@@ -1,0 +1,262 @@
+{% extends 'common/base.html' %}
+{% load static %}
+{% load util_tags %}
+{% block css %}
+<link rel="stylesheet" type="text/css" href="{% static 'accounts/css/wSelect.css' %}">
+
+{% endblock %}
+{% block content %}
+<main class="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg ">
+    <div class=" balance-cover  mx-4 ">
+        <div class="row">
+            <div class=" balance-main">
+                {% if message %}
+                <div class="alert-box-outer">
+                    <div class="{% if status %}success-alert{% else %}section-alert{% endif %}" style="display: block;"
+                        id="alertDiv">
+                        <button class="{% if status %}success-alert-close{% else %}section-alert-close{% endif %}"
+                            onclick="closeAlertModal()">
+                            <i class="fas fa-times"></i>
+                        </button>
+                        <p style="text-align: center" id="errorField">{{message}}</p>
+                    </div>
+                </div>
+                {% endif %}
+                <form method="post" action="{% url 'walletwithdrawal' %}" enctype="multipart/form-data"
+                    onsubmit="return validateForm('validationClass', 'class')">
+                    {% csrf_token %}
+                    <div class="row">
+
+                        <div class="form-group col-lg-12">
+                            <label for="select">Debit Account</label>
+                            <div>
+
+                                <select id="selectAccount" name="FromAccount" class="custom-select select-list" required
+                                    style="display:none">
+                                    <option value="">Select Currency</option>
+                                    {% if prevData and prevData.FromAccount %}
+                                    {% for account in accounts|acc_list:user_details %}
+                                    <option
+                                        data-icon="{% if account.currency.flag %}{{account.currency.flag.url}}{% else %}/other/no-image.jpg{% endif %}"
+                                        value="{{account.accountno}}" {% if prevData.FromAccount == account.accountno %}selected{% endif %}> {{account.accountno}}&nbsp;({{account.currency.code}})
+                                    </option>
+                                    {% endfor %}
+                                    {% else %}
+                                    {% for account in accounts|acc_list:user_details %}
+                                    <option
+                                        data-icon="{% if account.currency.flag %}{{account.currency.flag.url}}{% else %}/other/no-image.jpg{% endif %}"
+                                        value="{{account.accountno}}">
+                                        {{account.accountno}}&nbsp;({{account.currency.code}})</option>
+                                    {% endfor %}
+                                    {% endif %}
+                                </select>
+                            </div>
+                            <label style="display: none;" id="user_account_bal">Available Balance:
+                                <span id="bal_amnt"></span>
+                            </label>
+                        </div>
+
+                        <div class="form-group col-lg-12">
+                            <label for="Amount">Amount</label>
+                            {% if prevData and prevData.Amount %}
+                            <input id="Amount" name="Amount" placeholder="Enter Amount" type="text"
+                                class="form-control validationClass" required value="{{prevData.Amount}}"
+                                onkeypress='return restrictAmount(event)' onchange='return formatAmount(event)'
+                                onblur='return validateMaxAmount1(event,this)' maxlength="12">
+                            {% else %}
+                            <input id="Amount" name="Amount" placeholder="Enter Amount" type="text"
+                                class="form-control validationClass" onkeypress='return restrictAmount(event)'
+                                onchange='return formatAmount(event)' onblur='return validateMaxAmount1(event,this)'
+                                maxlength="12" required>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group col-lg-12">
+                            <label for="beneficiaryAccount">Select from Beneficiary</label>
+                            <div>
+                                <select id="beneficiaryAccount" name="Selectbeneficiary"
+                                    class="custom-select select-list">
+                                    <option value="">Select Your Wallet Name</option>
+                                    {% if prevData and prevData.name %}
+                                    {% for cryptolbeneficiary in cryptobeneficiaries %}
+                                    <option value="{{cryptolbeneficiary.name}}" {% if
+                                        prevData.name == cryptolbeneficiary.name %}selected{% endif
+                                        %}>{{cryptolbeneficiary.name}} ({{cryptolbeneficiary.wallet_name}})</option>
+                                    {% endfor %}
+                                    {% else %}
+                                    {% for cryptolbeneficiary in cryptobeneficiaries %}
+                                    <option value="{{cryptolbeneficiary.name}}">{{cryptolbeneficiary.name}}
+                                        ({{cryptolbeneficiary.wallet_name}})</option>
+                                    {% endfor %}
+                                    {% endif %}
+                                </select>
+
+                            </div>
+                        </div>
+
+<!--                        <div class="col-12 or-division or-division-brk"></div>-->
+<!--                        <div class="form-group col-lg-6">-->
+<!--                            <label for="BeneficiaryACNo">Beneficiary Account No</label>-->
+<!--                            {% if prevData and prevData.BeneficiaryACNo %}-->
+<!--                            <input id="BeneficiaryACNo" name="BeneficiaryACNo"-->
+<!--                                placeholder="Enter Beneficiary Account No" type="text" class="form-control"-->
+<!--                                value="{{prevData.BeneficiaryACNo}}" maxlength="50"-->
+<!--                                onkeypress='return restrictAlphabets(event)'-->
+<!--                                onchange="return formatAccount(event ,this.id)" onblur='removeSpace(event ,this.id)'-->
+<!--                                required>-->
+<!--                            {% else %}-->
+<!--                            <input id="BeneficiaryACNo" name="BeneficiaryACNo"-->
+<!--                                placeholder="Enter Beneficiary Account No" type="text" class="form-control"-->
+<!--                                maxlength="50" onkeypress='return restrictAlphabets(event)'-->
+<!--                                onchange="return formatAccount(event ,this.id)" onblur='removeSpace(event ,this.id)'-->
+<!--                                required>-->
+<!--                            {% endif %}-->
+<!--                        </div>-->
+
+                        <div class="form-group col-lg-6">
+                            <label for="BeneficiaryName">Wallet Name</label>
+                            {% if prevData and prevData.BeneficiaryName %}
+                            <input id="BeneficiaryName" name="BeneficiaryName" type="text" class="form-control validationClass" value="{{prevData.BeneficiaryName}}"
+                                maxlength="50" required>
+                            {% else %}
+                            <input id="BeneficiaryName" name="BeneficiaryName" placeholder="Enter Wallet Name"
+                                type="text" class="form-control validationClass" maxlength="50" required>
+                            {% endif %}
+                        </div>
+
+
+                        <div class="form-group col-lg-6">
+                            <label for="Currency">Currency</label>
+                            <div>
+                                <select id="Currency" name="Currency" class="custom-select select-list" required
+                                    style="display:none">
+                                    <option value="">Select Currency</option>
+                                    {% if prevData and prevData.Currency %}
+                                    {% for currency in currencies %}
+                                    <option
+                                        data-icon="{% if currency.flag %}{{currency.flag.url}}{% else %}/other/no-image.jpg{% endif %}"
+                                        value="{{currency.code}}" {% if currency.code == prevData.Currency %}selected{% endif %}>{{currency.code}} {{currency.name}}</option>
+                                    {% endfor %}
+                                    {% else %}
+                                    {% for currency in currencies %}
+                                    <option
+                                        data-icon="{% if currency.flag %}{{currency.flag.url}}{% else %}/other/no-image.jpg{% endif %}"
+                                        value="{{currency.code}}">{{currency.code}} {{currency.name}}</option>
+                                    {% endfor %}
+                                    {% endif %}
+                                </select>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group col-lg-6 wallet_new_class">
+                            <label for="wallet1">Wallet Address (alphanumeric characters)</label>
+                            {% if prevData and prevData.Walletname %}
+                            <input id="wallet1" name="Walletname" placeholder="Enter Your Wallet Address" type="text" class="form-control"
+                                value="{{prevData.Walletname}}" maxlength="50" onblur="checkNonAsciiCharacters(this)" required>
+                            {% else %}
+                            <input id="wallet1" name="Walletname" placeholder="Enter Your Wallet Address" type="text" class="form-control"
+                                maxlength="50" onblur="checkNonAsciiCharacters(this)" required>
+                            {% endif %}
+                        </div>
+
+                         <div class="form-group col-lg-6">
+                            <label for="text1">Note (optional)</label>
+                            {% if prevData and prevData.Note %}
+                            <input id="text1" name="Note" placeholder="Enter Your Note" type="text" class="form-control"
+                                value="{{prevData.Note}}" maxlength="50" onblur="checkNonAsciiCharacters(this)">
+                            {% else %}
+                            <input id="text1" name="Note" placeholder="Enter Your Note" type="text" class="form-control"
+                                maxlength="50" onblur="checkNonAsciiCharacters(this)">
+                            {% endif %}
+                        </div>
+
+                        <!-- user details -->
+
+                        <!--  -->
+                        <div class="form-group">
+                            <button type="submit" id="submit-button"
+                                class="btn btn-primary button-w w-100">Transfer</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+</main>
+{% endblock %}
+{% block extra_script %}
+<script src="{%static '/accounts/js/wSelect.min.js' %}"></script>
+<script>
+    $('#selectAccount').wSelect();
+    $('#Currency').wSelect();
+    $(document).ready(function () {
+        if ($('#selectAccount').val()) {
+            var accountno = $('#selectAccount').val();
+            if (accountno) {
+                $.post("/cutomer-account-balance",
+                    {
+                        accountno: accountno,
+                        'csrfmiddlewaretoken': '{{ csrf_token }}',
+                    },
+                    function (data, status) {
+                        $("#user_account_bal").show();
+                        $("#user_account_bal").find('span').text(data['customer_account_balance'] + ' ' + data['customer_account_currency_code']).css("color", "#22bc51");
+                    });
+
+            }
+            else {
+                $("#user_account_bal").hide();
+            }
+        }
+        $('#selectAccount').on('change', function () {
+            var accountno = $(this).val();
+            if (accountno) {
+                $.post("/cutomer-account-balance",
+                    {
+                        accountno: accountno,
+                        'csrfmiddlewaretoken': '{{ csrf_token }}',
+                    },
+                    function (data, status) {
+                        $("#user_account_bal").show();
+                        $("#user_account_bal").find('span').text(data['customer_account_balance'] + ' ' + data['customer_account_currency_code']).css("color", "#22bc51");
+                    });
+
+            }
+            else {
+                $("#user_account_bal").hide();
+            }
+        });
+        $('#beneficiaryAccount').on('change', function () {
+            var beneficiary_accountnumber = $(this).val();
+            if (beneficiary_accountnumber) {
+                $.post("/getcryptobeneficiarylist",
+                    {
+                        beneficiary_accountnumber: beneficiary_accountnumber,
+                        'csrfmiddlewaretoken': '{{ csrf_token }}',
+                    },
+                    function (data, status) {
+                        $("#beneficiaryAccount").val(data['beneficiaryName']);
+                        $("#BeneficiaryName").val(data['name']);
+                        $("#wallet1").val(data['Walletname']);
+                        $("#Currency").val(data['currency']).change();
+                    });
+            }
+            else {
+                $("#beneficiaryAccount").val('');
+                $("#Currency").val('').change();
+                $("#BeneficiaryName").val('');
+                $("#wallet1").val('');
+            }
+
+        });
+        //
+
+
+
+
+    });
+</script>
+{% endblock %}
+
+
+
+

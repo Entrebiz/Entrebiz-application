@@ -1,0 +1,88 @@
+ /**
+ This stylesheet is part of the java script calendar and date picker
+  **/
+#calender {
+	width: 300px;
+	font-family: ms sans serif, sans serif;
+	font-size: 7pt;
+	border: solid 1px #fff;
+	}
+
+#calenderTable {
+/*	border-style: outset;
+	border-width: 2px;
+	border-color: black;*/
+	margin-top: 45px;
+	background-color: #fff;
+	display: none;
+	position: absolute;
+	z-index: 1;
+	top: 0px;
+	left: 0px;
+	width: auto;
+	/*border: solid 1px #ddd;*/
+	box-shadow: 1px 0 10px 1px rgba(204, 204, 204, 0.48);
+
+	}
+#calenderTable  .calender-close{
+	width: 8px;
+	opacity: .6;
+}
+#calenderTableHead TR {
+	/*background-color: rgba(72, 79, 88, 0.2901960784313726);*/
+	background-color: #fff;
+}
+#calenderTableHead td{
+	padding: 5px 15px;
+}
+#calenderTableHead .select-td{
+	width: 250px;
+}
+#calenderTableHead select{
+	font-size: 14px;
+	border: none;
+}
+#calenderTableDays TR {
+	/*background-color: #B40404;*/
+	color: #58616b;
+	font-size: 12px;
+	font-family: "poppinsregular";
+}
+#calenderTableDays TR td{
+	color: #ff6600;
+	text-align: center;
+}
+#calender td{
+	padding: 7px 10px;
+	/*padding-right: 15px;*/
+	text-align: center;
+}
+.normalDay {
+	border: 1px solid #fff;
+	cursor: pointer;
+	background-color: #F5F5F5;
+	color: #252525;
+}
+
+.hlDay {
+	/*border: solid 1px #ff6600;*/
+	background-color: #585858;
+	color: #E6E6E6;
+	cursor: pointer;
+	}
+
+.toDay {
+	/*border: 1px solid #e7f8ec;*/
+    background-color: #ff6600;
+    color: #e7f8ec;
+	font-weight: bold;
+	cursor: pointer;
+	}
+
+.choosenDay {
+	/*border: solid 1px #000000;*/
+	background-color: #ff6600;
+	color: #fff;
+	font-weight: bold;
+	cursor: pointer;
+	}

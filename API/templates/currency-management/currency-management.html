@@ -1,0 +1,239 @@
+{% extends 'common/admin-base.html' %}
+{% load static %}
+{% load util_tags %}
+{% block css %}
+<style>
+    .btn-white {
+        background-color: #fff !important;
+        color: #fa661d !important;
+        border: solid 1px #fa661d !important;
+        border-radius: 5px !important;
+        height: 40px !important;
+        padding: 5px 20px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+
+    .btn-rgt {
+        float: right !important;
+    }
+
+    .btn-white img {
+        margin-right: 10px;
+    }
+
+    table {
+        border-collapse: collapse;
+        margin: 0.7em 0;
+        table-layout: fixed;
+        width: 100%;
+    }
+
+    .admin-table-def th {
+        font-weight: normal;
+        padding: 5px 10px;
+        text-align: left;
+        border-bottom: 1px solid #efefef;
+        color: #586168;
+        border-right: 1px solid #efefef;
+        font-size: 14px;
+    }
+
+    td {
+        border-bottom: 1px solid #efefef !important;
+    }
+
+    .admin-table-def td {
+        font-size: 14px;
+        padding: 10px 10px;
+        color: #586168;
+        border-color: #efefef;
+        word-break: break-all;
+    }
+
+    .td-slno {
+        width: 70px;
+    }
+</style>
+{% endblock %}
+{% block content %}
+<div class=" balance-cover  mx-4 ">
+    <div class="row">
+        <div class=" balance-main">
+            <div id="cust-err-msg-container" class="alert-box-outer cust-err-msg-container" style="display: none;">
+                <div class="section-alert" style="display: block;"
+                id="alertDiv">
+                <button class="section-alert-close"
+                    onclick="closeAlertModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+                <p class="cust-err-msg" style="text-align: center" id="errorField"></p>
+            </div>
+            </div>
+            {% if message %}
+            <div class="alert-box-outer">
+                <div class="{% if status %}success-alert{% else %}section-alert{% endif %}" style="display: block;"
+                    id="alertDiv">
+                    <button class="{% if status %}success-alert-close{% else %}section-alert-close{% endif %}"
+                        onclick="closeAlertModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <p style="text-align: center" id="errorField">{{message}}</p>
+                </div>
+            </div>
+            {% endif %}
+            <div class="row">
+                <div class="form-group col-lg-3">
+                    <select class="custom-select select-list" id="FromCurrency" name="FromCurrencyCode"
+                        onchange="filterConversionMarginList(this);">
+                        <option value="" selected="">FromCurrency</option>
+                        {% for currency in currencies %}
+                        {% if currency.code != ToCurrencyCode %}
+                        <option value="{{currency.code}}" {% if currency.code == FromCurrencyCode %}selected{% endif %}>
+                            {{currency.code}}</option>
+                        {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group col-lg-2">
+                    <select class="custom-select select-list" id="ToCurrency" name="ToCurrencyCode"
+                        onchange="filterConversionMarginList(this);">
+                        <option value="" selected="">ToCurrency</option>
+                        {% for currency in currencies %}
+                        {% if currency.code != FromCurrencyCode %}
+                        <option value="{{currency.code}}" {% if currency.code == ToCurrencyCode %}selected{% endif %}>
+                            {{currency.code}}</option>
+                        {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group col-lg-1">
+
+                </div>
+                <div class="form-group col-lg-6">
+                    <a href="javascript:saveMargin();" class="btn-white btn-rgt" type="button">
+                        <img src="{% static 'dash/assets/img/save-btn.svg' %}" alt="" width="14px" height="16px;">
+                        Save</a>
+                </div>
+
+            </div>
+            {% include 'currency-management/currency-table.html' %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block extra_script %}
+<script>
+    function showSuccessMsg(message){
+        var elements = '<div class="alert-box-outer"><div class="success-alert" style="display: block;" id="alertDiv"><button class="success-alert-close" onclick="closeAlertModal()"><i class="fas fa-times"></i></button><p style="text-align: center" id="errorField">'+message+'</p></div></div>'
+        if (document.getElementsByClassName('alert-box-outer').length > 0) {
+			document.getElementsByClassName('alert-box-outer')[0].remove();
+		}
+        $('.cust-err-msg-container').append(elements)
+        $('.section-alert').show()
+        $('.cust-err-msg-container').show()
+    }
+    function closeAlertModal() {
+        const elem = document.getElementById('cust-err-msg-container');
+        if (elem) {
+            elem.style.display = 'none';
+        }
+    }
+    function saveMargin() {
+        if (!validateForm('validationClass', 'class')) return false;
+        const marginUpdates = [];
+        $(".curr-val").each(function () {
+            const curr_id = $(this).attr("data-id")
+            const curr_val = $(this).val()
+            const inp_updated_margin = $("#margin-id-" + curr_id)
+            const updated_margin_val = inp_updated_margin.val()
+            if (curr_val != updated_margin_val) {
+                // append
+                marginUpdates.push({
+                    'marginId': curr_id,
+                    'marginPercent': Number(updated_margin_val)
+                });
+            }
+        })
+        if (!marginUpdates.length) {
+            $(".cust-err-msg").html('No changes found')
+            $('.cust-err-msg-container').show()
+            return false;
+        }else{
+            $(".cust-err-msg").html('')
+            $('.cust-err-msg-container').hide()
+        }
+        $(".cust-err-msg").html('')
+        let f1 = document.createElement('INPUT');
+        f1.type = 'text';
+        f1.name = 'marginUpdates';
+        f1.value = JSON.stringify(marginUpdates) || '';
+        let f3 = document.createElement('INPUT');
+        f3.type = 'text';
+        f3.name = 'action_type';
+        f3.value = 'save_margin_percents';
+        const inp_csrf = document.createElement('INPUT');
+        inp_csrf.type = 'hidden';
+        inp_csrf.name = 'csrfmiddlewaretoken';
+        inp_csrf.value = '{{csrf_token}}';
+        const formElem = document.createElement('form');
+        formElem.method = 'POST';
+        formElem.appendChild(f1);
+        formElem.appendChild(f3);
+        formElem.appendChild(inp_csrf);
+        document.body.appendChild(formElem);
+        formElem.submit();
+    }
+    function validatePercentageInputs(e) {
+        const ex = /^[0-9]+\.?[0-9]*$/;
+        if (ex.test(e.value) == false) {
+            e.value = e.value.substring(0, e.value.length - 1);
+        }
+        if (Number(e.value) > 100) {
+            e.value = e.value.substring(0, e.value.length - 1);
+        }
+    }
+    function filterConversionMarginList(e) {
+        let f1 = document.createElement('INPUT');
+        f1.type = 'text';
+        f1.name = 'FromCurrencyCode';
+        f1.value = $('#FromCurrency option:selected').val()
+        let f2 = document.createElement('INPUT');
+        f2.type = 'text';
+        f2.name = 'ToCurrencyCode';
+        f2.value = $('#ToCurrency option:selected').val()
+        let f3 = document.createElement('INPUT');
+        f3.type = 'text';
+        f3.name = 'action_type';
+        f3.value = 'currency_search';
+        const inp_csrf = document.createElement('INPUT');
+        inp_csrf.type = 'hidden';
+        inp_csrf.name = 'csrfmiddlewaretoken';
+        inp_csrf.value = '{{csrf_token}}';
+        const formElem = document.createElement('form');
+        formElem.method = 'POST';
+        formElem.appendChild(f1);
+        formElem.appendChild(f2);
+        formElem.appendChild(f3);
+        formElem.appendChild(inp_csrf);
+        formElem.onsubmit = showLoader();
+        document.body.appendChild(formElem);
+        formElem.submit();
+    }
+    $(document).on("click", ".btn-page", function () {
+        next_page = $(this).attr("data-page-num")
+        $.ajax({
+            type: 'POST',
+            data: {
+                'page': next_page,
+                'action_type': 'getcurrency_bypage',
+                'csrfmiddlewaretoken': '{{csrf_token}}'
+            },
+            success: function (result) {
+                $(".curr-conversion-sec").replaceWith(result.currency_table)
+            }
+        })
+    })
+</script>
+{% endblock %}

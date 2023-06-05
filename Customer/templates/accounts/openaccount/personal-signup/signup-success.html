@@ -1,0 +1,25 @@
+{% extends 'accounts/openaccount/personal-signup/reg-base.html' %}
+{% load static %}
+{% block content %}
+<div class="container acc-det-container acc-det-sm">
+    <div class="acc-det">
+        <div class="acc-det-logo">
+            <a href="/dahboard">
+            <img src="{% static 'dash/assets/img/logo-acc.png' %}" alt="">
+            </a>
+        </div>
+        <div class="acc-det-body-content acc-det-login">
+
+                <h2 class="acc-det-title" style="font-weight: 100;" >You have been successfully registered. Please check your E-mail.</h2>
+                    <div class="acc-det-footer">
+                        <div class="acc-bnt-sec">
+                            <a href="/login" class="acc-back-btn efct-link-dark"><img src="{% static 'dash/assets/img/arrow.png' %}" alt=""> Back to
+                                &nbsp;
+                                <span class="secondary-clr">Login</span></a>
+                        </div>
+                    </div>
+            
+        </div>
+    </div>
+</div>
+{% endblock %}

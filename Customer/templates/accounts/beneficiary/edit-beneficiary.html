@@ -1,0 +1,336 @@
+{% extends 'common/base.html' %}
+{% load static %}
+{% load util_tags %}
+{% block content %}
+<div class=" balance-cover  mx-4 ">
+<div class="row">
+   <div class =" balance-main">
+      {% if message %}
+      <div class="alert-box-outer">
+         <div class="{% if status %}success-alert{% else %}section-alert{% endif %}" style="display: block;" id="alertDiv">
+            <button class="section-alert-close" onclick="closeAlertModal()">
+            <i class="fas fa-times"></i>
+            </button>
+            <p style="text-align: center" id="errorField">{{message}}</p>
+         </div>
+      </div>
+      {% endif %}
+      <form method="post">
+         {% csrf_token %}
+         <input type="hidden" name="id" value="{{id}}">
+         <input type="hidden" name="beneficiary_type" value="{{beneficiary_type}}">
+         {% if beneficiary_type == 'transaction' %}
+         <div class="row">
+            <div class="form-group col-lg-6">
+               <label>Nick Name</label><input type="text" name="name" value="{{name}}" class="form-control" required>
+            </div>
+            <div class="form-group col-lg-6">
+               <label>Account Number</label><input type="text" name="accountnumber" value="{{accountnumber}}" class="form-control" required>
+            </div>
+         </div>
+         <div class="row">
+            <div class="form-group col-lg-6">
+               <label>First Name</label><input type="text" name="firstname" value="{{firstname}}" class="form-control" disabled>
+            </div>
+            {% if ben_obj.account.user_account.customer.customertype == 1 %}
+            <div class="form-group col-lg-6">
+               <label>Last Name</label><input type="text" name="lastname" value="{{lastname}}" class="form-control"  disabled>
+            </div>
+            {% endif %}
+         </div>
+         {% elif beneficiary_type == 'walletwithdrawal' %}
+         <div class="row">
+            <div class="form-group col-lg-6">
+               <label>Wallet Name</label><input type="text" name="name" value="{{name}}" class="form-control" required>
+            </div>
+            <div class="form-group col-lg-6 new_class">
+               <label>Wallet Address (alphanumeric characters)</label><input type="text" name="walletname" value="{{walletname}}" class="form-control" required>
+            </div>
+         </div>
+         <div class="row">
+            <div class="form-group col-lg-6">
+               <label>Currency</label><input type="text" name="currency" value="{{currency}}" class="form-control" disabled>
+            </div>
+            <!--    {% if ben_obj.account.user_account.customer.customertype == 1 %}-->
+            <!--    <div class="form-group col-lg-6">-->
+            <!--        <label>Last Name</label><input type="text" name="lastname" value="{{lastname}}" class="form-control"  disabled>-->
+            <!--    </div>-->
+            <!--    {% endif %}-->
+         </div>
+         {% elif  beneficiary_type == 'domestictransfer'%}
+         <div class="row">
+            <div class="form-group col-lg-6">
+               <label>Beneficiary Account No</label><input type="text" name="domestic_accountnumber" value="{{domestic_accountnumber}}" class="form-control" required>
+               {% if form.domestic_accountnumber.errors %}
+               {% for error in form.domestic_accountnumber.errors %}
+               <span style="list-style:none;color:orangered">{{ error|escape }}</span>
+               {% endfor %}
+               {% endif %}
+            </div>
+            <div class="form-group col-lg-6">
+               <label>Beneficiary Name</label><input type="text" name="domestic_name" value="{{domestic_name}}" class="form-control" required>
+               {% if form.domestic_name.errors %}
+               {% for error in form.domestic_name.errors %}
+               <span style="list-style:none;color:orangered">{{ error|escape }}</span>
+               {% endfor %}
+               {% endif %}
+            </div>
+         </div>
+         <div class="row">
+            <div class="form-group col-lg-6">
+               <label>Bank Name</label><input type="text" name="domestic_bankname" value="{{domestic_bankname}}" class="form-control" required>
+               {% if form.domestic_bankname.errors %}
+               {% for error in form.domestic_bankname.errors %}
+               <span style="list-style:none;color:orangered">{{ error|escape }}</span>
+               {% endfor %}
+               {% endif %}
+            </div>
+            <div class="form-group col-lg-6">
+               <label for="RoutingNumber">{% if c_code == 'INR' %}IFSC CODE{% else %}ABA/ACH Routing Number{% endif %}</td></label>
+               <input type="text" name="routing_number" value="{{routing_number}}" class="form-control" required>
+               {% if form.routing_number.errors %}
+               {% for error in form.routing_number.errors %}
+               <span style="list-style:none;color:orangered">{{ error|escape }}</span>
+               {% endfor %}
+               {% endif %}
+            </div>
+         </div>
+       
+         <div class="row">
+            <div class="form-group col-lg-6">
+                <label>Bank City</label><input type="text" name="domestic_city" value="{{domestic_city}}" class="form-control" required>
+                {% if form.domestic_city.errors %}
+                {% for error in form.domestic_city.errors %}
+                <span style="list-style:none;color:orangered">{{ error|escape }}</span>
+                {% endfor %}
+                {% endif %}
+             </div>
+
+            <div class="form-group col-lg-6">
+                <label>Bank Country</label>
+                <select name="domestic_country" id="domestic_country" class="custom-select select-list">
+                  {% for cntry in countries %}
+                     {% if cntry.shortform == 'US' or cntry.shortform == 'IN' or cntry.shortform == 'SG' %}
+                     <option value="{{cntry.id}}" {% if domestic_country|to_int == cntry.id %} selected {% endif %}>{{cntry.name}}</option>
+                     {% endif %}
+                     {% endfor %}
+                  </select>
+                <p>{{ form.country.errors }}</p>
+           </div>
+
+         </div>
+         <div class="row">
+            <div class="form-group col-lg-6">
+                <label>Currency</label>
+                <select id="CurrencyId" name="domestic_currency" class="custom-select select-list" >
+                  {% for crncy in currencies %}
+                     {% if crncy.code == 'USD' or crncy.code == 'INR' or crncy.code == 'SGD' %}
+                     <option value="{{crncy.id}}" {% if domestic_currency|to_int == crncy.id %}selected{% endif %}>{{crncy.code}}</option>
+                     {% endif %}
+                     {% endfor %}
+              </select>
+                <p>{{ form.currency.errors }}</p>
+           </div>
+
+            <div class="form-group col-lg-6">
+                <label>Beneficiary Email (optional)</label>
+               <input type="text" name="domestic_email" value="{{domestic_email|default_if_none:''}}" class="form-control">
+               {% if form.domestic_email.errors %}
+               {% for error in form.domestic_email.errors %}
+               <span style="list-style:none;color:orangered">{{ error|escape }}</span>
+               {% endfor %}
+               {% endif %}
+            </div>
+         </div>
+
+
+
+         {% else %}
+         <div class="row">
+            <div class="form-group col-lg-6">
+               <label>Beneficiary Account No</label><input type="text" name="accountnumber" value="{{accountnumber}}" class="form-control" required>
+               {% if form.accountnumber.errors %}
+               {% for error in form.accountnumber.errors %}
+               <span style="list-style:none;color:orangered">{{ error|escape }}</span>
+               {% endfor %}
+               {% endif %}
+            </div>
+            <div class="form-group col-lg-6">
+               <label>Beneficiary Name</label><input type="text" name="name" value="{{name}}" class="form-control" required>
+               {% if form.name.errors %}
+               {% for error in form.name.errors %}
+               <span style="list-style:none;color:orangered">{{ error|escape }}</span>
+               {% endfor %}
+               {% endif %}
+            </div>
+         </div>
+         <div class="row">
+            <div class="form-group col-lg-6">
+               <label>Bank Name</label><input type="text" name="bankname" value="{{bankname}}" class="form-control" required>
+               {% if form.bankname.errors %}
+               {% for error in form.bankname.errors %}
+               <span style="list-style:none;color:orangered">{{ error|escape }}</span>
+               {% endfor %}
+               {% endif %}
+            </div>
+            <div class="form-group col-lg-6">
+               <label>Bank Swift Code</label><input type="text" name="swiftcode" value="{{swiftcode}}" class="form-control" required>
+               {% if form.swiftcode.errors %}
+               {% for error in form.swiftcode.errors %}
+               <span style="list-style:none;color:orangered">{{ error|escape }}</span>
+               {% endfor %}
+               {% endif %}
+            </div>
+         </div>
+         <div class="row">
+            <div class="form-group col-lg-6">
+               <label>Bank City</label><input type="text" name="city" value="{{city}}" class="form-control" required>
+               {% if form.city.errors %}
+               {% for error in form.city.errors %}
+               <span style="list-style:none;color:orangered">{{ error|escape }}</span>
+               {% endfor %}
+               {% endif %}
+            </div>
+            <div class="form-group col-lg-6">
+               <label>Bank Country</label>
+               <select name="country" class="custom-select select-list" required>
+                  <option value="">
+                     -Select Country-
+                  </option>
+                  {% for cntry in countries %}
+                  <option value="{{cntry.id}}" {% if country|to_int == cntry.id %}selected{% endif %}>{{cntry.shortform}}</option>
+                  {% endfor %}
+               </select>
+               <p>{{ form.country.errors }}</p>
+            </div>
+        </div>
+            <div class="row">
+               <div class="form-group col-lg-6">
+                  <label>Currency</label>
+                  <select id="CurrencyId" name="currency" class="custom-select select-list" required>
+                  {% for crncy in currencies %}
+                  <option value="{{crncy.id}}" {% if currency|to_int == crncy.id %}selected{% endif %}>
+                  {{crncy.code}}
+                  </option>
+                  {% endfor %}
+                  </select>
+                  <p>{{ form.currency.errors }}</p>
+               </div>
+               <div class="form-group col-lg-6">
+                  <label>Beneficiary Email (optional)</label>
+                  <input type="text" name="email" value="{{email|default_if_none:''}}" class="form-control">
+                  {% if form.email.errors %}
+                  {% for error in form.email.errors %}
+                  <span style="list-style:none;color:orangered">{{ error|escape }}</span>
+                  {% endfor %}
+                  {% endif %}
+               </div>
+            </div>
+            {% endif %}
+            <input type="submit" value="submit" class="btn btn-primary button-w btn-edit-beneficiary">
+      </form>
+      </div>
+   </div>
+</div>
+<!-- Modal to notify the customer that any country they have previously selected is no longer available. -->
+<div id="modal-show-country-disable" class="modal fade">
+   <div class="modal-dialog modal-confirm" style="width: 500px !important;">
+      <div class="modal-content">
+         <div class="modal-header flex-column">
+            <h5 class="modal-title w-100">The selected country for the beneficiary's bank has been disabled.</h5>
+         </div>
+         <div class="modal-body">
+            <p style="color: black;">Beneficiary bank country you selected during enrollment has been disabled. We deeply regret the inconvenience caused. Should you require any further assistance of the above matter, please contact your Relationship Manager.</p>
+         </div>
+      </div>
+   </div>
+</div>
+<!--  -->
+{% endblock %}
+{% block extra_script %}
+<script>
+   function closeAlertModal() {
+     $(".alert-box-outer").hide()
+   }
+   if ("{{ben_obj.country}}" != "None" && "{{ben_obj.country.isdeleted}}" == "True"){
+     $("#modal-show-country-disable").modal("show")
+   }
+
+   var updating = false;
+   $('select[name="domestic_country"]').on('change', function () {
+      if (updating) return; // prevent recursion
+      
+      updating = true;
+      $('label[for="RoutingNumber"]').text('ABA/ACH Routing Number'); // set default label
+
+      var country = $(this).find(":selected").text();
+      var currencyDropdown = document.getElementById('CurrencyId');
+      var options = currencyDropdown.options;
+    
+      for (var i = 0; i < options.length; i++) {
+        var option = options[i];
+        var currencyName = option.innerHTML.trim().split(' ')[0];
+        
+        if (country === 'India' && currencyName === 'INR') {
+          option.selected = true;
+          $('label[for="RoutingNumber"]').text('IFSC CODE');
+
+        } else if (country === 'United States' && currencyName === 'USD') {
+          option.selected = true;
+        } else if (country === 'Singapore' && currencyName === 'SGD') {
+          option.selected = true;
+        } else {
+          option.selected = false;
+        }
+      }
+    
+      $("#CurrencyId").val($(currencyDropdown).find('option:selected').val()); // update value
+      
+      updating = false;
+    });
+   
+    // Add event listener to "Currency" select element
+   $('select[name="domestic_currency"]').on('change', function () {
+      if (updating) return; // prevent recursion
+      
+      updating = true;
+      
+      var currency = $(this).find(":selected").text();
+
+      $('label[for="RoutingNumber"]').text('ABA/ACH Routing Number'); // set default label
+
+      var countryDropdown = document.getElementById('domestic_country');
+      var options = countryDropdown.options;
+    
+      for (var i = 0; i < options.length; i++) {
+        var option = options[i];
+        var countryName = option.innerHTML.trim();
+
+        if (currency === 'INR' && countryName === 'India') {
+          option.selected = true;
+          $('label[for="RoutingNumber"]').text('IFSC CODE');
+
+        } else if (currency === 'USD' && countryName === 'United States') {
+          option.selected = true;
+        } else if (currency === 'SGD' && countryName === 'Singapore') {
+          option.selected = true;
+        } else {
+          option.selected = false;
+        }
+      }
+    
+      $("#domestic_country").val($(countryDropdown).find('option:selected').val()); // update value
+      
+      updating = false;
+    });
+    {% comment %} $(document).ready(function () {
+      var currency = $(this).find(":selected").text().trim(); // Get the selected option's text and remove leading/trailing whitespace
+
+      if (currency === "IndiaINR") {
+        $('label[for="RoutingNumber"]').text('IFSC CODE');
+      }
+    });
+     {% endcomment %}
+      
+</script>
+{% endblock %}

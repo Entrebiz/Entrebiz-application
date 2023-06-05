@@ -1,0 +1,64 @@
+{% extends 'common/base.html' %}
+{% load static %}
+{% block css %}
+<style>
+    .curr-conversion-card {
+        padding: 20px 40px 10px;
+    }
+
+    .msg-card-size {
+        max-width: 100% !important;
+        width: 600px !important;
+    }
+
+    .trans-success-title {
+        text-align: center;
+        color: #586168;
+        border-bottom: 1px solid #efefef;
+        padding-bottom: 15px;
+    }
+
+    .trans-success-title h3 {
+        font-size: 25px;
+        margin-bottom: 0;
+    }
+
+    .trans-success-title img {
+        max-width: 60px;
+        margin-bottom: 15px;
+    }
+</style>
+{% endblock %}
+{% block content %}
+<main class="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg ">
+    <div class=" balance-cover  mx-4 " style="height: 450px;">
+        <!--  -->
+        <div class="row curr-conversion-row m-0">
+            <div class="curr-conversion-card msg-card-size" style="margin-left: 20%;">
+                <div class="trans-success-title ">
+                    <img src="{% static 'dash/assets/img/success-alert.png' %}" alt="">
+                    <h3 style="font-weight: 500;" class="reciveMoneySucess">Your request has been successfully
+                        submitted.</h3>
+                    <p></p>
+                </div>
+                <div class="confirm-tab-holder" style="margin-top: 24px;">
+                    <table class="confirm-table">
+                        <tbody>
+                            <tr></tr>
+                        </tbody>
+                    </table>
+                    <div class="row confirm-btn-holder" style="margin: 0 150px;">
+                        <div class="col-sm-12">
+                            <a href="/dashboard">
+                                <button class="btn btn-primary button-w" style="margin-left: 20%;" type="button">DONE
+                                </button>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--  -->
+    </div>
+</main>
+{% endblock %}

@@ -1,0 +1,307 @@
+{% extends 'common/admin-base.html' %}
+{% load static %}
+{% load util_tags %}
+{% block css %}
+<link rel="stylesheet" type="text/css" href="{% static 'accounts/css/wSelect.css' %}">
+<style>
+    .statment-filter-tab {
+        display: block;
+        border-bottom: solid 1px #efefef;
+        width: 100%;
+        overflow: hidden;
+    }
+
+    .statment-filter-tab a {
+        display: inline-block;
+        padding: 10px;
+        border-right: solid 1px #efefef;
+        color: #84878a;
+        border-bottom: solid 2px transparent;
+        float: left;
+    }
+    .isactive {
+        border-bottom-color: #22bc51 !important;
+    }
+</style>
+{% endblock %}
+{% block content %}
+<div class=" balance-cover  mx-4 " style="padding-left:0;padding-right:0">
+    <div class="row">
+        <div class=" balance-main">
+            <!--  -->
+            <div class="statment-filter-tab">
+                <a href="/getCustomerDetails?slug={{current_user_details.slug}}" id="page1"
+                    class="" style="display: block"> Personal
+                    details</a>
+                <a href="/getCustomerDetails?userDocument=statement&slug={{current_user_details.slug}}" id="page2"
+                    class="isactive" style="display: block">
+                    Statements</a>
+                <a href="/getCustomerDetails?userDocument=referrals&slug={{current_user_details.slug}}" id="page3"
+                    class="" style="display: block">
+                    Referrals</a>
+            </div><br>
+            <!--  -->
+            {% if message %}
+            <div class="alert-box-outer">
+                <div class="{% if status %}success-alert{% else %}section-alert{% endif %}" style="display: block;"
+                     id="alertDiv">
+                    <button class="{% if status %}success-alert-close{% else %}section-alert-close{% endif %}"
+                            onclick="closeAlertModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <p style="text-align: center" id="errorField">{{message}}</p>
+                </div>
+            </div>
+            <br>
+            {% endif %}
+            <form method="post" class="stmnt-form" action="">
+                {% csrf_token %}
+                <input type="hidden" name="slug" value="{{user_details.slug}}">
+                <input type="hidden" class="inp-action_type" name="action_type" value="gettransactionbyaccount">
+                <div class="row" style="width:100%;border-bottom: solid 1px #ebeff1;margin-left:0px;">
+                    <div class="form-group col-lg-6">
+                        <select class="custom-select select-list sel-account" name="accountid" style="display:none">
+                            {% for account in accounts|acc_list:user_details %}
+                            <option data-icon="{% if account.currency.flag %}{{account.currency.flag.url}}{% else %}/other/no-image.jpg{% endif %}"
+                                    value="{{account.id}}" {% if accountid == account.id %}selected{% endif %}>{{account.accountno}} {{account.currency.code}}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group col-lg-6">
+                        <p style="float:right;font-size:13px;">Closing Balance: <span class="span-account-balance"
+                                                                                      style="font-size:16px;font-weight:bold;color:#ff6600">{% if account %}{{account.balance|floatformat:2}} {{account.currency.code}}{% else %} {%  acc_bal user_details %} {% endif %}</span>
+                        </p>
+                    </div>
+                </div>
+                <br>
+                <div class="stmnt-filter">
+                    <div class="row mb-4">
+                        <div class="row mb-2">
+                            <div class="col-sm-3 input-form-group"><input class="form-control" type="text"
+                                                                          name="transaction_no" id="transactionNo"
+                                                                          placeholder="Search Transaction No" value="{{transaction_no}}"></div>
+                            <div class="col-sm-3 input-form-group"><input class="form-control" type="text"
+                                                                          name="beneficiary_name" id="beneficiaryName"
+                                                                          placeholder="Search Beneficiary Name" value="{{beneficiary_name}}"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-4 input-form-group">
+                                <input type="hidden" id="inp-fromDate" name="from_date" value="{{from_date}}">
+                                <input type="hidden" id="inp-toDate" name="to_date" value="{{to_date}}">
+                                <label for="fromDate">From Date</label><input class="form-control" type="text"
+                                                                              id="fromDate"
+                                                                              onclick="setYears(1947, 2008);showCalender(this, 'fromDate');"
+                                                                              placeholder="Select from date" value="{{from_date}}"></div>
+                            <div class="col-sm-4 input-form-group"><label for="toDate">To Date</label><input
+                                    class="form-control" type="text" id="toDate"
+                                    onclick="setYears(1947, 2008);showCalender(this, 'toDate');"
+                                    placeholder="Select to date" value="{{to_date}}"></div>
+                            <div class="col-sm-2 input-form-group">
+                                <label for="creditdebit">Credit/Debit</label>
+                                <select id="creditdebit" class="custom-select select-list" name="creditdebit">
+                                    <option value="0" {% if creditdebit == '0' %}selected{% endif %}>Both</option>
+                                    <option value="1" {% if creditdebit == '1' %}selected{% endif %}>Credit</option>
+                                    <option value="2" {% if creditdebit == '2' %}selected{% endif %}>Debit</option>
+                                </select>
+
+                            </div>
+                            <div class="col-sm-1 input-form-group" style="width:10.333333%;">
+                                <label for="page">Page</label>
+                                <select id="page" class="custom-select select-list" name="per_page">
+                                    <option value="10" {% if per_page == '10' %}selected{% endif %}>10</option>
+                                    <option value="50" {% if per_page == '50' %}selected{% endif %}>50</option>
+                                    <option value="100" {% if per_page == '100' %}selected{% endif %}>100</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-8" ></div>
+                        <div class="col-sm-4" >
+                            <input type="hidden" name="export_type" class="export_type" value="">
+                            <button class="btn btn-bordered">Search</button>
+                            <button class="btn btn-bordered btn-export-statement" data-attr="csv" {% if not transactions %}disabled="disabled"{% endif %}><img
+                                    src="{% static 'transaction/statements/img/CSV.svg' %}"
+                                    alt="" style="margin-right:5px">Download CSV
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div class="statement-div">
+                {% include 'transactions/e-statements/includes/statement_table.html' %}
+            </div>
+
+        </div>
+    </div>
+
+    <table id="calenderTable">
+        <tbody id="calenderTableHead">
+        <tr>
+            <td colspan="6" align="center" class="select-td">
+                <select onChange="showCalenderBody(createCalender(document.getElementById('selectYear').value,
+							this.selectedIndex, false));" id="selectMonth">
+                    <option value="0">Jan</option>
+                    <option value="1">Feb</option>
+                    <option value="2">Mar</option>
+                    <option value="3">Apr</option>
+                    <option value="4">May</option>
+                    <option value="5">Jun</option>
+                    <option value="6">Jul</option>
+                    <option value="7">Aug</option>
+                    <option value="8">Sep</option>
+                    <option value="9">Oct</option>
+                    <option value="10">Nov</option>
+                    <option value="11">Dec</option>
+                </select>
+                <!-- </td>
+                <td colspan="2" align="center"> -->
+                <select onChange="showCalenderBody(createCalender(this.value,
+							document.getElementById('selectMonth').selectedIndex, false));" id="selectYear">
+                </select>
+            </td>
+            <td align="center">
+                <a href="#" onClick="closeCalender();"><font color="#003333" size="+1"><img class="calender-close"
+                                                                                            src="{% static 'calendar/img/close.png' %}"
+                                                                                            alt=""></font></a>
+            </td>
+        </tr>
+        </tbody>
+        <tbody id="calenderTableDays">
+        <tr style="">
+            <td>Sun</td>
+            <td>Mon</td>
+            <td>Tue</td>
+            <td>Wed</td>
+            <td>Thu</td>
+            <td>Fri</td>
+            <td>Sat</td>
+        </tr>
+        </tbody>
+        <tbody id="calender"></tbody>
+    </table>
+
+    <div id="modal-confirm-delete" class="modal fade">
+        <div class="modal-dialog modal-confirm">
+            <div class="modal-content">
+                <div class="modal-header flex-column">
+                    <div class="icon-box">
+                        <i class="fas fa-times"></i>
+                    </div>
+                    <h4 class="modal-title w-100">Are you sure?</h4>
+                    <!--                <a class="modal-close" data-dismiss="modal" aria-hidden="true">&times;</a>-->
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" class="slug">
+                    <input type="hidden" class="bentype">
+                    <p>Do you really want to delete ? This process cannot be undone.</p>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-secondary btn-modal-close" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger btn-del-ben">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block extra_script %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script src="{%static '/accounts/js/wSelect.min.js' %}"></script>
+<script>
+$('.sel-account').wSelect();
+
+
+$(document).on("change",".sel-account",function(){
+    $(".inp-action_type").val("gettransactiondetails")
+    var formData = $('.stmnt-form').serializeArray();
+    formData.push({ name: "from_page", value: 'customer_management' });
+    formData.push({ name: "slug", value: '{{request.GET.slug}}' });
+    $.ajax({
+        type:'POST',
+        url: '/statements',
+        data:formData,
+        success: function(result) {
+            $(".inp-action_type").val("gettransactionbyaccount")
+            $(".stmnt-table").replaceWith(result.statementtable_html)
+            if (result.record_status){
+                $(".btn-export-statement").each(function(){
+                    $(this).attr("disabled",false)
+                })
+            }else{
+                $(".btn-export-statement").each(function(){
+                    $(this).attr("disabled",true)
+                })
+            }
+            $(".span-account-balance").html(result.account_balance+" "+result.currency_code)
+    }});
+})
+
+$(document).on("click",".btn-page",function(){
+
+    next_page = $(this).attr("data-page-num")
+    var formData = $('.stmnt-form').serializeArray();
+    formData.push({ name: "page", value: next_page });
+    formData.push({ name: "action_type", value: "gettransactionbyaccount" });
+    formData.push({ name: "is_paginate", value: "true" });
+    $.ajax({
+        type:'POST',
+        url: '/statements',
+        data:formData,
+        success: function(result) {
+            $(".stmnt-table").replaceWith(result.statementtable_html)
+        }
+    })
+})
+$(document).on("click",".btn-export-statement",function(e){
+        e.preventDefault()
+        $(".inp-action_type").val("export_statement")
+        $(".export_type").val($(this).attr("data-attr"))
+        var formData = $('.stmnt-form').serializeArray();
+        $.ajax({
+            type:'POST',
+            url: '/statements',
+            data:formData,
+            success: function(result) {
+                $(".inp-action_type").val("gettransactionbyaccount")
+                if (result.status){
+                    filepath = result.filepath
+                    // create a tag
+                    var download_file = $("<a>");
+                    download_file.addClass("dwnld_file")
+                    download_file.attr("download", filepath);
+                    download_file.attr("href", filepath);
+                    $('body').append(download_file);
+                    download_file[0].click();
+                    // $('.dwnld_file').remove(); // remove tag once file downloaded
+                }
+            }
+        });
+})
+
+function submit_transactiondetails_form(form){
+
+    $(".inp-action_type").val("add_to_session")
+    var formData = $('.stmnt-form').serializeArray();
+    $.ajax({
+        type:'POST',
+        url: '/statements',
+        data:formData,
+        success: function(result) {
+            if (result.status){
+                $(".inp-action_type").val("gettransactionbyaccount")
+                }
+        }
+    })
+    const inp_csrf = document.createElement('INPUT');
+    inp_csrf.type = 'hidden';
+    inp_csrf.name = 'csrfmiddlewaretoken';
+    inp_csrf.value = '{{csrf_token}}';
+    form.appendChild(inp_csrf);
+    form.submit();
+}
+
+</script>
+{% endblock %}

@@ -1,0 +1,170 @@
+{% extends 'accounts/openaccount/personal-signup/reg-base.html' %}
+{% load static %}
+{% block style %}
+<style>
+    .personal-confirm-outer {
+        width: 610px;
+    }
+
+    .acc-det-body .acc-det-container .business-confirm-body .confirm-data-group .confirm-data-label {
+        font-weight: 700;
+        font-size: 15px;
+        color: #84878a;
+        display: block;
+    }
+
+    .acc-det-body .acc-det-container .business-confirm-body .confirm-data-group .confirm-data-value {
+        padding: 3px 0 10px;
+        font-weight: 700;
+        border-bottom: solid 1px #ececec;
+        font-size: 15px;
+        width: 100%;
+        color: #484a4c;
+    }
+</style>
+{% endblock %}
+{% block content %}
+<div class="container acc-det-container signup-confirm-container personal-confirm-outer">
+    <div class="acc-det business-confirm-body">
+        <div class="acc-det-logo signup-title-logo">
+            <a class="navbar-brand" href="">
+                <img src="{% static 'dash/assets/img/logo.svg' %}" alt="">
+            </a>
+        </div>
+        <div class="row signup-title-row">
+            <div class="col-md-8 col-12 signup-title-block">
+                <h2 style="font-size: 19px;" class="confirm-sub-title">Confirm your details</h2>
+            </div>
+            <div class="col-md-4 col-12 signup-title-block">
+                <a href="/register/personal" class="link-with-icn efct-txt-grn">
+                    <img class="anm-slide-lft" src="{% static 'dash/assets/img/pencil.png' %}" alt=""> Edit</a>
+            </div>
+            {% if message %}
+            <div class="alert-box-outer">
+                <div class="{% if status %}success-alert{% else %}section-alert{% endif %}" style="display: block;"
+                    id="alertDiv">
+                    <button class="{% if status %}success-alert-close{% else %}section-alert-close{% endif %}"
+                        onclick="closeAlertModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <p style="text-align: center" id="errorField">{{message}}</p>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        <div class="acc-det-body-content">
+            <div class="confirm-content-block">
+                <div class="row form-row-signup">
+                    <div class="col-12 confirm-data-group">
+                        <div class="confirm-data-label">
+                            First Name
+                        </div>
+                        <div class="confirm-data-value">
+                            {{firstName}}
+                        </div>
+                    </div>
+                    {% if middleName %}
+                    <div class="col-12 confirm-data-group">
+                        <div class="confirm-data-label">
+                            Middle Name
+                        </div>
+                        <div class="confirm-data-value">
+                            {{middleName}}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="row form-row-signup">
+                    <div class="col-12 confirm-data-group">
+                        <div class="confirm-data-label">
+                            Last Name
+                        </div>
+                        <div class="confirm-data-value">
+                            {{lastName}}
+                        </div>
+                    </div>
+                    <div class="col-12 confirm-data-group">
+                        <div class="confirm-data-label">
+                            Email
+                        </div>
+                        <div class="confirm-data-value">
+                            {{email}}
+                        </div>
+                    </div>
+                </div>
+                {% if request.session.personalInfo %}
+                <div class="row form-row-signup">
+                    <div class="col-12 confirm-data-group">
+                        <div class="confirm-data-label">
+                            1st Currency
+                        </div>
+                        <div class="confirm-data-value">
+                            <span class="confirm-currency">
+                                <img src="{% if first_currency.flag %}{{first_currency.flag.url}}{% else %}/other/no-image.jpg{% endif %}"
+                                    alt="">
+                                {{first_currency.name}} ({{first_currency.code}})
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-12 confirm-data-group">
+                        <div class="confirm-data-label">
+                            2nd Currency
+                        </div>
+                        <div class="confirm-data-value">
+                            <span class="confirm-currency"><img
+                                    src="{% if second_currency.flag %}{{second_currency.flag.url}}{% else %}/other/no-image.jpg{% endif %}"
+                                    alt="">
+                                {{second_currency.name}} ({{second_currency.code}})
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                {% elif request.session.personalInfoTemp %}
+                <!--  -->
+                <div class="row form-row-signup">
+                    <table class="table table" style="font-size:13px">
+                        <tbody>
+                            <tr style="font-weight: 700;font-size: 15px;color: #84878a;">
+                                <th>Sl.no</th>
+                                <th>Account No.</th>
+                                <th>Balance</th>
+                                <th>Currency</th>
+                            </tr>
+                            {% for account_list in account_lists %}
+                            <tr style="font-weight: 700;color: #484a4c;font-size: 15px;">
+                                <td>{{forloop.counter}}</td>
+                                <td>{{account_list.accnumber}}</td>
+                                <td> {{account_list.balance}}</td>
+                                <td>{{account_list.currency}}</td>
+                            </tr>
+                            {% endfor %}
+                            
+                        </tbody>
+                    </table>
+                </div>
+                <!--  -->
+                {% endif %}
+            </div>
+
+            <div class="acc-det-body-content acc-det-body-signup">
+                <form id="personalForm" name="personalForm" action="" method="post">
+                    {% csrf_token %}
+                    <div class="row form-row-signup form-row-signup-btn">
+                        <button class="btn btn-primary button-w signup-btn" id="signUpSubmit" type="submit">
+                            Finish
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="acc-det-footer">
+            <div class="acc-bnt-sec">
+                <a href="/login" class="acc-back-btn efct-link-dark">
+                    <img src="{% static 'dash/assets/img/arrow.png' %}" alt=""> Back to &nbsp;
+                    <span class="secondary-clr">Login</span></a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

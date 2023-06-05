@@ -1,0 +1,313 @@
+{% load static %}
+{% load util_tags %}
+<!doctype html>
+<html class="no-js" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <title>Entrebiz :: Transaction Invoice Statement</title>
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600&display=swap" rel="stylesheet">
+    <style>
+        .tr-total td {font-weight: 500;}
+.statement-table{
+    width:100%;
+}
+.statement-table td:nth-child(1) {
+
+  font-size:18px;
+  font-weight:500;
+  width:25%;
+}
+.statement-table td:nth-child(3) {
+    font-weight:normal;
+}
+
+.statement-table td{
+
+    width: 200px; padding: 3px 1px;  color: #696969; word-break: break-all;
+
+}
+.row{
+    display:flex;
+}
+
+.container-right{
+    width: 27%;
+    padding: 50px 0px 0px 120px;
+}
+.container-left{
+    width:60%;
+}
+.balance-amnt-content{
+    border: 2px solid #dfdfdf;
+    padding: 1px 1px 0px 30px;
+    color: #696969;
+}
+.p-amnt-label{
+    margin-bottom: 0px;
+}
+.p-amnt{
+        margin-top: 0px;
+    font-size: 25px;
+    font-weight: 600;
+    color: #26bc51;
+}
+.table-bordered {
+    border: 1px solid #ddd;
+}
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+.table-bordered tbody th{
+    border: 1px solid #ddd;
+}
+.table tbody tr th{
+        padding: 8px;
+    line-height: 1.42857143;
+    vertical-align: top;
+    border-top: 1px solid #ddd;
+
+}
+.table>tbody+tbody {
+    border-top: 2px solid #ddd;
+}
+.table-bordered tbody tr td{
+
+    border: 1px solid #ddd;
+    padding-left:10px;
+    padding-right:10px;
+
+}
+th{
+    background-color:#dddd;
+}
+    </style>
+</head>
+
+
+<body>
+<div class="container-fluid statement-outer-cover"
+     style="font-family: 'Poppins', sans-serif; box-sizing: border-box;">
+    <div class="container statement-container transaction-statement-container"
+         style="position: relative; width: 100%; padding: 35px 25px; overflow: hidden; z-index: 1; margin: auto; box-sizing: border-box;">
+        <div
+                style="position: absolute; left: 0; top: 0; z-index: -1; width: 100%; height: 100%; -webkit-transform: rotate(-35deg); -moz-transform: rotate(-35deg); -ms-transform: rotate(-35deg); -o-transform: rotate(-35deg); transform: rotate(-35deg); background: url(img/logo-statement.png); background-repeat: no-repeat; background-position: center center; background-size: 85%; opacity: .3;">
+        </div>
+        <div class="statement-header" style="border-bottom: solid 1px #eaeaea; box-sizing: border-box;">
+            <a href="#" style="display: inline-block; padding-bottom: 5px;">
+                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJQAAAA7CAYAAACddqPvAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA4FpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDYuMC1jMDAyIDc5LjE2NDQ4OCwgMjAyMC8wNy8xMC0yMjowNjo1MyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDplNjNmNWYyMC1kZjU4LTI0NGEtYjgwZS1lODJhNTI5ZWE4MmUiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6RDY3MTc2QTc4NDUzMTFFQzgwNDA4QzIwRUU2OEFDRUUiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6RDY3MTc2QTY4NDUzMTFFQzgwNDA4QzIwRUU2OEFDRUUiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIDIyLjAgKFdpbmRvd3MpIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6ODk5MTI0YjAtZDNjYS00YjQ5LWIyNzItOGQwNjRkZjI1ZTI5IiBzdFJlZjpkb2N1bWVudElEPSJhZG9iZTpkb2NpZDpwaG90b3Nob3A6Y2MyNTQ5YzYtYmEwYS1hYTQzLTk4ZmQtZDUz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"
+                     alt="" style="">
+            </a>
+        </div>
+        <div class="account-details-container"
+             style="padding-top: 15px; padding-bottom: 15px; overflow: hidden; box-sizing: border-box;">
+            <div class="row">
+                <div class="container-left" >
+                    <div class="account-details-content">
+                        <h1 style="font-family: 'Poppins', sans-serif; font-weight: 500; color: #24262c; font-weight: 500; margin-bottom: 0; margin-top: 0;">
+                            Statement</h1>
+                        <table class="statement-table transaction-statement-table">
+                    <tbody>
+                    <tr>
+                        <td style=""> Name
+                        </td>
+                        <td style="width:5px;font-weight:600;">:</td>
+                        <td style="">
+                            {% if account.user_account.customer.customertype == 1 %}
+                            {{account.user_account.firstname|default_if_none:''}} {{account.user_account.middlename|default_if_none:''}} {{account.user_account.lastname|default_if_none:''}}
+                            {% else %}
+                            {{ account.user_account.customer.bsnssdtls_cstmr.all.0.companyname|default_if_none:'' }}
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style=""> Email
+                        </td>
+                        <td style="width:5px;font-weight:600;">:</td>
+                        <td style="">
+                            {% if account.user_account.customer.customertype == 1 %}
+                            {{account.user_account.customer.user.email|default_if_none:''}}
+                            {% else %}
+                            {{ account.user_account.customer.bsnssdtls_cstmr.all.0.emailaddress|default_if_none:'' }}
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style=""> Address
+                        </td>
+                        <td style="width:5px;font-weight:600;">:</td>
+                        <td style="">
+                            {% if account.user_account.customer.customertype == 1 %}
+                            {{account.user_account.street_address|default_if_none:''}}
+                            {% else %}
+                            {{ account.user_account.customer.bsnssdtls_cstmr.all.0.address|default_if_none:'' }}
+                            {% endif %}
+                        </td>
+                    </tr>
+
+                        <td style=""> City
+                        </td>
+                        <td style="width:5px;font-weight:600;">:</td>
+                        <td style="">
+                            {% if account.user_account.customer.customertype == 1 %}
+                            {{account.user_account.city|default_if_none:''}}
+                            {% else %}
+                            {{ account.user_account.customer.bsnssdtls_cstmr.all.0.city|default_if_none:'' }}
+                            {% endif %}
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style=""> State
+                        </td>
+                        <td style="width:5px;font-weight:600;">:</td>
+                        <td style="">
+                            {% if account.user_account.customer.customertype == 1 %}
+                            {{account.user_account.region|default_if_none:''}}
+                            {% else %}
+                            {{ account.user_account.customer.bsnssdtls_cstmr.all.0.state|default_if_none:'' }}
+                            {% endif %}
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style=""> Country
+                        </td>
+                        <td style="width:5px;font-weight:600;">:</td>
+                        <td style="">
+                            {% if account.user_account.customer.customertype == 1 %}
+                            {{account.user_account.country.name|default_if_none:''}}
+                            {% else %}
+                            {{ account.user_account.customer.bsnssdtls_cstmr.all.0.country|default_if_none:'' }}
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% if account.user_account.customer.customertype == 1 %}
+                    <tr class="tr-total">
+                        <td style=""> Zipcode
+                        </td>
+                        <td style="width:5px;font-weight:600;">:</td>
+                        <td style="">
+                            {{account.user_account.zipcode|default_if_none:''}}
+                        </td>
+                    </tr>
+                     {% endif %}
+                    <tr>
+                        <td style=""> Account No
+                        </td>
+                        <td style="width:5px;font-weight:600;">:</td>
+                        <td style="font-weight:bold">
+                            {{account.accountno}} ({{account.currency.code}})
+                        </td>
+
+                    </tr>
+                    </tbody>
+                </table>
+                    </div>
+                </div>
+                <div class="container-right">
+                    <div class="balance-amnt-content">
+                        <p class="p-amnt-label">
+                            Closing Balance
+                        </p>
+                        <p class="p-amnt">
+                            {{account_balance}} {{account.currency.code}}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div style="text-align: center;">Account Statement from {{from_date|date:"d M Y"}} to {{to_date|date:"d M Y"}}</div>
+        <div class="account-statement-body"
+             style="box-sizing: border-box; width: 100%; border-top: solid 1px #eaeaea; padding-top: 15px;">
+            <div class="statement-table-container" style="box-sizing: border-box; padding-bottom: 15px;">
+
+                <table class="table table-bordered" style="width:100%;font-size: 12px;">
+                    <tr>
+                        <th>Date</th>
+                        <th>Type</th>
+                        <th>Details</th>
+                        <th>Withdrawals</th>
+                        <th>Deposits</th>
+                        <th>Balance</th>
+                    </tr>
+                    <tbody>
+                        {% for transaction in transactions %}
+                            {% get_beneficiary transaction as beneficiary %}
+                            {% get_transaction_type transaction as transactiontype %}
+                            {% get_debit_amount transaction as debit_amount %}
+                            {% is_debit_or_credit transaction account.accountno as debit_or_credit %}
+                            {% get_reference transaction as reference %}
+                            {% get_balance_amount transaction as balance_amount %}
+                                <tr>
+                                   <td>{{transaction.createdon|date:"M d Y"}}</td>
+                                   <td title="{{transaction.transactiontype.name}}">
+                                       {% if transactiontype == 'Acccount To Account Transfer' %}
+                                            ATAT
+                                       {% elif transactiontype == 'International Transfer' %}
+                                            International
+                                       {% elif transactiontype == 'International Transfer Fee' %}
+                                            International Fee
+                                       {% else %}
+                                       {{transactiontype}}
+                                       {% endif %}
+                                   {% if debit_or_credit == 'debit' %}
+                                       (Dr)
+                                       {% else %}
+                                       (Cr)
+                                       {% endif %}
+                                   </td>
+                                   <td class="stmt-td-det">
+
+                                        <b>Transaction No</b>: {{transaction.transactionno}}<br>
+                                        <b>Beneficiary Name</b>: {{beneficiary.name}}<br>
+                                         {% if reference %}<b>Ref</b>: {{reference}}{% endif %}
+                                   </td>
+                                   {% if debit_or_credit == 'debit' %}
+
+                                    <td class="textRight" style="color: red;">
+                                            <b>-{{debit_amount|floatformat:2}}</b>
+                                        </td>
+                                    <td></td>
+                                       <td class="textRight" style="color: {{balance_amount|to_color}};"><b>
+                                            {{balance_amount|floatformat:2|default_if_none:'-'}}
+                                   {% else %}
+                                           <td></td>
+                                        <td class="textRight" style="color: green;">
+                                            <b>+{{transaction.toamount|floatformat:2}}</b>
+                                        </td>
+
+                                       <td class="textRight" style="color: {{transaction.toaccountbalance|to_color}};"><b>
+                                            {{transaction.toaccountbalance|floatformat:2|default_if_none:'-'}}
+                                       {% endif %}
+                                       </b></td>
+                               </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6" style="text-align:center;">
+                                <span style="font-size:16px;">No records found</span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+
+            </div>
+        </div>
+
+        <div class="statement-footer footer-border"
+             style="text-align: center; box-sizing: border-box; color: #4c546d;  padding: 10px 10% 5px;">
+             <p style="font-family: 'Poppins', sans-serif; margin-bottom: 0;"> Entrebiz Pte. Ltd. is a company registered in Singapore with registered number 201802629R. Our registered office is at 60 PAYA LEBAR ROAD, #05-40B, PAYA LEBAR SQUARE, Singapore 409051.</p>
+            <p style="font-family: 'Poppins', sans-serif; margin-bottom: 0;">Copyright © {% now "Y" %} Entrebiz. All rights
+                reserved.</p>
+        </div>
+    </div>
+</div>
+</body>
+
+</html>

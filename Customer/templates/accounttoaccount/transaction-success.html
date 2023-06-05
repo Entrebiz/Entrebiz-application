@@ -1,0 +1,233 @@
+
+{% extends 'common/base.html' %}
+{% load static %}
+
+
+{% block content %}
+<main class="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg ">
+  
+   <div class="balance-cover  mx-4">
+      {% if messages %}
+      {% for message in messages %} 
+      <p id="otpMsg" {% if message.tags == "success" %} style="background-color: #d1e7de;color: green;padding: 10px;padding-left: 36%;margin-top: 10px;"
+      {% elif message.tags == 'error' %}style="background-color: #d1e7de;color: #a94442;padding: 10px;padding-left: 36%;margin-top: 10px;" {% endif %}>{{message}}  </p>
+      {% endfor %}
+      {% endif %} 
+      <div class="container-fluid py-5 ">
+            <div class="row" style="align-items: center;justify-content: center;">
+               <div class="col-lg-11 col-md-10 col-12">
+                  <div class="conversion-confirm-sec">
+                        <div class="">
+                           <div class="curr-conversion-sec">
+                              <div class="row curr-conversion-row m-0" style="justify-content: center;">
+                                    <div class="col-lg-8 col-md-10 col-12 curr-conversion-card">
+                                       <div class="confirm-title">
+                                          <img style="padding-left: 50%; padding-bottom: 9px;" src="{% static 'dash/assets/img/success-alert.png' %}" alt="">
+                                          <h3 style="text-align: center;">Transaction successfully completed</h3>
+                                       <p style="text-align: center;">Transaction No:&nbsp;{{request.session.accounttoaccounttransfer.transactionnumber}}</p>
+                                       <p style="text-align: center;">Date and Time:&nbsp;{{request.session.accounttoaccounttransfer.date_and_time}}</p>
+                                       <input type="hidden" id="transactionnumber" name="transactionnumber" value="{{request.session.accounttoaccounttransfer.transactionnumber}}">
+                                       <hr>
+                                       </div>
+                                       <div class="card-body px-0 pt-0 pb-2">
+                                       <div class="table-responsive p-0">
+                                          <table class="table align-items-center mb-3 table-borderless">
+                                             <tbody>
+                                             <tr>
+                                                <td>
+                                                   <div class="d-flex px-2 py-0">
+                                                   <div class="d-flex flex-column justify-content-center">
+                                                      <p class="mb-0 text-sm">Debit Account</p>
+                                                   </div>
+                                                   </div>
+                                                </td>
+                                                <td>
+                                                   <h6 class="mb-0 text-sm">&#58;&nbsp;{{ request.session.accounttoaccounttransfer.debit_account }} ({{ request.session.accounttoaccounttransfer.currency_code_debit }})</h6>
+                                                </td>
+                                             </tr>
+                                             <tr>
+                                                <td>
+                                                <div class="d-flex px-2 py-1">
+                                                   <div class="d-flex flex-column justify-content-center">
+                                                      <p class="mb-0 text-sm">Credit Account</p>
+                                                   </div>
+                                                </div>
+                                                </td>
+                                                <td>
+                                                <h6 class="mb-0 text-sm">&#58;&nbsp;{{ request.session.accounttoaccounttransfer.beneficiary_accountnumber }} ({{ request.session.accounttoaccounttransfer.currency_code_beneficiary }})</h6>
+                                                </td>
+                                             </tr>
+                                             {% if request.session.accounttoaccounttransfer.beneficiary_name %}
+                                             <tr>
+                                                <td>
+                                                <div class="d-flex px-2 py-1">
+                                                   <div class="d-flex flex-column justify-content-center">
+                                                      <p class="mb-0 text-sm">Beneficiary Name</p>
+                                                   </div>
+                                                </div>
+                                                </td>
+                                                <td>
+                                                <h6 class="mb-0 text-sm">&#58;&nbsp;{{ request.session.accounttoaccounttransfer.beneficiary_name }}</h6>
+                                                </td>
+                                             </tr>
+                                             {% endif %}
+                                             <tr>
+                                                <td>
+                                                <div class="d-flex px-2 py-1">
+                                                   <div class="d-flex flex-column justify-content-center">
+                                                      <p class="mb-0 text-sm">Net Amount</p>
+                                                   </div>
+                                                </div>
+                                                </td>
+                                                <td>
+                                                <h6 class="mb-0 text-sm">&#58;&nbsp;{{ request.session.accounttoaccounttransfer.amount }} {{ request.session.accounttoaccounttransfer.currency_code_debit }}</h6>
+                                                </td>
+                                             </tr>
+                                             <tr>
+                                             <td>
+                                                <div class="d-flex px-2 py-1">
+                                                   <div class="d-flex flex-column justify-content-center">
+                                                   <p class="mb-0 text-sm">Fee</p>
+                                                   </div>
+                                                </div>
+                                             </td>
+                                             <td>
+                                                <h6 class="mb-0 text-sm">&#58; {{ request.session.accounttoaccounttransfer.conversion_fee }} {{ request.session.accounttoaccounttransfer.currency_code_debit }}</h6>
+                                             </td>
+                                             </tr>
+                                             <tr>
+                                                <td>
+                                                <div class="d-flex px-2 py-1">
+                                                   <div class="d-flex flex-column justify-content-center">
+                                                      <p class="mb-0 text-sm">Debit Amount</p>
+                                                   </div>
+                                                </div>
+                                                </td>
+                                                <td>
+                                                <h6 class="mb-0 text-sm">&#58;&nbsp;{{ request.session.accounttoaccounttransfer.debit_amount }} {{ request.session.accounttoaccounttransfer.currency_code_debit }}</h6>
+                                                </td>
+                                             </tr>
+                                             <tr style="background-color: #e8f8ed;">
+                                                <td>
+                                                <div class="d-flex px-2 py-1">
+                                                   <div class="d-flex flex-column justify-content-center">
+                                                      <strong><h6 class="mb-0 text-sm">Credit Amount</h6></strong>
+                                                      
+                                                   </div>
+                                                </div>
+                                                </td>
+                                                <td>
+                                                   <strong><h6 class="mb-0 text-sm">&#58;&nbsp;{{ request.session.accounttoaccounttransfer.credit_amount }} {{ request.session.accounttoaccounttransfer.currency_code_beneficiary }}</h6></strong>
+                                                
+                                                </td>
+                                             </tr>
+                                             {% if request.session.accounttoaccounttransfer.note %}
+                                             <tr>
+                                                <td>
+                                                <div class="d-flex px-2 py-1">
+                                                   <div class="d-flex flex-column justify-content-center">
+                                                      <p class="mb-0 text-sm">Note</p>
+                                                   </div>
+                                                </div>
+                                                </td>
+                                                <td>
+                                                <h6 class="mb-0 text-sm">&#58;&nbsp;{{request.session.accounttoaccounttransfer.note}}</h6>
+                                                </td>
+                                             </tr>
+                                             {% endif %}
+                                             </tbody>
+                                          </table>
+                                          <!-- $$$$$$$$$$$$$$$$$$$$$$$/ -->
+                                          <div class="row confirm-btn-holder transactionSucessButton " id="transactionSucessButton">
+                                             <div class="col-sm-12" style="overflow-x: hidden;">
+                                                   <a href="/"
+                                                      class="btn btn-primary w-100"
+                                                      id="done">DONE
+                                                   </a>
+                                             </div>
+                                             
+                                             <div class="col-sm-12" style="overflow-x: hidden;">
+                                                   <a href="/transaction/acc/"
+                                                      class="btn w-100"
+                                                      id="another">
+                                                      <img src="{% static 'dash/assets/img/another.png' %}"
+                                                         alt=""> Another
+                                                      Transfer
+                                                   </a>
+                                             </div>
+                                             
+                                             <div id="download" class="col-sm-4">
+                                                   <a href="#" class="btn w-100 btn-download-pdf-acc"><img
+                                                         src="{% static 'dash/assets/img/pdf.png' %}">
+                                                      Download
+                                                   </a>
+                                             </div>
+                                             
+                                             <form id="mail" class="col-sm-4" method="post" action="{% url 'accSuccess'  request.session.token %}">
+                                                   {% csrf_token %}
+                                                   <input type="hidden" name="action_type" value="email_send">
+                                                   <button class="btn w-100" type="submit"><img src="{% static 'dash/assets/img/inbox-light.png' %}">
+                                                      Send Mail
+                                                   </button>
+                                             </form>
+                                             
+                                                <div id="" class="col-sm-4">
+                                                   <button class="btn w-100 btn-open-dlt-cnfrm-modal" style="padding: 3px;">
+                                                      <img src="{% static 'dash/assets/img/add.png' %}">
+                                                      Add as Beneficiary
+                                                   </button>
+                                                </div>
+                                                               
+                                                                  
+                                          </div>
+                                       <!-- 3333333333333333333 -->
+                                       </div>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+</main>
+{% include 'accounttoaccount/modal-add-as-beneficiary.html' %}
+{% endblock %}
+{% block extra_script %}
+<script>
+ setTimeout(() => {
+            document.getElementById('otpMsg').innerHTML = '';
+            document.getElementById('otpMsg').style.background = '#fff';
+        }, 5000);
+    
+
+        $(document).on("click",".btn-download-pdf-acc",function(){
+         
+         $.ajax({
+        type:'GET',
+        data:{
+        'export_pdf':"True"
+        },
+        success: function(response) {
+            filepath = response.filepath
+            // create a tag
+            var download_file = $("<a>");
+            download_file.addClass("dwnld_file")
+            download_file.attr("download", filepath);
+            download_file.attr("href", filepath);
+            $('body').append(download_file);
+            download_file[0].click();
+            // $('.dwnld_file').remove(); // remove tag once file downloaded
+        }
+    });
+})
+
+    $(document).on("click",".btn-open-dlt-cnfrm-modal",function(){
+            $("#modal-add-beneficiary").find(".accnt-id").val('{{request.session.accounttoaccounttransfer.beneficiary_accountnumber}}')
+            $("#modal-add-beneficiary").modal("show")
+    })
+</script>
+{% endblock %}
+

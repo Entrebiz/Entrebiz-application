@@ -1,0 +1,657 @@
+
+ {% extends 'common/base.html' %}
+ {% load static %}
+ {% load util_tags %}
+ {% block content %}
+
+<style>
+    .input-form-group{
+        margin-bottom: 10px;
+        padding-left: 0;
+        padding-right: 0;
+        -webkit-box-flex: 0;
+        flex: 0 0 58.333333%;
+        max-width: 58.333333%;
+    }
+    .confirm-btn-holder button {
+        min-height: 40px;
+        height: auto;
+        font-size: 14px;
+        margin-bottom: 10px;
+        background-color: #ff6600;
+        color: #fff;
+        text-transform: uppercase;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-position: center;
+        transition: background 0.8s;
+        box-shadow: none;
+        border-radius: 5px;
+        border: none;
+        -webkit-appearance: button;
+        cursor: pointer;
+        overflow: visible;
+    }
+    #documentStatus{
+        font-size: 14px;
+        color: #787a7c;
+        }
+    .custom-input-file{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 117px;
+        border: dashed 2px #f0f0f0;
+        background-color: #f8f9fa;
+        flex-direction: column;
+        position: relative;
+        cursor: pointer;
+        margin-bottom: 15px;
+    }
+    .sett-card-row{
+        margin: 0;
+        display: flex;
+        flex-wrap: wrap;
+        color: #586168;
+    
+    }
+
+    .m-0 {
+        margin: 0;
+    }
+    .row {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
+        margin-right: -15px;
+        margin-left: -15px;
+    }
+    *, *::before, *::after {
+        box-sizing: inherit;
+    }
+    * {
+        box-sizing: border-box;
+    }
+    
+    div {
+        display: block;
+    }
+    .tab-layout .tab-body-layout .tab-body-content-inner {
+        color: #586168;
+        background-color: #fff;
+    }
+
+    .h2{
+        margin-bottom: 0;
+        font-size: 16px;
+        font-family: "poppinsmedium";
+        font-weight: normal;
+        background-color: #fff;
+        z-index: 1;
+        display: inline-block;
+        padding-right: 20px;
+    }
+    .ripple-efct{
+        width: 240px;
+        height: 38px;
+        color: #fff;
+        text-transform: uppercase;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #ff6600;
+        background-position: center;
+        transition: background 0.8s;
+        box-shadow: none;
+        border-radius: 5px;
+        border: none;
+        -webkit-appearance: button;
+        cursor: pointer;
+        overflow: visible;
+        margin: 0;
+        -webkit-writing-mode: horizontal-tb !important;
+        text-rendering: auto;
+        letter-spacing: normal;
+        word-spacing: normal;
+        text-indent: 0px;
+        text-shadow: none;    text-align: center;padding: 1px 6px;
+    }
+    .rec-mny-card{
+        margin-bottom: 10px;
+        width: 380px;
+        max-width: 100%;
+        justify-content: flex-start;
+        height: auto;
+        min-height: 75px;
+        padding: 10px;
+        border: 1px solid #efefef;
+        display: flex;
+
+    }
+    .custom-input-file img {
+    width: auto;
+    max-width: 150px !important;
+    height: auto;
+    vertical-align: middle;
+    border: 0;
+    cursor: pointer;
+    }
+    .doc-upload-label {
+    
+        color: green !important;
+        font-size: 15px !important;
+        margin-top: 0px !important;
+        font-style: oblique !important;
+    }                                       
+    .validationClass{
+    padding: 8px 2px;
+    margin-left: 10px;
+    background: #fff;
+    background-size: 13px;
+    background-position: right 10px center;
+    border: solid 1px #ccc;
+    font-size: 15px;
+    color: #84878a;
+    flex: 0 0 41.666667%;
+    max-width: 43.666667%;
+    position: relative;
+    min-height: 1px;
+   }
+   .validationClass_input{
+    padding: 8px 15px;
+    margin-left: 10px;
+    background: #fff;
+    background-size: 13px;
+    background-position: right 10px center;
+    border: solid 1px #ccc;
+    font-size: 15px;
+    color: #84878a;
+    flex: 0 0 41.666667%;
+    max-width: 100%;
+    position: relative;
+    min-height: 1px;
+    border-radius: 5px;
+    
+   }
+   .validity{
+    max-width: 100%;
+   }
+   .button-w {
+    border-radius: 0px;
+    }
+</style>
+
+<div class=" balance-cover  mx-4 ">
+    <div class="row">
+        <div class=" balance-main">
+            {% if message %}
+            <div class="alert-box-outer" id="alert">
+                <div class="{% if status %}success-alert{% else %}section-alert{% endif %}" style="display: block;"
+                    id="alertDiv">
+                    <button class="{% if status %}success-alert-close{% else %}section-alert-close{% endif %}" onclick="closeAlertModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <p style="text-align: center" id="errorField">{{message}}</p>
+                </div>
+            </div>
+            {% endif %}
+            <div class="row">
+                <div class="form-group col-sm-7 col-12 plr-0">
+                    <label class="tab-title settings-inr-title" style="font-size: 15px;"> Id Verification<label>
+                </div>
+            </div>
+            <hr style="margin-top: -12px;">
+            <div class="tab-content-right">
+                <form role="form" id="uploadVerification" method="post" enctype="multipart/form-data"
+                        action="" onsubmit="return SubmitValidation()">
+                {% csrf_token %}
+                <input type="hidden" name='DocumentTypeId' id="documentId" value=""/>
+                <input type="hidden" name='editMode' id="editMode" value=""/>
+                <input type="hidden" name='VerificationType' id="VerificationType" value="1"/>
+                    <div class="tab-body-layout">
+                        <div class="tab-body-panel tabcontent" id="set_Address_Verification">
+                                
+                            
+                            <div class="tab-body-content-inner" style="min-height: 470px;color: #586168;background-color: #fff;margin-left: 40px;">
+                    
+
+                                <div class="set-verf-passport">
+                                    <div class="row file-upload-form sett-file-upload">
+                                        <div class="col-lg-4 col-md-12 col-12">
+                                            <div class="custom-input-file err-shw-inpfile" id="front">
+                                                
+
+                                                {% if customer_file_frontPage %}
+                                                <img src="" id="frontPage" class="imagLoad" alt="">
+                                                <label for="idImageFile0" id="idImageFile0-label">Front side of the doc uploaded.<br>Click here to upload again.</label>
+                                                <input type="file" class="idImageFile0"
+                                                name="frontPage" id="idImageFile0"  onchange="readImageURL(this)" value="" onclick="removeErrorfront(this)">
+                                                {% else %}
+                                                <img src="" id="frontPage" class="imagLoad" alt="">
+                                                <label for="idImageFile0" id="idImageFile0-label">Front side of the doc</label>
+                                                <input type="file" class="idImageFile0"  
+                                                name="frontPage" id="idImageFile0"  onchange="readImageURL(this)" onclick="removeErrorfront(this)">
+                                                {% endif %}
+
+                                                
+
+                                                
+                                            </div>
+
+                                            <label id="frontPage-label" class="doc-upload-label"></label>
+                                            <label id="err-front" style="color: red; font-size: small;"></label>
+                                            <div class="custom-input-file err-shw-inpfile" id="back">
+                                                
+                                                {% if customer_file_backPage %}
+                                                <img src="" id="backPage" class="imagLoad" alt="">
+                                                <label for="idImageFile1" id="idImageFile1-label" >Back side of the doc uploaded.<br>Click here to upload again.</label>
+                                                <input type="file" class="idImageFile1"
+                                                name="backPage" id="idImageFile1"  onchange="readImageURL(this)" value="" onclick="removeErrorback(this)">
+                                                {% else %}
+                                                <img src="" id="backPage" class="imagLoad" alt="">
+                                                <label for="idImageFile1" id="idImageFile1-label">Back side of the doc</label>
+                                                <input type="file" class="idImageFile1"
+                                                name="backPage" id="idImageFile1"  onchange="readImageURL(this)" onclick="removeErrorback(this)">
+                                                {% endif %}
+                                                
+
+                                                
+                                            </div>
+                                            <label id="backPage-label" class="doc-upload-label"></label>
+                                            <label id="err-back" style="color: red; font-size: small;"></label>
+                                            <div class="custom-input-file err-shw-inpfile" id="selfie">
+                                                
+
+                                                {% if customer_file_selfiePage %}
+                                                <img src="" id="selfiePage" class="imagLoad" alt="">
+                                                <label for="idImageFile2" id="idImageFile2-label">Selfie with doc uploaded.<br>Click here to upload again.</label>
+                                                <input type="file" class="idImageFile2"
+                                                name="selfiePage" id="idImageFile2"  onchange="readImageURL(this)" value="" onclick="removeErrorselfie(this)">
+                                                {% else %}
+                                                <img src="" id="selfiePage" class="imagLoad" alt="">
+                                                <label for="idImageFile2" id="idImageFile2-label">Selfie with doc</label>
+                                                <input type="file" class="idImageFile2"
+                                                name="selfiePage" id="idImageFile2"  onchange="readImageURL(this)" onclick="removeErrorselfie(this)">
+                                                {% endif %}
+
+                                                
+
+                                    
+                                            </div>
+                                            <label id="selfiePage-label" class="doc-upload-label"></label>
+                                            <label id="err-selfie" style="color: red; font-size: small;"></label>
+                                            <!--....-->
+                                            <div class="custom-input-file err-shw-inpfile" id="additional">
+                                                {% if customer_file_additionalPage %}
+                                                <img src="" id="additionalPage" class="imagLoad" alt="">
+                                                <label for="idImageFile3" id="idImageFile3-label">Additional document uploaded.<br>Click here to upload again.</label>
+                                                <input type="file" class="idImageFile3"
+                                                name="additionalPage" id="idImageFile3"  onchange="readImageURL(this)" value="" onclick="removeErroradditional(this)">
+                                                {% else %}
+                                                <img src="" id="additionalPage" class="imagLoad" alt="">
+                                                <label for="idImageFile3" id="idImageFile3-label">Additional document</label>
+                                                <input type="file" class="idImageFile3"
+                                                name="additionalPage" id="idImageFile3"  onchange="readImageURL(this)" onclick="removeErroradditional(this)">
+                                                {% endif %}
+
+                                            </div>
+                                            <label id="additionalPage-label" class="doc-upload-label"></label>
+                                            <label id="err-additional" style="color: red; font-size: small;"></label>
+                                            <!-- -->
+                                            <div class="col-md-10 col-12" id="formatType" style="display: block">
+                                                <label>Note:&nbsp;<br/>
+                                                <small>- Allowed Files :
+                                                    jpeg, jpg, pdf, tiff, png
+                                                </small>
+                                                <br/>
+                                                <small>- Maximum file size :
+                                                    10 MB
+                                                </small>
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-8 col-md-12 col-12 file-upload-form-rgt">
+
+                                            <div class="col-lg-7 plr-0 title-btn-rgt input-form-group">
+                                                <label for="idProof">Id Type</label>
+                                                <input type="hidden" value="" id="selectDocType">
+                                                {% if prev_id %}
+                                                <select name="idProof" id="idProof" class="select-list"
+                                                    style="width: 77%;height: 45px;" required>
+                                                    <option  disabled="" value="" selected="">-Select Id type-</option>
+                                                    {% if documenttypes %}
+                                                    {% for document in documenttypes %}
+                                                    <option validitytype="{{document.filesrequired}}" value="{{document.id}}" {% if prev_id == document.id %}selected{% endif %}> {{document.name}}</option>
+                                                    {% endfor %}
+                                                    {% endif %}
+                                                </select>
+                                                {% else %}
+                                                <select name="idProof" id="idProof" class="select-list"
+                                                    style="width: 77%;height: 45px;" required>
+                                                    <option  disabled="" value="" selected="">-Select Id type-</option>
+                                                    {% if documenttypes %}
+                                                    {% for document in documenttypes %}
+                                                    <option validitytype="{{document.filesrequired}}" value="{{document.id}}" {% if customer_doc.documenttype.name == document.name %}selected{% endif %}> {{document.name}}</option>
+                                                    {% endfor %}
+                                                    {% endif %}
+                                                </select>
+                                                {% endif %}
+                                            </div>
+
+                                            <div id="replace">
+                                                <!-- forms -->
+                                            </div>
+                                
+                                            <div class="form-group">
+                                                <button id="saveDetails" type="submit" style="margin-top: 17px;margin-left: 0px;"
+                                                    class="btn btn-primary button-w btn-edit-beneficiary w-40">
+                                                    <!-- <img src="{% static 'dash/assets/img/tick.png' %}" alt="">  -->
+                                                    Save Details
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="idcard" style="display: none;">
+    <div class="row persn-det-row sett-card-row m-0">
+        <div id="documentField">
+            <div class="persn-det-card rec-mny-card consum-num"
+                style="margin-left: -2%;margin-top: 3%;height: 95px;padding-left: 10px;padding: 5px;">
+                <div class="form-grp-edit input-form-group " style="width: 80%;">
+                
+                    <label for="docId">ID Card Number</label>
+                    <input type="hidden" id="docFieldId" name="doc_field_id" value="">
+                    <input type="hidden" id="check" name="check" value="ID Card">
+                    {% if prev %}
+                    <input type="text" maxlength="25" onkeypress="return restrictAlphabets(event)"
+                        id="docId" name="docId" class="form-control" onfocus="clearErrorMessage(this)"
+                        placeholder="Enter Id Card Number" value="{% if prev_id == 8 %}{{prev.docId}}{% else %}{% endif %}" onblur="formVerification(this)" required>
+                {% else %}
+                    <input type="text" maxlength="25" onkeypress="return restrictAlphabets(event)"
+                        id="docId" name="docId" class="form-control" onfocus="clearErrorMessage(this)"
+                        placeholder="Enter Id Card Number" value="{% if customer_document_type == 8 %}{{idproofnumber}}{% else %}{% endif %}" onblur="formVerification(this)" required>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="other" style="display: none;">
+    <div class="row persn-det-row sett-card-row m-0">
+        <div id="documentField">
+            <div class="persn-det-card rec-mny-card consum-num"
+                style="margin-left: -2%;margin-top: 3%;height: 95px;padding-left: 10px;padding: 5px;">
+                <div class="form-grp-edit input-form-group " style="width: 80%;">
+                
+                    <label for="docId">ID Proof Number</label>
+                    <input type="hidden" id="docFieldId" name="doc_field_id" value="">
+                    <input type="hidden" id="check" name="check" value="Other">
+                    {% if prev %}
+                    <input type="text" maxlength="25" onkeypress="return restrictAlphabets(event)"
+                        id="docId" name="docId" class="form-control" onfocus="clearErrorMessage(this)"
+                        placeholder="Enter Id Proof Number" value="{% if prev_id == 9 %}{{prev.docId}}{% else %}{% endif %}" onblur="formVerification(this)" required>
+                    {% else %}
+                    <input type="text" maxlength="25" onkeypress="return restrictAlphabets(event)"
+                        id="docId" name="docId" class="form-control" onfocus="clearErrorMessage(this)"
+                        placeholder="Enter Id Proof Number" value="{% if customer_document_type == 9 %}{{idproofnumber}}{% else %}{% endif %}" onblur="formVerification(this)" required>
+                    
+                {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="passport" style="display: none;">
+    {% include 'Idverification/passport.html' %}
+</div>
+<div id="license" style="display: none;">
+    {% include 'Idverification/license.html' %}
+</div>
+
+{% endblock %}
+
+{% block extra_script %}
+<script>
+
+
+
+function formVerification(){
+    if(document.getElementById("docId").value){
+        document_id = document.getElementById("idProof").value
+        if(document_id==2 || document_id==6){
+            
+            if(document.getElementById("idImageFile0").files.length == 0){
+                {% if not customer_file_frontPage %}
+                document.getElementById("front").style.borderColor = "red";
+                document.getElementById("err-front").innerHTML = "Front side of the doc is required.";
+                return false
+                {% else %}
+                return true
+                {% endif %}
+            
+            
+            }else if(document.getElementById("idImageFile1").files.length == 0){
+                {% if not customer_file_backPage %}
+                document.getElementById("back").style.borderColor = "red";
+                document.getElementById("err-back").innerHTML = "Back side of the doc is required.";
+                return false
+                {% else %}
+                return true
+                {% endif %}
+            
+            }else if (document.getElementById("idImageFile2").files.length == 0){
+                {% if not customer_file_selfiePage %}
+                document.getElementById("selfie").style.borderColor = "red";
+                document.getElementById("err-selfie").innerHTML = "Selfie with doc is required.";
+                return false
+                {% else %}
+                return true
+                {% endif %}
+            }else if(document.getElementById("month").value == "{{validity_month}}" || document.getElementById("month").value == "0"){
+                document.getElementById("month").style.borderColor = "red";
+                document.getElementById("year").style.borderColor = "red";
+                document.getElementById("err-month-year").innerHTML = "Validity is required";
+                return false
+            }else if(document.getElementById("year").value == "{{validity_year}}" || document.getElementById("year").value == "0"){
+                document.getElementById("month").style.borderColor = "red";
+                document.getElementById("year").style.borderColor = "red";
+                document.getElementById("err-month-year").innerHTML = "Validity is required";
+                return false
+            }
+            else{
+                document.getElementById("front").style.borderColor = "#f0f0f0";
+                document.getElementById("back").style.borderColor = "#f0f0f0";
+                document.getElementById("selfie").style.borderColor = "#f0f0f0";
+                document.getElementById("additional").style.borderColor = "#f0f0f0";
+                return true
+                
+            }
+        }else{
+            if(document.getElementById("idImageFile0").files.length == 0){
+                document.getElementById("front").style.borderColor = "red";
+                document.getElementById("err-front").innerHTML = "Front side of the doc is required.";
+                return false
+            }else if(document.getElementById("idImageFile1").files.length == 0){
+                document.getElementById("back").style.borderColor = "red";
+                document.getElementById("err-back").innerHTML = "Back side of the doc is required.";
+                return false
+            }else if (document.getElementById("idImageFile2").files.length == 0){
+                document.getElementById("selfie").style.borderColor = "red";
+                document.getElementById("err-selfie").innerHTML = "Selfie with doc is required.";
+                return false
+            }
+            else{
+                document.getElementById("front").style.borderColor = "#f0f0f0";
+                document.getElementById("back").style.borderColor = "#f0f0f0";
+                document.getElementById("selfie").style.borderColor = "#f0f0f0";
+                document.getElementById("additional").style.borderColor = "#f0f0f0";
+                return true
+            }
+
+        }
+    }
+
+
+
+}
+
+function SubmitValidation(){
+    if (document.getElementById("docId").value  == "{{idproofnumber}}"){
+        return true
+    }else{
+       result=formVerification();
+       return result
+    }
+}
+
+
+window.onload=function(){
+  if ($('#idProof').val()) {
+      var id = $('#idProof').val();
+      if (id==2){
+        $('#replace').html($('#passport').html());
+      }else if (id==6){
+    $('#replace').html($('#license').html());
+    }else if(id==8){
+    $('#replace').html($('#idcard').html());
+    }else{
+    $('#replace').html($('#other').html());
+    }
+    
+  }
+};
+
+$('select').on('change', function() {
+    var document_id = $(this).val();
+    if (document_id==2){
+    $('#replace').html($('#passport').html());
+    }else if (document_id==6){
+    $('#replace').html($('#license').html());
+    }else if(document_id==8){
+    $('#replace').html($('#idcard').html());
+    }else{
+    $('#replace').html($('#other').html());
+    }
+});
+
+setTimeout(() => {
+            document.getElementById('alert').innerHTML = '';
+        }, 5000);
+    
+
+   
+      
+
+function ValidateSize(file) {
+const FileSize = file.files[0].size / 1024 / 1024; // in MB
+// return FileSize <= 10;
+return true
+}
+
+
+function readImageURL(input) {
+    document.getElementById(`${input.id}-label`).style.display = 'none'
+	if (input && input.files && input.files.length) {
+        
+		const result = ValidateSize(input);
+		if (!result) {
+			document.getElementById(input.id).value = null;
+			document.getElementById(`${input.name}-label`).innerText = '';
+			if (!appData.idVerification || !appData.idVerification.documentfilesLength) {
+				document.getElementById(input.name).src = '/static/dash/assets/img/pdf2.png';
+				uploadIconShowAndHide(input, 'block');
+			} else {
+				showUploadedLabel(input, 'block');
+			}
+			showErrorMsg('Maximum file size allowed is 10 MB');
+		} else if (input.files && input.files[0]) {
+            const reader = new FileReader();
+			reader.onload = (e) => {
+				if (['application/pdf', 'application/wps-office.pdf'].includes(input.files[0].type)) {
+					document.getElementById(input.name).src = '/static/dash/assets/img/pdf2.png';
+					// '/assets/img/pdf2.png'
+				} else { 
+					document.getElementById(input.name).src = e.target.result;
+				}
+				uploadIconShowAndHide(input, 'none');
+			};
+			reader.readAsDataURL(input.files[0]);
+			document.getElementById(`${input.name}-label`).innerText = 'Document added.';
+		}
+	} else {
+		if (!appData.idVerification || !appData.idVerification.documentfilesLength) {
+			uploadIconShowAndHide(input, 'block');
+			document.getElementById(input.name).src = '/assets/img/upload.png';
+		} else {
+			document.getElementById(input.name).src = '';
+			showUploadedLabel(input, 'block');
+		}
+		document.getElementById(input.id).value = null;
+		document.getElementById(`${input.name}-label`).innerText = '';
+	}
+}
+function clearErrorMessage(elem) {
+	(document.getElementById(`err-${elem.id}`)) && document.getElementById(`err-${elem.id}`).remove();
+	if (elem.style.borderColor && elem.style.borderColor === 'red') {
+		elem.style.borderColor = null;
+	}
+}
+ function closeAlertModal(){
+     $(".alert-box-outer").hide()
+ }
+
+
+
+ function removeErrorfront(){
+    if(document.getElementById("front").style.borderColor === "red"){
+        document.getElementById("front").style.borderColor = "#f0f0f0";
+        document.getElementById("err-front").style.display = "none";
+    }
+
+}
+function removeErrorback(){
+    if(document.getElementById("back").style.borderColor === "red"){
+        document.getElementById("back").style.borderColor = "#f0f0f0";
+        document.getElementById("err-back").style.display = "none";
+    }
+
+}
+function removeErrorselfie(){
+    if(document.getElementById("selfie").style.borderColor === "red"){
+        document.getElementById("selfie").style.borderColor = "#f0f0f0";
+        document.getElementById("err-selfie").style.display = "none";
+    }
+
+}
+function removeErrormonth(){
+    if(document.getElementById("month").style.borderColor === "red"){
+        document.getElementById("month").style.borderColor = "#f0f0f0";
+        document.getElementById("err-month-year").style.display = "none";
+    }
+
+}
+function removeErroryear(){
+    if(document.getElementById("year").style.borderColor === "red"){
+        document.getElementById("year").style.borderColor = "#f0f0f0";
+        document.getElementById("err-month-year").style.display = "none";
+    }
+
+}
+</script>
+
+{% endblock %}

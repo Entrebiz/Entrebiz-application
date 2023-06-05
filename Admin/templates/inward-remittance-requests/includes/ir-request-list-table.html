@@ -1,0 +1,110 @@
+{% load util_tags %}
+<div class="tr-requests-content">
+    {% if inward_remittances %}
+<table class="table table-striped" style="font-size:13px">
+                <tbody>
+                    <tr>
+                        <th>Created On</th>
+                        <th>Sender Name</th>
+                        <th>Bank Name</th>
+                        <th>Receiver Account No.</th>
+                        <th>Amount</th>
+                        <th colspan="2">Action</th>
+                    </tr>
+
+                    {% for inward_remittance in inward_remittances %}
+
+                    <tr>
+                        <td>{{inward_remittance.createdon|date:'d M Y'}}</td>
+                        <td>{{inward_remittance.sendername|value_change}}</td>
+                        <td>{{inward_remittance.bank.bankname}}</td>
+                        <td>{{inward_remittance.receiveraccount.accountno}} <br> ({{inward_remittance.receiveraccount.currency.code}})</td>
+                        <td>{{inward_remittance.amount|floatformat:2}} {{inward_remittance.receiveraccount.currency.code}}</td>
+                        <td>
+                            <a href="/viewReceiveRequest?Id={{inward_remittance.slug}}&Type=1" class="btn-edit-ben"
+                                style="margin-right: 10px;">
+                                <i class="far fa-eye" style="
+    color: #586168;
+"></i></a>
+
+                            <a onclick="showModal('{{inward_remittance.slug}}','inward_remittance')" href="#"
+                                class="btn-open-hide-ben tab-actn-btn">
+                                <i class="far fa-trash-alt"></i></a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="8" style="text-align:center;font-size:20px;font-weight: 300;">No Records</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+    {% else %}
+        <table class="table table-striped" style="font-size:13px">
+                <tbody>
+                    <tr>
+                        <th>Created On</th>
+                        <th>Sender Name</th>
+                        <th>Sender Bank Name</th>
+                        <th>Account No.</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th colspan="2">Action</th>
+                    </tr>
+
+                    {% for inc_trace_payment in inc_trace_payments %}
+
+                    <tr>
+                        <td>{{inc_trace_payment.createdon|date:'d M Y'}}</td>
+                        <td>{{inc_trace_payment.sendername|value_change}}</td>
+                        <td>{{inc_trace_payment.senderbank|value_change}}</td>
+                        <td>{{inc_trace_payment.account.accountno}} <br> ({{inc_trace_payment.account.currency.code}})</td>
+                        <td>{{inc_trace_payment.amount|floatformat:2}} {{inc_trace_payment.currency.code}}</td>
+                        <td>{{inc_trace_payment.status}}</td>
+                        <td>
+                            <a href="/viewReceiveRequest?Id={{inc_trace_payment.slug}}&Type=2" class="btn-edit-ben"
+                                style="margin-right: 10px;">
+                                <i class="far fa-eye" style="
+    color: #586168;
+"></i></a>
+
+                            <a onclick="showModal('{{inc_trace_payment.slug}}','inc_trace_payment')" href="#"
+                                class="btn-open-hide-ben tab-actn-btn">
+                                <i class="far fa-trash-alt"></i></a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="8" style="text-align:center;font-size:20px;font-weight: 300;">No Records</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+    {% endif %}
+<div class="row" style="margin-top:15px;margin-bottom:20px;">
+                <div class="col-sm-12" style="text-align:center">
+                    <div class="pagination" style="">
+                  {% if paginate_data.has_other_pages %}
+                        {% if paginate_data.has_previous %}
+                          <a class="btn-page" data-page-num="{{ paginate_data.previous_page_number }}">&laquo;</a>
+                        {% else %}
+                          <a class="disabled"><span>&laquo;</span></a>
+                        {% endif %}
+                        {% for i in paginate_data.paginator.page_range %}
+                          {% if paginate_data.number == i %}
+                            <a data-page-num="{{ i }}" class="active">{{ i }}</a>
+                          {% else %}
+                            <a class="btn-page" data-page-num="{{ i }}">{{ i }}</a>
+                          {% endif %}
+                        {% endfor %}
+                        {% if paginate_data.has_next %}
+                          <a class="btn-page" data-page-num="{{ paginate_data.next_page_number }}">&raquo;</a>
+                        {% else %}
+                          <a class="disabled"><span>&raquo;</span></a>
+                        {% endif %}
+                    {% endif %}
+                </div>
+                </div>
+
+            </div>
+</div>

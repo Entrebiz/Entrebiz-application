@@ -1,0 +1,110 @@
+{% extends 'common/admin-base.html' %}
+{% load static %}
+{% load util_tags %}
+{% block css %}
+<style>
+    .details-content-holder {
+        display: flex;
+        align-items: flex-start;
+    }
+
+    .det-label {
+        color: #586168;
+        padding: 10px 10px;
+        min-width: 180px;
+        font-size: 15px;
+    }
+
+    .det-show {
+        padding: 8px 10px;
+        font-weight: 800;
+        color: #586168;
+    }
+</style>
+{% endblock %}
+{% block content %}
+<div class=" balance-cover  mx-4 " style="min-height: 450px;">
+    <div class="row">
+        <div class=" balance-main">
+            <div class="row">
+                <div class="form-group col-lg-6">
+                </div>
+                <div class="form-group col-lg-6">
+                    <a href="/inwardRemittancePending" style="float:right;padding: 0.75rem 1.5rem;"><i
+                            class="fa fa-solid fa-angle-left"></i>&nbsp;Back</a>
+                </div>
+            </div>
+            <!--  -->
+            <div class="row">
+                <div class="col-md-6 details-content-holder">
+                    <div class="det-label">
+                        Account Name
+                    </div>
+                    {% if inwardrem_tr.account.user_account.customer.customertype == 1 %}
+                    <div class="det-show">
+                        : {{inwardrem_tr.account.user_account.firstname}}
+                        {{inwardrem_tr.account.user_account.middlename|default_if_none:''}}
+                        {{inwardrem_tr.account.user_account.lastname}}
+                    </div>
+                    {% else %}
+                    <div class="det-show">
+                        : {{inwardrem_tr.account.user_account.customer|company_name}}
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="col-md-6 details-content-holder">
+                    <div class="det-label">
+                        Account No
+                    </div>
+                    <div class="det-show">
+                        : {{inwardrem_tr.account.accountno}}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 details-content-holder">
+                    <div class="det-label">
+                        Amount
+                    </div>
+                    <div class="det-show">
+                        : {{inwardrem_tr.amount|floatformat:2}}
+                    </div>
+                </div>
+                <div class="col-md-6 details-content-holder">
+                    <div class="det-label">
+                        Transaction Type
+                    </div>
+                    {% if inwardrem_tr.transactiontype.name == 'Inward Remittance' %}
+                    <div class="det-show">
+                        : Add Money
+                    </div>
+                    {% elif inwardrem_tr.transactiontype.name == 'Other Charges' %}
+                    <div class="det-show">
+                        : Add Charge
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 details-content-holder">
+                    <div class="det-label">
+                        Created On
+                    </div>
+                    <div class="det-show">
+                        : {{inwardrem_tr.createdon|date:"d M Y"}}
+                    </div>
+                </div>
+                <div class="col-md-12 details-content-holder">
+                    <div class="det-label">
+                        Comments
+                    </div>
+                    <div class="det-show" style="max-width: 500px;overflow-wrap: break-word;">
+                        :&nbsp{{inwardrem_tr.comment}}
+                    </div>
+                </div>
+            </div>
+            <!--  -->
+        </div>
+    </div>
+</div>
+{% endblock %}

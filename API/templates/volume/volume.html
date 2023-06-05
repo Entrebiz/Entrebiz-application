@@ -1,0 +1,83 @@
+{% extends 'common/admin-base.html' %}
+{% load static %}
+{% load util_tags %}
+{% block css %}
+<style>
+.dashbrd-card-inner {
+    min-height: 120px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #fff;
+    box-shadow: 1px 1px 2px 1px rgb(0 0 0 / 4%);
+}
+</style>
+{% endblock %}
+{% block content %}
+
+
+<div class=" balance-cover mx-4" style="min-height: 450px;">
+    <div class="row">
+        <div class=" balance-main">
+
+            <form action="/beneficiary/list/" method="POST" class="ben-list-form">
+                <div class="row">
+                    <div class="form-group col-lg-3">
+                        <label>From</label>
+                        <input id="text2" type="date" name="BookingDate" class="form-control" value="{{BookingDate}}">
+                    </div>
+                    <div class="form-group col-lg-3">
+                        <label>To</label>
+                        <input id="text2" type="date" name="BookingDate" class="form-control" value="{{BookingDate}}">
+                    </div>
+                    <div class="form-group col-lg-3">
+                        <label>Currency</label>
+                        <select id="selectAccount" name="FromAccount" class="custom-select select-list wSelect-el" >
+                            <option value="">Select Currency</option>
+                            
+                            
+                            <option data-icon="/uploads/currency/flags/US-32.png" value="4535340">
+                                4535340&nbsp;(USD)</option>
+                            
+                            
+                        </select>
+                    </div>
+                </div>
+            </form>
+            <!--  -->
+            <hr>
+            <h4 class="h4" style="font-size: 18px;margin: 0 0 0.7em;line-height: 1.2;font-weight: 700;">Total Volume of Business</h4>
+            <div class="row admn-dashboard-row m-0">
+                <div class="admn-dashbrd-card col-xl-3 col-sm-6">
+                    <div class="dashbrd-card-inner">
+                        <div class="content-cover">
+                            <p>Credit</p>
+                            <h2>1000</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="admn-dashbrd-card col-xl-3 col-sm-6">
+                    <div class="dashbrd-card-inner">
+                        <div class="content-cover">
+                            <p>Debit</p>
+                            <h2>8000</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="admn-dashbrd-card col-xl-3 col-sm-6">
+                    <div class="dashbrd-card-inner">
+                        <div class="content-cover">
+                            <p>Closing Balance</p>
+                            <h2>2000</h2>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!--  -->
+        </div>
+    </div>
+</div>
+{% endblock %}

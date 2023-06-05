@@ -1,0 +1,91 @@
+{% load static %}
+{% load util_tags %}
+<div class="customer-table">
+    <table class="table table-striped" style="font-size:13px">
+        <tbody>
+            <tr>
+                <th>Sl No</th>
+                <th>Customer Name</th>
+                <th>Email</th>
+                <th>Phone No</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+
+
+            {% for user_account in user_accounts %}
+            <tr>
+                <td>{{forloop.counter}}</td>
+                <td> <b>{{user_account.firstname}} {{user_account.middlename|default_if_none:''}}
+                        {{user_account.lastname}}</b>{{user_account|business_details}}</td>
+                <td>{{user_account.customer.user.email}}</td>
+                <td>{{user_account.phonenumber|default_if_none:'nil'}}</td>
+                {% if user_account.activestatus == 'Not Verified' %}
+                <td style="color: orange"><b>{{user_account.activestatus}}</b></td>
+                {% elif user_account.activestatus == 'Deactivated by UBO' %}
+                <td style="color: #586168"><b>{{user_account.activestatus}}</b></td>
+                {% elif user_account.activestatus == 'Verified' %}
+                <td style="color: green"><b>{{user_account.activestatus}}</b></td>
+                {% elif user_account.activestatus == 'Rejected' %}
+                <td style="color: red"><b>{{user_account.activestatus}}</b></td>
+                {% elif user_account.activestatus == 'Suspended' %}
+                <td style="color: red"><b>{{user_account.activestatus}}</b></td>
+                {% endif %}
+                <td>
+                    <a href="javascript:openInNewTab('/getCustomerDetails?slug={{user_account.slug}}');"
+                        class="btn-edit-ben" style="margin-right: 10px;">
+                        <i class="far fa-eye"></i></a>
+                    <a href=""
+                        onclick="return sendMailToCustomer({email:'{{user_account.customer.user.email}}'})"
+                        class="btn-edit-ben" style="margin-right: 10px;">
+                        <i class="far fa-envelope"></i></a>
+                    {% if user_account.islocked %}
+                    <a href="" class="btn-edit-ben" style="margin-right: 10px;"
+                        onclick="return changeUserLock(1,'{{user_account.customer.user.email}}')">
+                        <i class="far fa-lock-open"></i></a>
+                    {% else %}
+                    <a href="" class="btn-edit-ben" style="margin-right: 10px;"
+                        onclick="return changeUserLock(0,'{{user_account.customer.user.email}}')">
+                        <i class="far fa-lock"></i></a>
+                    {% endif %}
+                    <a onclick="return deleteConfirmation('{{user_account.id}}', '{{user_account.customer.user.email}}');"
+                        href="" class="btn-open-del-ben">
+                        <i class="far fa-trash-alt"></i></a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="8" style="text-align:center;font-size:20px;font-weight: 300;">No records found!
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <hr>
+    <div class="row" style="margin-top:15px;margin-bottom:20px;">
+        <div class="col-sm-12" style="text-align:center">
+            <div class="pagination" style="">
+                {% if user_accounts.has_other_pages %}
+                {% if user_accounts.has_previous %}
+                <a class="btn-page" data-page-num="{{ user_accounts.previous_page_number }}">&laquo;</a>
+                {% else %}
+                <a class="disabled"><span>&laquo;</span></a>
+                {% endif %}
+                {% for i in user_accounts.paginator.page_range %}
+                {% if user_accounts.number == i %}
+                <a data-page-num="{{ i }}" class="active">{{ i }}</a>
+                {% else %}
+                <a class="btn-page" data-page-num="{{ i }}">{{ i }}</a>
+                {% endif %}
+                {% endfor %}
+                {% if user_accounts.has_next %}
+                <a class="btn-page" data-page-num="{{ user_accounts.next_page_number }}">&raquo;</a>
+                {% else %}
+                <a class="disabled"><span>&raquo;</span></a>
+                {% endif %}
+                {% endif %}
+            </div>
+        </div>
+
+    </div>
+</div>

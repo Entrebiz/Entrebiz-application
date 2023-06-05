@@ -1,0 +1,360 @@
+{% load static %}
+{% load util_tags %}
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <link rel="apple-touch-icon" sizes="76x76" href="{% static 'dash/assets/img/apple-icon.png' %}">
+      <link rel="icon" type="image/png" href="{% static 'dash/assets/img/favicon.png' %}">
+      <title>
+         Dashboard
+      </title>
+      {% block css %}
+
+      {% endblock %}
+      <!--     Fonts and icons     -->
+        <link href="{% static 'fonts/assets/css/Open+Sans:300,400,500,600,700.css' %}" rel="stylesheet" />
+        <link href="{% static 'fonts/assets/css/Poppins.css' %}" rel='stylesheet'>
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap" rel="stylesheet">
+      <!-- Nucleo Icons -->
+      <link href="{% static 'dash/assets/css/nucleo-icons.css' %}" rel="stylesheet" />
+      <link href="{% static 'dash/assets/css/nucleo-svg.css' %}" rel="stylesheet" />
+      <!-- Font Awesome Icons -->
+      <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+      <link href="{% static 'dash/assets/css/nucleo-svg.css' %}" rel="stylesheet" />
+      <!-- CSS Files -->
+      <!-- <link rel="stylesheet" href="{% static 'dash/assets/css/bootstrap.min.css' %}"> -->
+      <link id="pagestyle" href="{% static 'dash/assets/css/soft-ui-dashboard.css' %}" rel="stylesheet" />
+      <link rel="stylesheet" type="text/css" href="{% static 'dash/assets/css/style.css' %}">
+      <link rel="stylesheet" type="text/css" href="{% static 'dash/assets/css/beneficiary.css' %}">
+      <!-- custome css file -->
+   <link rel="stylesheet" type="text/css" href="{% static 'dash/assets/css/custome.css' %}">
+   <link rel="stylesheet" type="text/css" href="{% static 'calendar/css/calendar.css' %}">
+   <link rel="stylesheet" type="text/css" href="{% static 'entrebiz-admin/assets/css/style.css' %}">
+
+   <style>
+      .active{
+         width: 100%;
+      }
+       .cust-footer{
+            position: fixed;
+    bottom: 0;
+    width: 100%;
+    padding-bottom:1em;
+    }
+    a{
+    color:#4078c0;
+    }
+    .footer a:hover{
+        color:#4078c0;
+    }
+    .main-content{
+        min-height: calc(157vh - 118px);
+    }
+    footer .container{
+        height: 50px;
+    }
+   </style>
+   </head>
+   <body class="g-sidenav-show  bg-gray-100">
+      <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 fixed-start ms-3 sidenav-cust" id="sidenav-main" style="">{% check_current_menu request.path as current_menu %}
+         <div class="sidenav-header">
+            <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
+            <a class="navbar-brand m-0" href="#" target="_blank">
+            <img src="{% static 'dash/assets/img/logo-ct.png' %}" class="navbar-brand-img h-100" alt="main_logo">
+            </a>
+         </div>
+         <hr class="horizontal dark mt-0">
+         <div class="collapse navbar-collapse  w-auto  max-height-vh-100 h-100" id="sidenav-collapse-main">
+            <ul class="navbar-nav">
+               <li class="nav-item">
+                  <a class="nav-link {% if request.path == '/ebzadmin/dashboard' %}active{% endif %}" href="/ebzadmin/dashboard">
+                     <!-- <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="fas fa-home fa-lg"></i>
+                     </div> -->
+                     <span class="nav-link-text ms-1">Dashboard</span><i class="fa-solid fa-circle-exclamation"></i>
+                  </a>
+               </li>
+               <li class="nav-item">
+                  <a class="nav-link {% if request.path == '/volume' %}active{% endif %}" href="/volume">
+                     <!-- <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="fas fa-redo-alt"></i>
+                     </div> -->
+                     <span class="nav-link-text ms-1">Volume</span>
+                  </a>
+               </li>
+               {% if request.user.adminacc_created_by.admin_level == 'Super Admin' %}
+               <li class="nav-item">
+                  <a class="nav-link  {% if '/adminUserManagement' in request.path or '/editAdminUser/' in request.path or '/addAdminUsers' in request.path %}active{% endif %}" href="/adminUserManagement">
+                     <!-- <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="fas fa-sync"></i>
+                     </div> -->
+                     <span class="nav-link-text ms-1">Admin User Management</span>
+                  </a>
+               </li>
+               {% endif %}
+               <li class="nav-item">
+                  <a class="nav-link {% if '/customerManagement' in request.path or '/getCustomerDetails' in request.path %}active{% endif %} " href="/customerManagement">
+                     <!-- <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="fas fa-exchange-alt"></i>
+                     </div> -->
+                     <span class="nav-link-text ms-1">Customer Management</span>
+                  </a>
+               </li>
+               <li class="nav-item">
+                  <a class="nav-link {% if '/bankManagement' in request.path or '/viewBank' in request.path or '/editBank' in request.path or '/addBank' in request.path %}active{% endif %}" href="/bankManagement">
+                     <!-- <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="fas fa-globe"></i>
+                     </div> -->
+                     <span class="nav-link-text ms-1">Bank Management</span>
+                  </a>
+               </li>
+               {% if request.user.adminacc_created_by.approval_level != 'Approver' %}
+               <li class="nav-item">
+                  <a class="nav-link {% if request.path == '/inwardRemittance' %}active{% endif %}" href="/inwardRemittance">
+                     <!-- <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="fas fa-check-square"></i>
+                     </div> -->
+                     <span class="nav-link-text ms-1">Inward Remittance</span>
+                  </a>
+               </li>
+               {% endif %}
+               {% if request.user.adminacc_created_by.approval_level == 'Inputter' %}
+               <li class="nav-item">
+                  <a class="nav-link {% if '/inwardRemittanceStatus' in request.path %}active{% endif %}" href="/inwardRemittanceStatus">
+                     <!-- <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="fas fa-clipboard-list"></i>
+                     </div> -->
+                     <span class="nav-link-text ms-1">Inward Remittance Status</span>
+                  </a>
+               </li>
+               {% endif %}
+               {% if request.user.adminacc_created_by.approval_level != 'Inputter' %}
+               <li class="nav-item">
+                  <a class="nav-link {% if '/inwardRemittancePending' in request.path %}active{% endif %}" href="/inwardRemittancePending">
+                     <!-- <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="fas fa-clipboard-list"></i>
+                     </div> -->
+                     <span class="nav-link-text ms-1">Inward Remittance Approval</span>
+                  </a>
+               </li>
+               {% endif %}
+               <li class="nav-item">
+                  <a class="nav-link {% if 'receiveMoneyRequest' in request.path or 'viewReceiveRequest' in request.path %}active{% endif %}" href="/receiveMoneyRequest">
+                     <!-- <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="fas fa-user-friends"></i>
+                     </div> -->
+                     <span class="nav-link-text ms-1">Inward Remittance Request</span>
+                  </a>
+               </li>
+               <li class="nav-item">
+                  <a class="nav-link {% if 'transactions' in request.path or request.path == '/getransactionDetails' %}active{% endif %}" href="/transactions">
+                     <!-- <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="fas fa-child"></i>
+                     </div> -->
+                     <span class="nav-link-text ms-1">International Wire Transfer Request</span>
+                  </a>
+               </li>
+               <li class="nav-item">
+                  <a class="nav-link  " href="#">
+                     <!-- <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                        <i class="fas fa-headset"></i>
+                     </div> -->
+                     <span class="nav-link-text ms-1">Cross Currency Report</span>
+                  </a>
+               </li>
+               <!-- <li class="nav-item">
+                <a class="nav-link  " href="#"> -->
+                   <!-- <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                      <i class="fas fa-headset"></i>
+                   </div> -->
+                   <!-- <span class="nav-link-text ms-1">Support Query Management</span>
+                </a>
+             </li> -->
+             <li class="nav-item">
+               <a class="nav-link {% if '/currencyManagement' in request.path %}active{% endif %} " href="/currencyManagement">
+                  <!-- <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                     <i class="fas fa-headset"></i>
+                  </div> -->
+                  <span class="nav-link-text ms-1">Currency Management</span>
+               </a>
+            </li>
+            </ul>
+         </div>
+      </aside>
+      <main class="main-content position-relative h-100 mt-1 border-radius-lg ">
+    <!-- Navbar -->
+    <nav class="navbar navbar-main navbar-expand-lg d-xl-none px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur" navbar-scroll="true">
+       <div class="container-fluid py-1 px-3">
+          <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
+             <ul class="navbar-nav  justify-content-end">
+                <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
+                   <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">
+                      <div class="sidenav-toggler-inner">
+                         <i class="sidenav-toggler-line"></i>
+                         <i class="sidenav-toggler-line"></i>
+                         <i class="sidenav-toggler-line"></i>
+                      </div>
+                   </a>
+                </li>
+             </ul>
+          </div>
+       </div>
+    </nav>
+    <div class="admin-navbar dashboard-top-nav">
+        <nav class="px-0 mx-4" style="margin-right: 1.5rem !important;">
+            <div class="container-fluid nav-cover navbar-row">
+          <div class="nav-collapse" id="User_Dropdown" style="">
+                <ul class="navbar-nav-top">
+                    <li>
+                        <div class="nav-verify">
+                                <div class="verify-content">
+                                    <p style="font-size: 14px;" class="v-label">{{request.user.adminacc_created_by.admin_level|default_if_none:''}}</p>
+                                        <p class="v-content" title="{{request.user.adminacc_created_by.firstname|default_if_none:''}} {{request.user.adminacc_created_by.middlename|default_if_none:''}} {{request.user.adminacc_created_by.lastname|default_if_none:''}}">{{request.user.adminacc_created_by.firstname|default_if_none:''}} {{request.user.adminacc_created_by.middlename|default_if_none:''}} {{request.user.adminacc_created_by.lastname|default_if_none:''}}</p>
+                                </div>
+                            </div>
+                    </li>
+                    <li>
+                        <a href="/logout" class="logout-btn" type="">
+                       <i class="fa fa-solid fa-power-off" style="margin-right:5px;"></i><span>Logout</span>
+                        </a>
+                        <div class="time-reminder justify-content-start" id="timerShow"></div>
+                    </li>
+                </ul>
+            </div>
+       </div>
+        </nav>
+    </div>
+   <div class="container-fluid " style="padding-left:40px;">
+<div class="row">
+<div class="col-lg-5">
+    <ol class="breadcrumb" style="background:none;">
+       <li class="breadcrumb-item"><a>Home / </a>
+      <!-- </li> -->
+       <!-- <li class="breadcrumb-item active"> -->
+
+            {% if request.path == '/ebzadmin/dashboard' %}
+                Dashboard
+            {% elif request.path == '/volume' %}
+                Volume 
+            {% elif request.path == '/adminUserManagement' or request.path == '/editAdminUser/' or request.path == '/addAdminUsers' %}
+               Admin User Management
+            {% elif request.path == '/bankManagement' or request.path == '/addBank' or request.path == '/viewBank' or request.path == '/editBank' %}
+               Bank Management
+            {% elif request.path == '/customerManagement' or request.path == '/getCustomerDetails' %}
+            Customer Management
+            {% elif request.path == '/getStatements' %}
+            Statements / Info
+            {% elif request.path == '/addReferral' %}
+            Referrals / add
+            {% elif request.path == '/transactions' or request.path == '/getransactionDetails' %}
+               International Wire Transfer Request
+            {% elif 'receiveMoneyRequest' in request.path or 'viewReceiveRequest' in request.path %}
+               Inward Remittance Request
+            {% elif request.path == '/currencyManagement' %}
+               Currency Management
+            {% elif '/inwardRemittance' == request.path %}
+               Inward Remittance
+            {% elif '/inwardRemittanceStatus' == request.path %}
+               Inward Remittance Status
+            {% elif '/inwardRemittancePending' == request.path %}
+            Inward Remittance Approval
+            {% endif %}
+       </li>
+  
+    </ol>
+<!--                <h5>Dashboard</h5>-->
+ </div>
+</div>
+</div>
+      {% block content %}
+
+      {% endblock %}
+      </main>
+
+      <!--   Core JS Files   -->
+      <script src="{% static 'dash/assets/js/core/popper.min.js' %}"></script>
+      <script src="{% static 'dash/assets/js/core/bootstrap.min.js' %}"></script>
+      <script src="{% static 'dash/assets/js/plugins/perfect-scrollbar.min.js' %}"></script>
+      <script src="{% static 'dash/assets/js/plugins/smooth-scrollbar.min.js' %}"></script>
+      <script src="{% static 'dash/assets/js/plugins/chartjs.min.js' %}"></script>
+      <script src="{% static 'calendar/js/calendar.js' %}"></script>
+      <script>
+      if(document.getElementById('resMsg')) {
+         document.getElementById('resMsg') && document.getElementById('resMsg').scrollIntoView();
+         setTimeout(() => {
+            document.getElementById('resMsg').style.display = "none";
+         }, 5000);
+     }
+         var win = navigator.platform.indexOf('Win') > -1;
+         if (win && document.querySelector('#sidenav-scrollbar')) {
+           var options = {
+             damping: '0.5'
+           }
+           Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+         }
+      </script>
+      <!-- custom validation jsFns -->
+   <script src="{% static 'dash/assets/js/validationFns.js' %}"></script>
+   <script src="{% static 'dash/assets/js/validation.js' %}"></script>
+      <!-- Github buttons -->
+      <script async defer src="https://buttons.github.io/buttons.js"></script>
+      <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
+      <script src="{% static 'assets/js/soft-ui-dashboard.min.js' %}"></script>
+      <script src="{% static 'dash/assets/js/jquery-3.5.1.slim.min.js' %}"></script>
+      <script src="{% static 'dash/assets/js/popper.min.js' %}"></script>
+      <script src="{% static 'dash/assets/js/bootstrap.min.js' %}" integrity="sha384-+YQ4JLhjyBLPDQt//I+STsc9iw4uQqACwlvpslubQzn4u2UU2UFM80nGisd026JF" crossorigin="anonymous"></script>
+   </body>
+</html>
+<script src="{% static 'dash/assets/js/jquery.min.js' %}"></script>
+<script src="{% static 'dash/assets/js/script.js' %}"></script>
+
+<script>
+
+  document.addEventListener("DOMContentLoaded", function(){
+   document.querySelectorAll('.nav-link').forEach(function(element){
+
+   element.addEventListener('click', function (e) {
+
+   let nextEl = element.nextElementSibling;
+   let parentEl  = element.parentElement;
+
+   if(nextEl) {
+       e.preventDefault();
+       let mycollapse = new bootstrap.Collapse(nextEl);
+
+       if(nextEl.classList.contains('show')){
+         mycollapse.hide();
+       } else {
+           mycollapse.show();
+           // find other submenus with class=show
+           var opened_submenu = parentEl.parentElement.querySelector('.submenu.show');
+           // if it exists, then close all of them
+           if(opened_submenu){
+             new bootstrap.Collapse(opened_submenu);
+           }
+       }
+   }
+   }); // addEventListener
+   }) // forEach
+   });
+   // DOMContentLoaded  end
+
+
+
+
+
+  // currency select
+
+
+
+</script>
+<script>
+      function closeAlertModal() {
+        $(".alert-box-outer").hide()
+    }
+</script>
+{% block extra_script %}
+{% endblock %}

@@ -1,0 +1,218 @@
+{% extends 'accounts/openaccount/personal-signup/reg-base.html' %}
+{% load static %}
+{% block style %}
+<style>
+    .p-details-header {
+        font-weight: 600;
+    }
+
+    .cust-row {}
+
+    .cust-col {
+        padding-top: 10px;
+        padding-bottom: 20px;
+        //border: 1px solid #efefef;
+    }
+
+    .input-edit {
+        display: block;
+        border: none;
+        border-bottom: solid 1px #ccc;
+        box-shadow: none;
+        width: 100%;
+        color: #84878a;
+    }
+
+    .input-edit:focus {
+        outline: 0;
+    }
+
+    .date-field-row {
+        display: flex;
+    }
+
+    .custom-select.day {
+
+        width: 30%;
+    }
+
+    .custom-select.month {
+        margin-left: 10px;
+        margin-right: 10px;
+        width: 30%;
+    }
+
+    .custom-select.year {
+        width: 40%;
+    }
+
+    .phnumber {
+        margin-right: 10px;
+        width: 30%;
+    }
+
+
+    .btn-back {
+        float: right;
+        padding: 0.75rem 1.5rem;
+        border: none;
+        box-shadow: none;
+        font-size: 15px;
+        margin-bottom: 0;
+    }
+
+    .btn-back:hover {
+        transform: none !important;
+        box-shadow: none !important;
+        color: #99a0af;
+    }
+</style>
+{% endblock %}
+{% block content %}
+<div class="container acc-det-container signup-confirm-container personal-confirm-container acc-det-lg">
+    <div class="acc-det business-confirm-body">
+        <div class="signup-title-row personal-confirm-title-row">
+            <div class="row">
+                <div class="col-md-8 col-12 signup-title-block">
+                    <h2 class="confirm-sub-title">Confirm Personal Details</h2>
+                </div>
+                <div class="col-md-4 col-12 signup-title-block">
+                    <form method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="goto_edit">
+                        <button type="submit" class="btn btn-back" style="float:right;padding: 0.75rem 1.5rem;"><i class="fa fa-solid fa-angle-left"></i>&nbspBack</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="acc-det-body-content sett-confirmation-outer">
+            <div class="confirm-content-block">
+                <form method="POST" class="ed-details-form">
+                    {% csrf_token %}
+                    <input type="hidden"  name="page" value="1">
+                    <div class="row cust-row">
+                        <div class="col-sm-6 cust-col">
+                            <div class="form-grp-edit">
+                                <label>First Name</label>
+                                <input type="text" name="firstname" value="{{firstname|default_if_none:''}}"
+                                    class="input-edit" required="" readonly="" style="cursor: default;">
+                            </div>
+                        </div>
+                        <div class="col-sm-6 cust-col">
+                            <div class="form-grp-edit">
+                                <label>Middle Name</label>
+                                <input type="text" name="middlename" value="{{middlename|default_if_none:''}}"
+                                    class="input-edit" required="" readonly="" style="cursor: default;">
+                            </div>
+                        </div>
+                    </div>
+                    <!--row1-->
+                    <div class="row cust-row">
+                        <div class="col-sm-6 cust-col">
+                            <div class="form-grp-edit">
+                                <label>Last Name</label>
+                                <input type="text" name="lastname" value="{{lastname|default_if_none:''}}"
+                                    class="input-edit" required="" readonly="" style="cursor: default;">
+                            </div>
+                        </div>
+                        <div class="col-sm-6 cust-col">
+                            <div class="form-grp-edit">
+                                <label>Email</label>
+                                <input type="text" name="email" value="{{email|default_if_none:''}}" class="input-edit"
+                                    required="" readonly="" style="cursor: default;">
+                            </div>
+                        </div>
+                    </div>
+                    <!--row2-->
+                    <div class="row cust-row">
+                        <div class="col-sm-6 cust-col">
+                            <div class="form-grp-edit">
+                                <label>Date of Birth</label>
+                                <input type="hidden" name="dateofbirth" value="{{dateofbirth|date:'d-m-Y'}}">
+                                <input type="text" name="" value="{{dateofbirth|date:'d M Y'}}" class="input-edit"
+                                    required="" readonly="" style="cursor: default;">
+                            </div>
+                        </div>
+                        <div class="col-sm-6 cust-col">
+                            <div class="form-grp-edit">
+                                <label>Street Address</label>
+                                <input type="text" name="street_address" value="{{street_address|default_if_none:''}}"
+                                    class="input-edit" required="" readonly="" style="cursor: default;">
+                            </div>
+                        </div>
+                    </div>
+                    <!--row3-->
+                    <div class="row cust-row">
+                        <div class="col-sm-6 cust-col">
+                            <div class="form-grp-edit">
+                                <label>City</label>
+                                <input type="text" name="city" value="{{city|default_if_none:''}}" class="input-edit"
+                                    required="" readonly="" style="cursor: default;">
+                            </div>
+                        </div>
+                        <div class="col-sm-6 cust-col">
+                            <div class="form-grp-edit">
+                                <label>State / Region</label>
+                                <input type="text" name="region" value="{{region|default_if_none:''}}"
+                                    class="input-edit" required="" readonly="" style="cursor: default;">
+                            </div>
+                        </div>
+                    </div>
+                    <!--row4-->
+                    <div class="row cust-row">
+                        <div class="col-sm-6 cust-col">
+                            <div class="form-grp-edit">
+                                <label>Zip Code</label>
+                                <input type="text" name="zipcode" value="{{zipcode|default_if_none:''}}"
+                                    class="input-edit" required="" readonly="" style="cursor: default;">
+                            </div>
+                        </div>
+                        <div class="col-sm-6 cust-col">
+                            <div class="form-grp-edit">
+                                <label>Phone Number</label>
+                                <div class="date-field-row">
+
+                                    <input type="text" name="phonenumber"
+                                        value="{{countrycode|default_if_none:''}} {{phonenumber|default_if_none:''}}"
+                                        class="input-edit" required="" style="" readonly="">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--row5-->
+                    <div class="row cust-row">
+                        <div class="col-sm-6 cust-col">
+                            <div class="form-grp-edit">
+                                <label>Country Of Residence</label>
+                                <!--                        <input type="text" name="country" value="{{user_account.country.name|default_if_none:''}}" class="input-edit form-control" required=""-->
+                                <!--                               style="cursor: default;">-->
+                                <input type="text" name="country" value="{{country|default_if_none:''}}"
+                                    class="input-edit" required="" style="" readonly="">
+                            </div>
+                        </div>
+                        <div class="col-sm-6 cust-col">
+                            <div class="form-grp-edit">
+                                <label>Nationality</label>
+                                <!--                        <input type="text" name="nationality" value="{{user_account.nationality.name|default_if_none:''}}" class="input-edit form-control" required=""-->
+                                <!--                               style="cursor: default;">-->
+
+                                <input type="text" name="nationality" value="{{nationality|default_if_none:''}}"
+                                    class="input-edit" required="" style="" readonly="">
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <!--row6-->
+                    <div class="row">
+                        <div class="row confirm-btn-container confirm-btn-container-sm">
+                            <button class="btn btn-primary button-w signup-btn ripple-efct" style="font-size: 0.75rem;" type="submit">Save</button>
+                        </div>
+                    </div>
+                    <!--row7-->
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,75 @@
+{% extends 'common/base.html' %}
+{% load static %}
+{% load util_tags %}
+{% block css %}
+<style>
+    .beneficiary-listing-table th {
+        padding: 10px 5px !important;
+        font-size: 14px;
+        word-break: break-all;
+        border-bottom: 1px solid #efefef;
+        color: #586168;
+        border-right: 1px solid #efefef;
+    }
+
+    .beneficiary-listing-table td {
+        font-size: 14px;
+        word-break: break-word;
+        color: #586168;
+        border-color: #efefef;
+        border-bottom: 1px solid #efefef;
+    }
+
+    .table tbody tr:last-child td {
+        border-bottom-width: 1px !important;
+    }
+</style>
+{% endblock %}
+{% block content %}
+<main class="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg ">
+    <div class=" balance-cover  mx-4 " style="min-height: 450px;">
+        <div class="row">
+            <div class=" balance-main">
+                <table class="table beneficiary-listing-table user-details-table" style="font-size:13px">
+                    <tbody>
+                        <tr>
+                            <th style="width: 80px">Sl No</th>
+                            <th>Company Name</th>
+                            <th>Email</th>
+                            <th>Primary Balance</th>
+                            <th>Secondary Balance</th>
+                        </tr>
+                        {% for referee in referees %}
+                        <tr>
+                            <td>{{forloop.counter}}</td>
+                            
+                            {% if referee.customer.customertype == 1 %}
+                            <td>-</td>
+                            {% else %}
+                            <td>{{referee.customer|company_name}}</td>
+                            {% endif %}
+                            <td>{{referee.customer.user.email}}</td>
+                                {% if referee.added_by %}
+                                {% refferal_accounts referee.added_by.useracc_customer.all.0.accnt_usr_accnt.all 1 as primary_balance %}
+                                {% refferal_accounts referee.added_by.useracc_customer.all.0.accnt_usr_accnt.all 2 as secondary_balance %}
+                                <td style="font-weight: bold;color: {{primary_balance|to_color}};">{{primary_balance|floatformat:2}} {% refferal_accounts referee.added_by.useracc_customer.all.0.accnt_usr_accnt.all 1 True %}</td>
+                                <td style="font-weight: bold;color: {{secondary_balance|to_color}};">{{secondary_balance|floatformat:2}} {% refferal_accounts referee.added_by.useracc_customer.all.0.accnt_usr_accnt.all 2 True %} </td>
+                                {% else %}
+                                {% refferal_accounts referee.accnt_usr_accnt.all 1 as primary_balance %}
+                                {% refferal_accounts referee.accnt_usr_accnt.all 2 as secondary_balance %}
+                                <td style="font-weight: bold;color: {{primary_balance|to_color}};">{{primary_balance|floatformat:2}} {% refferal_accounts referee.accnt_usr_accnt.all 1 True %}</td>
+                                <td style="font-weight: bold;color: {{secondary_balance|to_color}};">{{secondary_balance|floatformat:2}} {% refferal_accounts referee.accnt_usr_accnt.all 2 True %}</td>
+                                {% endif %}
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="8" style="text-align:center;font-size:20px;font-weight: 300;">No Records</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}

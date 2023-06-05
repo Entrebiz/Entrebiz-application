@@ -1,0 +1,296 @@
+{% extends 'accounts/openaccount/personal-signup/reg-base.html' %}
+{% load static %}
+{% block content %}
+<div class="container acc-det-container acc-det-lg">
+    <div class="acc-det">
+        <div class="acc-det-logo signup-title-logo">
+            <a class="navbar-brand" href="">
+                <img src="{% static 'dash/assets/img/logo.svg' %}" alt="">
+            </a>
+        </div>
+        {% if message %}
+        <div class="alert-box-outer">
+            <div class="{% if status %}success-alert{% else %}section-alert{% endif %}" style="display: block;"
+                id="alertDiv">
+                <button class="{% if status %}success-alert-close{% else %}section-alert-close{% endif %}"
+                    onclick="closeAlertModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+                <p style="text-align: center" id="errorField">{{message}}</p>
+            </div>
+        </div>
+        {% endif %}
+        <div class="row signup-title-row">
+            <div class="col-sm-7 col-12 signup-title-block">
+                <h2 class="signup-title">Sign up now</h2>
+            </div>
+            <div class="col-sm-5 col-12 signup-title-block">
+                <a href="/login" class="link-with-icn efct-txt-grn">
+                    <img class="anm-slide-lft" src="{% static 'dash/assets/img/arrow-lft.png' %}" alt="" />
+                    Back to Login
+                </a>
+            </div>
+        </div>
+        <div class="acc-det-body-content acc-det-body-signup">
+            <form id="personalForm" name="personalForm" action="" method="post"
+                onsubmit="return validateForm('personalForm', 'form')">
+                {% csrf_token %}
+                <input type="hidden" name="accountType" value="personal">
+
+                <div class="row form-row-signup">
+                    <div class="col-md-6 col-12 form-group">
+                        <label for="firstName">First Name</label>
+                        <input type="text" name="firstName" id="firstName" maxlength="50" value="{{firstName}}"
+                            class="form-control" onkeypress="return signUpFieldValidate(event)" autocomplete="off"
+                            onblur="return signUpFieldValidateOnchange(this)" placeholder="Enter Your First Name"
+                            minlength="3">
+                    </div>
+                    <div class="col-md-6 col-12 form-group">
+                        <label for="middleName">Middle Name&nbsp;<span class="input-optional">(optional)</span></label>
+                        <input type="text" name="middleName" id="middleName" maxlength="50" value="{{middleName}}"
+                            class="form-control" onkeypress="return signUpFieldValidate(event)" autocomplete="off"
+                            onblur="return signUpFieldValidateOnchange(this)" placeholder="Enter Your Middle Name">
+                    </div>
+                </div>
+                <div class="row form-row-signup">
+                    <div class="col-md-6 col-12 form-group">
+                        <label for="lastName">Last Name</label>
+                        <input type="text" name="lastName" id="lastName" maxlength="50" value="{{lastName}}"
+                            class="form-control" onkeypress="return signUpFieldValidate(event)" autocomplete="off"
+                            onblur="return signUpFieldValidateOnchange(this)" placeholder="Enter Your Last Name">
+                    </div>
+                    <div class="col-md-6 col-12 form-group">
+                        <label for="email">Email</label>
+                        <input type="email" name="email" id="email" value="{{email}}" maxlength="50"
+                            class="form-control" onkeypress="return signUpFieldValidate(event)" autocomplete="off"
+                            onblur="return signUpFieldValidateOnchange(this)" placeholder="Enter Your Email">
+                    </div>
+                </div>
+                <p>
+                    <input type="checkbox" name="accountcheck" id="accountcheck" {% if accountcheck %}checked{% endif %} style="transform: scale(1.3);">
+                    <label for="accountcheck">Already have account?</label>
+                </p>
+                {% if account_lists %}
+                <div class="details-body-sec">
+                    <input type="hidden" name="acc_type" value="for_exist_acc">
+                    <div class="details-body-sub-block details-body-inner">
+                        <div class="title-content-skip">
+                            <div class="row title-skip-row title-brdr m-0">
+                                <div class="col-12 title-block">
+                                    <h2 class="header">Currency</h2>
+                                    <p>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row bus-det-curncy-form">
+                            {% for account_list in account_lists %}
+                            {% if forloop.counter == 1 %}
+                            <label for="" style="color: black;">Primary Account</label>
+                            {% elif forloop.counter == 2 %}
+                            <label for="" style="color: black;">Secondary Account</label>
+                            {% endif %}
+                            <div class="form-group col-lg-4 inp-{{forloop.counter}}" data-id="{{forloop.counter}}">
+                                <label for="accnumber">Account No.</label>
+                                <input type="text" name="accnumber" id="accnumber" maxlength="50" value="{{account_list.accnumber}}"
+                                    class="form-control accInfo inp-acc" onkeypress="return restrictAmount(event)" autocomplete="off"
+                                    onblur="return signUpFieldValidateOnchange(this)" placeholder="Enter Your Account No."
+                                    minlength="3">
+                            </div>
+                
+                            <div class="form-group col-lg-4 inp-{{forloop.counter}}" data-id="{{forloop.counter}}">
+                                <label for="balance">Balance</label>
+                                <input type="text" name="balance" id="balance" maxlength="50" value="{{account_list.balance}}"
+                                    class="form-control accInfo" onkeypress="return restrictAmount(event)" autocomplete="off"
+                                    onblur="return signUpFieldValidateOnchange(this)" placeholder="Enter Account Balance">
+                            </div>
+                            <div class="form-group col-lg-4 inp-{{forloop.counter}}" data-id="{{forloop.counter}}">
+                                <label for="currency">Currency</label>
+                                <select id="currency" name="currency" class="custom-select select-list accInfo inp-curr" required>
+                                    <option value="">Select Currency</option>
+                                    {% for currency in currencies %}
+                                    <option value="{{currency.code}}" {% if account_list.currency == currency.code %}selected{% endif %}>
+                                        {{currency.code}} {{currency.name}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            {% if forloop.counter > 2 %}
+                            <div class="col-12 inp-{{forloop.counter}}" data-id="{{forloop.counter}}"><button class="btn-default del-btn" type="button" id="removeUserBtn1"
+                                    onclick='return removeAccount("{{forloop.counter}}");'><img src="{% static 'dash/assets/img/delete.png' %}" alt="">
+                                    Delete</button></div>
+                            {% endif %}
+                            {% endfor %}
+                        </div>
+                        <div style="text-align: right;">
+                            <button class="btn btn-primary button-w btn-ap-accnt-list" type="button" id="CloneBtn"><i
+                                    class="fa fa-solid fa-plus"></i>&nbsp;Add More Accounts </button>
+                        </div>
+
+                    </div>
+                </div>
+                {% else %}
+                {% include 'accounts/openaccount/personal-signup/new-acc.html' %}
+                {% endif %}
+                <p style="margin-left: 28%;margin-bottom: 5px;">
+                    <input type="checkbox" name="termsConditions" id="terms-checkbox" style="transform: scale(1.3);">
+                    <label>I accept</label>
+                    <a href="" target="_blank" title="Click to see the terms and conditions" class="terms-accpt">
+                        <label style="cursor: pointer;color: #4078c0;">terms & conditions</label>
+                    </a>
+                    <label>and</label>
+                    <a target="_blank" href="" title="Click to see the privacy policy" class="terms-accpt">
+                        <label style="cursor: pointer;color: #4078c0;">privacy policy</label>
+                    </a>
+                </p>
+                <div class="row form-row-signup form-row-signup-btn">
+
+                    <button class="btn btn-primary button-w signup-btn" id="signUpSubmit" type="submit">
+                        Sign Up
+                    </button>
+                </div>
+            </form>
+        </div>
+        <div class="acc-det-footer">
+            <div class="acc-bnt-sec">
+                <a href="/" class="acc-back-btn efct-link-dark"><img src="{% static 'dash/assets/img/arrow.png' %}"
+                        alt="">
+                    Back to
+                    &nbsp;
+                    <span class="secondary-clr">Home</span></a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block script %}
+<script>
+    $('#secondaryCurrency').wSelect();
+    $('#primaryCurrency').wSelect();
+    $('#currency').wSelect();
+    $(document).ready(function () {
+        $('#signUpSubmit').on('click', function () {
+            if ($('#terms-checkbox').is(':checked')) {
+                $('#signUpSubmit').removeAttr('disabled');
+            }
+            else {
+                $('#signUpSubmit').attr('disabled', 'disabled');
+            }
+        })
+        $('#terms-checkbox').on('change', function () {
+            if ($(this).is(':checked')) {
+                $('#signUpSubmit').removeAttr('disabled');
+            }
+        })
+        // 
+        $('#accountcheck').on('change', function () {
+            var val = 0
+            if ($(this).is(':checked')) {
+                val = 1
+            } else {
+                val = 0
+            }
+            $.post('/curr-acc',
+                {
+                    'val': val,
+                    'csrfmiddlewaretoken': '{{ csrf_token }}',
+                },
+                function (data, status) {
+                    $(".details-body-sec").replaceWith(data.curr_acc);
+                });
+        });
+        $(document).on("click", ".btn-ap-accnt-list", function () {
+            appendToAccountList()
+        })
+        function appendToAccountList() {
+            if (validateForm('accInfo', 'class')) {
+
+                var ids = [];
+                $(".bus-det-curncy-form").find(".form-group").each(function () {
+                    var id = $(this).attr("data-id")
+                    ids.push(parseInt(id))
+                })
+                let uniqueIds = [...new Set(ids)];
+                var total_acc = $('.inp-acc').length;
+                var acc_flag = false
+                $('.inp-acc').each(function (index) {
+                    if (index === total_acc - 1) {
+                        acc_flag = accountCheck(this)
+                    }
+                })
+                var total_curr = $('.inp-acc').length;
+                var curr_flag = false
+                $('.inp-curr').each(function (index) {
+                    if (index === total_curr - 1) {
+                        curr_flag = currencyCheck(this)
+                    }
+
+                })
+                if (acc_flag && curr_flag) {
+                    $.post('/curr-acc',
+                        {
+                            'uniqueIds': JSON.stringify(uniqueIds) || '',
+                            'val': 'duplicate',
+                            'csrfmiddlewaretoken': '{{ csrf_token }}',
+                        },
+                        function (data, status) {
+                            $(".bus-det-curncy-form").append(data.curr_acc);
+                        });
+                }
+            }
+        }
+        // 
+    });
+    $(document).on("focus", ".accInfo", function () {
+        if (document.forms.length) {
+            for (let f = 0; f < document.forms.length; f += 1) {
+                for (let e = 0; e < document.forms[f].elements.length; e += 1) {
+                    document.forms[f].elements[e].addEventListener('focus', (event) => {
+                        if (event.target.style.borderColor && event.target.style.borderColor === 'red') {
+                            event.target.style.borderColor = null;
+                        }
+                        const errMsgSelector = document.getElementById(`err-${event.target.id}`);
+                        if (errMsgSelector) {
+                            errMsgSelector.remove();
+                        }
+                        if (['day', 'month', 'year'].includes(event.target.id)) {
+                            document.getElementById('err-dob') && document.getElementById('err-dob').remove();
+                        }
+                    });
+                }
+            }
+        }
+    })
+    function removeAccount(divNo) {
+        $('.inp-' + divNo).each(function () {
+            this.remove()
+        })
+    }
+
+    function accountCheck(params) {
+        var status = true
+        var current_val = $(params).val()
+        var current_element = $(params)[0]
+        $('.inp-acc').not(params).each(function () {
+            var prev_val = $(this).val()
+            if (prev_val == current_val) {
+                showErrorField([current_element], 'User with same account number is not allowed.');
+                status = false 
+            }
+        })
+        return status
+    }
+    function currencyCheck(params) {
+        var status = true
+        var current_val = $(params).val()
+        var current_element = $(params)[0]
+        $('.inp-curr').not(params).each(function () {
+            var prev_val = $(this).val()
+            if (prev_val == current_val) {
+                showErrorField([current_element], 'User with same currency is not allowed.');
+                status = false 
+            }
+        })
+        return status
+    }
+</script>
+{% endblock %}

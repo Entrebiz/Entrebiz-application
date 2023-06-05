@@ -1,0 +1,364 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Entrebiz : Home</title>
+    <link rel="icon" type="image/png" href="{% static 'dash/assets/img/favicon.png' %}">
+    <!-- Bootstrap CSS -->
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+        integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="{% static 'landing_page/assets/css/bootstrap.min.css' %}">
+    <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
+    <link rel="stylesheet" type="text/css" href="{% static 'landing_page/assets/css/style.css' %}">
+
+    {% block link %}
+
+    {% endblock link %}
+
+    {% block style %}
+    <style>
+
+    </style>
+    {% endblock style %}
+</head>
+
+<body style="font-family: 'Poppins', sans-serif;">
+    <nav class="navbar navbar-expand-md  fixed-top ">
+        <div class="container">
+            <a class="navbar-brand" href="/"><img src="{% static 'landing_page/assets/images/logo.png' %}"></a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
+                aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <ul class="navbar-nav ml-auto ">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/aboutUs">About Us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/services">Services</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/login">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/register/account"><span>Open an Account</span></a>
+                    </li>
+                    </li>
+                </ul>
+            </div>
+
+            <div id="myNav" class="overlay">
+                <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+                <div class="overlay-content">
+                    <a href="#">Home</a>
+                    <a href="#">About Us</a>
+                    <a href="/services">Services</a>
+                    <a href="#">Login</a>
+                    <a href="#">Open an Account</a>
+                    <button class="download-btn">Download</button>
+                </div>
+            </div>
+
+            <span class="mobile-menu" onclick="openNav()">&#9776;</span>
+
+        </div>
+    </nav>
+
+    {% block content %}
+
+
+
+    <div class="carousel slide top-det-content" data-ride="carousel">
+        <div class="carousel-inner bg-info" role="listbox">
+            <div class="carousel-item active">
+                <div class="d-flex align-items-center justify-content-center min-vh-100 banner-content">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-8">
+                                <h2>THE INTERNATIONAL <span>PAYMENTS
+                                        PLATFORM</span> SIMPLIFYING YOUR WORLD
+                                </h2>
+                                <p>Entrebiz is a digital platform where you can experience a simpler way of transferring
+                                    your funds. You can open a zero-balance account online, in multiple currencies, with
+                                    minimal fees and transfer funds in real-time GLOBALLY.</p>
+                                <button class="banner-btn">See More</button> <button class="banner-btnwhite">See
+                                    More</button>
+                            </div>
+                            <div class="col-lg-4">
+                                <img class="banner-mobile" src="{% static 'landing_page/assets/images/mobile.png' %}">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <section class="download-cover">
+        <div class="container">
+            <div class="download-store">
+                <h2>OPEN <span>PRIVATE</span> AND <span>BUSINESS ACCOUNT</span></h2>
+                <h4>* Demo will be provided on request.</h4>
+                <a href="#" class="download-btn1">
+                    <img src="{% static 'landing_page/assets/images/android.png' %}">
+                    <h5>ANDROID APP ON</h5>
+                    <br>
+                    <h3>Google Play</h3>
+                </a>
+                <a href="#" class="download-btn1">
+                    <img src="{% static 'landing_page/assets/images/apple.png' %}">
+                    <h5>IOS APP ON</h5>
+                    <br>
+                    <h3>App store</h3>
+                </a>
+            </div>
+        </div>
+    </section>
+    <section class="key-main">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="features-cover">
+                        <h3>Key Features</h3>
+                        <h5>"Simplifying your <span> world"</span></h5>
+                        <div class="feature-main">
+                            <img src="{% static 'landing_page/assets/images/icon-1.png' %}">
+                            <h5>Secure, trusted, and <br>
+                                <span>user-friendly</span>
+                            </h5>
+                        </div>
+                        <div class="feature-main">
+                            <img src="{% static 'landing_page/assets/images/icon-1.png' %}">
+                            <h5>Fast international <br>
+                                <span>transfers</span>
+                            </h5>
+                        </div>
+                        <div class="feature-main">
+                            <img src="{% static 'landing_page/assets/images/icon-1.png' %}">
+                            <h5>Superior customer support <br>
+                                <span>24X7</span>
+                            </h5>
+                        </div>
+                        <div class="feature-main">
+                            <img src="{% static 'landing_page/assets/images/icon-1.png' %}">
+                            <h5>Low incoming <br>
+                                <span>charges</span>
+                            </h5>
+                        </div>
+                        <div class="feature-main">
+                            <img src="{% static 'landing_page/assets/images/icon-1.png' %}">
+                            <h5>Multiple payment <br>
+                                <span>options</span>
+                            </h5>
+                        </div>
+                        <div class="feature-main">
+                            <img src="{% static 'landing_page/assets/images/icon-1.png' %}">
+                            <h5>Real-time internal <br>
+                                <span>transfers</span>
+                            </h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="">
+                        <img class="feature-laptop" src="{% static 'landing_page/assets/images/laptopandmibile.png' %}">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container about-main">
+            <div class="row">
+                <div class="col-lg-6">
+                    <img class="about-img" src="{% static 'landing_page/assets/images/about.png' %}">
+                </div>
+                <div class="col-lg-6 ">
+                    <h3>About Us</h3>
+                    <h5>We're here to help <span>you when you need </span><br>
+                        expert support
+                    </h5>
+                    <p>Entrebiz is founded by a group of professionals with long-term career in the Fintech industry. We
+                        understand the difficulties faced in moving funds securely and efficiently across the globe.We
+                        have developed a platform to facilitate smooth flow of transactions. Our team of support
+                        specialists will guide you through the exceptions, whenever there are challenges and hurdles.
+                        The efficient team of professionals from Banking, Compliance and IT will maintain high standard
+                        throughout the processes.</p>
+                    <button>Read More</button>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div class="parallax">
+        <div class="container bein-cover">
+            <div class="row">
+                <div class="col-lg-6">
+                    <img class="bein-image" src="{% static 'landing_page/assets/images/bein.png' %}">
+                </div>
+                <div class="col-lg-6">
+                    <h2>Be in <span>touch</span></h2>
+                    <h4>Use our application to monitor the status
+                        of your account
+                    </h4>
+                    <ul>
+                        <li>
+                            <p>Surprisingly convenient</p>
+                        </li>
+                        <li>
+                            <p>Simple yet secure
+                                sign in
+                            </p>
+                        </li>
+                    </ul>
+                    <ul>
+                        <li>
+                            <p>Efficient, fast and secure</p>
+                        </li>
+                        <li>
+                            <p>AI based Chat bot for customer
+                                support
+                            </p>
+                        </li>
+                    </ul>
+                    <a href="#" class="download-btn1">
+                        <img src="{% static 'landing_page/assets/images/android.png' %}">
+                        <h5>ANDROID APP ON</h5>
+                        <br>
+                        <h3>Google Play</h3>
+                    </a>
+                    <a href="#" class="download-btn1">
+                        <img src="{% static 'landing_page/assets/images/apple.png' %}">
+                        <h5>IOS APP ON</h5>
+                        <br>
+                        <h3>App store</h3>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="parallax2">
+        <div class="container subscribe-cover">
+            <h2>Subscribe Our Newsletter!!</h2>
+            <form>
+                <div class="form-group row">
+                    <div class="col-6">
+                        <input id="text1" name="text1" placeholder="Name" type="text" class="form-control">
+                    </div>
+                    <div class="col-6">
+                        <input id="text" name="text" placeholder="Email" type="text" class="form-control">
+                    </div>
+                </div>
+                <button name="submit" type="submit" class="btn btn-primary"><img
+                        src="{% static 'landing_page/assets/images/notification.png' %}">Subscribe Now</button>
+            </form>
+        </div>
+    </div>
+    {% endblock content %}
+    <footer>
+        <div class="container footer-cover">
+
+
+            {% block social %}
+            <div class="social-main">
+                <ul>
+                    <a href="#">
+                        <li>
+                            <i class="fab fa-facebook-f fa-2x"></i>
+                        </li>
+                    </a>
+                    <a href="#">
+                        <li>
+                            <i class="fab fa-twitter fa-2x"></i>
+                        </li>
+                    </a>
+                    <a href="#">
+                        <li>
+                            <i class="fab fa-google-plus-g fa-2x"></i>
+                        </li>
+                    </a>
+                    <a href="#">
+                        <li>
+                            <i class="fab fa-linkedin-in fa-2x"></i>
+                        </li>
+                    </a>
+                </ul>
+            </div>
+
+            {% endblock social %}
+
+
+
+            <div class="row">
+                <div class="col-lg-7 col-md-6 footer-contact">
+                    <img src="{% static 'landing_page/assets/images/footer-logo.png' %}">
+                    <ul>
+                        <li><img src="{% static 'landing_page/assets/images/mail.png' %}"><span>
+                                support@entrebiz-pte.com</span></li>
+                        <li><img src="{% static 'landing_page/assets/images/call.png' %}"><span style="top: 7px;"> +63
+                                917 830 8611</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-3 contact-menu">
+                    <ul>
+                        <a href="/">
+                            <li>Home</li>
+                        </a>
+                        <a href="/aboutUs">
+                            <li>About us</li>
+                        </a>
+                        <a href="/services">
+                            <li>Our Services</li>
+                        </a>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-3 contact-menu">
+                    <ul>
+                        <a href="/termsAndCondition">
+                            <li>Terms and Conditions</li>
+                        </a>
+                        <a href="/privacyPolicy">
+                            <li>Privacy Policy</li>
+                        </a>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <section class="footer-right">
+        <div class="container">
+            <p>© {% now "Y" %} Entrebiz. All Rights Reserved.</p>
+        </div>
+    </section>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="{% static 'landing_page/assets/js/jquery-3.5.1.slim.min.js' %}"></script>
+    <script src="{% static 'landing_page/assets/js/popper.min.js' %}"></script>
+    <script src="{% static 'landing_page/assets/js/bootstrap.min.js' %}"></script>
+    <script>
+        $(window).scroll(function () {
+            $('nav').toggleClass('scrolled', $(this).scrollTop() > 50);
+        });
+    </script>
+    <script>
+        function openNav() {
+            document.getElementById("myNav").style.height = "100%";
+        }
+
+        function closeNav() {
+            document.getElementById("myNav").style.height = "0%";
+        }
+    </script>
+
+
+
+</body>
+
+</html>

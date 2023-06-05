@@ -1,0 +1,402 @@
+{% extends 'common/base.html' %}
+{% load static %}
+{% load util_tags %}
+
+{% block content %}
+
+
+    <div class=" balance-cover  mx-4 ">
+        <div class="row">
+        <div class =" balance-main">
+            {% if message %}
+            <div class="alert-box-outer">
+                <div class="{% if status %}success-alert{% else %}section-alert{% endif %}" style="display: block;" id="alertDiv">
+                    <button class="section-alert-close" onclick="closeAlertModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <p style="text-align: center" id="errorField">{{message}}</p>
+                </div>
+            </div>
+            {% endif %}
+<form method="POST">
+    {% csrf_token %}
+    <div class="row">
+        <div class="form-group col-lg-6">
+                         <label for="select">Select Type</label>
+        <select id="select" class="select_ben_type custom-select select-list" name="beneficiary_type" style="background-color: #e8eaf0;">
+            <option value="transaction" {% if beneficiary_type == 'transaction' %}selected{% endif %}>Account to Account Transfer</option>
+            <option value="international"{% if beneficiary_type == 'international' %}selected{% endif %}>International Wire Transfer</option>
+    </select>
+        </div>
+        <div class="form-group col-lg-3" style="margin-left:auto">
+            <label>&nbsp</label>
+        <div id="userTypeSelectDiv">
+            <label>
+                <input type="radio" name="user_type" class="user_type_sel" id="personal" onchange="showNameFields(this)" value="personal" {% if not user_type or user_type == 'personal'%}checked{% endif %}>
+                Personal
+            </label>
+            <label>
+                <input type="radio" name="user_type" class="user_type_sel" id="company" value="company" onchange="showNameFields(this)" {% if  user_type == 'company'%}checked{% endif %}> Company
+            </label>
+        </div>
+    </div>
+    </div>
+    <div class="row">
+        <div class="internal form-group col-lg-6">
+
+            <label>Beneficiary Account No</label>
+            <input type="text" name="int_accountnumber"  placeholder="Enter Beneficiary Account No" class="form-control" value="{{int_accountnumber}}">
+        </div>
+        <div class="internal form-group col-lg-6">
+            <label>Nick Name</label><input type="text" name="ben_nickname" placeholder="Nick Name" class="form-control" value="{{ben_nickname}}">
+        </div>
+    </div>
+        <div class="external" style="display:none">
+            <div class="row">
+                <div class="form-group col-lg-6">
+
+                    <label>Beneficiary Account No</label>
+                    <input type="text" name="accountnumber"  placeholder="Enter Beneficiary Account No" class="form-control" value="{{accountnumber}}">
+                    {% if form.accountnumber.errors %}
+                        {% for error in form.accountnumber.errors %}
+                            <span style="list-style:none;color:orangered">{{ error|escape }}</span>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                <div class="form-group col-lg-6">
+                    <label>Beneficiary Name</label><input id="beneficiaryName" type="text" name="name" placeholder="Enter Beneficiary Name" value="{{name}}" class="form-control">
+                    {% if form.name.errors %}
+                        {% for error in form.name.errors %}
+                            <span style="list-style:none;color:orangered">{{ error|escape }}</span>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-lg-6">
+                    <label>Bank Name</label><input type="text" name="bankname" placeholder="Enter Bank Name" value="{{bankname}}" class="form-control">
+                    {% if form.bankname.errors %}
+                        {% for error in form.bankname.errors %}
+                            <span style="list-style:none;color:orangered">{{ error|escape }}</span>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                <div class="form-group col-lg-6">
+                    <label>Bank Swift Code</label><input id="SwiftCode" type="text" name="swiftcode" placeholder="Enter Bank Swift Code" value="{{swiftcode}}" class="form-control">
+                    {% if form.swiftcode.errors %}
+                        {% for error in form.swiftcode.errors %}
+                            <span style="list-style:none;color:orangered">{{ error|escape }}</span>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-lg-6">
+                    <label>Bank City</label><input type="text" name="city" placeholder="Enter Bank City" value="{{city}}" class="form-control">
+                    {% if form.city.errors %}
+                        {% for error in form.city.errors %}
+                            <span style="list-style:none;color:orangered">{{ error|escape }}</span>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                <div class="form-group col-lg-6">
+                    <label>Bank Country</label><select name="country" class="custom-select select-list">
+                             <option value="" disabled selected> -Select Country-
+                                </option>
+                             {% for cntry in countries %}
+
+                            <option value="{{cntry.id}}" {% if country|to_int == cntry.id %}selected{% endif %}>{{cntry.name}}</option>
+
+                            {% endfor %}
+                        </select>
+                    {% if form.country.errors %}
+                        {% for error in form.country.errors %}
+                            <span style="list-style:none;color:red">{{ error|escape }}</span>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-lg-6">
+                    <label>Currency</label><select id="CurrencyId" name="currency" class="custom-select select-list">
+                        <option value="" selected> -Select Currency-
+                        </option>
+                    {% for crncy in currencies %}
+                    <option value="{{crncy.id}}" {% if currency|to_int == crncy.id %}selected{% endif %}>{{crncy.code}}</option>
+                    {% endfor %}
+                    </select>
+                    {% if form.currency.errors %}
+                        {% for error in form.currency.errors %}
+                            <span style="list-style:none;color:red">{{ error|escape }}</span>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                <div class="form-group col-lg-6">
+                    <label>Beneficiary Email (optional)</label><input type="text" name="email" placeholder="Enter Beneficiary Email" value="{{email|default_if_none:''}}" class="form-control">
+                    {% if form.email.errors %}
+                        {% for error in form.email.errors %}
+                            <span style="list-style:none;color:orangered">{{ error|escape }}</span>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+    </div>
+      <div id="showNameDiv">
+
+    </div>
+    <br>
+    <div>
+        <input type="submit" class="btn btn-primary button-w btn-add-beneficiary">
+    </div>
+</form>
+         </div>
+         </div>
+    </div>
+
+{% endblock %}
+{% block extra_script %}
+<script>
+$(document).ready(function(){
+    switch_benificiary_form()
+})
+    $(document).on("change",".select_ben_type",function(){
+        switch_benificiary_form()
+    })
+
+function switch_benificiary_form(){
+    val = $(".select_ben_type option:selected").val();
+        if (val == "transaction"){
+
+            $(".internal").show()
+            $(".external").hide()
+            $(".user_type_sel:checked").trigger("change")
+            $("#userTypeSelectDiv").show()
+            $("#showNameDiv").show()
+        }else{
+            $(".internal").hide()
+            $(".external").show()
+            $("#userTypeSelectDiv").hide()
+            $("#showNameDiv").hide()
+        }
+
+}
+</script>
+<script>
+
+    const appData = {};
+
+
+    function loadDataInFields() {
+        let selected = document.getElementById('beneficiaryType').value;
+        if (appData.beneficiaryAccountData.userType) {
+            let elem;
+            switch (appData.beneficiaryAccountData.userType) {
+                case '1':
+                    elem = document.getElementById('personal');
+                    elem.checked = true;
+                    showNameFields(elem)
+                    break;
+                case '2':
+                    elem = document.getElementById('company');
+                    elem.checked = true;
+                    showNameFields(elem)
+                    break;
+            }
+        }
+
+
+        document.getElementById('editMode').value = appData.beneficiaryAccountData.Id;
+
+    }
+
+    function showBenificaryFields() {
+        const localData = {};
+        localData.htmlContent = '';
+        switch (appData.selectedTBeneficiary) {
+            case 'international':
+                localData.htmlContent = ` <% include partials/addInternationalTransfer.ejs %> `;
+                break;
+            case 'transaction':
+                localData.htmlContent = ` <% include partials/addAccountToaccountTransfer.ejs %>`;
+                break;
+            default:
+                break;
+        }
+        document.getElementById('addBenificiaryFields').innerHTML = '';
+        document.getElementById('addBenificiaryFields').innerHTML = localData.htmlContent;
+        if (appData.selectedTBeneficiary === 'transaction') {
+            const elem = document.getElementById('personal');
+            showNameFields(elem)
+        }
+
+    }
+
+    function deleteConfirmation(value) {
+        const type = document.getElementById(value.id).getAttribute('value');
+        document.getElementById('rmvcurrency').style.display = 'block';
+        document.getElementById('Id').value = value.id;
+        document.getElementById('type').value = type;
+    }
+
+    function deleteCancel() {
+        document.getElementById('rmvcurrency').style.display = 'none';
+    }
+
+    function editBeneficiary(beneficiaryId, type, CustomerType) {
+        const form = document.createElement('form');
+        const my_tb = document.createElement('INPUT');
+        my_tb.type = 'hidden';
+        my_tb.name = 'Id';
+        my_tb.value = beneficiaryId;
+
+        const my_tb1 = document.createElement('INPUT');
+        my_tb1.type = 'hidden';
+        my_tb1.name = 'Type';
+        my_tb1.value = type;
+
+        const my_tb2 = document.createElement('INPUT');
+        my_tb2.type = 'hidden';
+        my_tb2.name = 'customerType';
+        my_tb2.value = CustomerType;
+
+        form.action = '/api/v1/beneficiary/editBeneficiary';
+        form.method = 'POST';
+        form.appendChild(my_tb);
+        form.appendChild(my_tb1);
+        form.appendChild(my_tb2);
+        document.body.append(form);
+        form.submit();
+    }
+
+    let container1;
+    document.addEventListener('click', function (event) {
+        container1 = document.getElementsByClassName('mainCurrencyDiv1')[0];
+        if (container1 && container1 !== event.target && !container1.contains(event.target)) {
+            const next = document.getElementById('CurrencylistOptions');
+            next.style.display = 'none';
+        } else {
+            if (container1) {
+                event.preventDefault();
+                // document.getElementById('mainCurrencyDiv1').focus();
+            }
+            const next = document.getElementById('CurrencylistOptions');
+            if (next && next.style.display == 'none') {
+                next.style.display = 'block';
+            } else if (next) {
+                next.style.display = 'none';
+            }
+        }
+    });
+
+    function loadCurrency(currencyId, status = false) {
+        clearErrorMessage(document.getElementById('CurrencyId'));
+        document.getElementById('selectedCurrencyName').innerHTML = '';
+        const currencyDetails = appData.currencyList.find(el => el.Id.toString() === currencyId.toString());
+        document.getElementById('selectedCurrencyName').innerHTML = currencyDetails.Code + ' ' + currencyDetails.Name;
+        document.getElementById('selectedCurrencyImage').src = currencyDetails.Flag;
+        document.getElementById('selectedCurrencyImage').classList.remove('removeSelectImage');
+        document.getElementById('CurrencyId').value = currencyId;
+        document.getElementById('selectedCurrencyName').focus();
+    }
+
+    function showNameFields(elem) {
+        switch (elem.id) {
+            case 'personal':
+                loadPersonalField();
+                break;
+            case 'company':
+                loadCompanyField();
+                break;
+        }
+    }
+
+
+
+
+    function loadPersonalField() {
+        const htmlContent = `
+            <div class="row">
+                <div class="col-lg-6 col-12">
+                    <div class="" id="firstNameDiv">
+                        <div class="input-form-group err-alert-outer">
+                            <label for="FirstName">First Name</label>
+                            <input type="text" name="firstname"
+                                value="{{firstname}}"
+                                id="FirstName"
+                                class="input-box validationClass form-control"
+                                onclick="clearErrorMessage(this)"
+                                maxlength="50"
+                                placeholder="Enter First Name">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-12">
+                <div class="" id="lastNameDiv">
+                     <div class="input-form-group err-alert-outer">
+                         <label for="lastName">Last Name</label>
+                         <input type="text" name="lastname"
+                              value="{{lastname}}"
+                              id="lastName"
+                              class="input-box validationClass form-control"
+                              onclick="clearErrorMessage(this)"
+                              maxlength="50"
+                              placeholder="Enter Last Name">
+                      </div>
+                    </div>
+                </div>
+            </div>`;
+        const elem = document.getElementById('showNameDiv');
+        if (elem) {
+            elem.innerHTML = '';
+            elem.innerHTML = htmlContent;
+        }
+        document.getElementById('userTypeSelectDiv').style.display = 'block';
+    }
+
+    function loadCompanyField() {
+        const htmlContent = `
+        <div class="row">
+                <div class="col-lg-6 col-12">
+                    <div class="" id="firstNameDiv">
+                        <div class="input-form-group err-alert-outer">
+                            <label for="FirstName">Company Name</label>
+                            <input type="text" name="firstname"
+                            value="{{firstname}}"
+                            id="FirstName"
+                            class="input-box validationClass form-control"
+                            onclick="clearErrorMessage(this)"
+                            maxlength="100"
+                            placeholder="Enter Company Name">
+                        </div>
+                    </div>
+                </div>
+            </div>
+                    `;
+        const elem = document.getElementById('showNameDiv');
+        elem.innerHTML = '';
+        if (elem) {
+            elem.innerHTML = htmlContent;
+        }
+    }
+
+
+    function loadData() {
+        showLoader();
+        const form = document.createElement('form');
+        const my_tb = document.createElement('INPUT');
+        my_tb.type = 'hidden';
+        my_tb.name = 'transactionType';
+        my_tb.value = document.getElementById('beneficiaryType').value;
+        form.action = '/api/v1/beneficiary/listBeneficiary';
+        form.method = 'POST';
+        form.appendChild(my_tb);
+        document.body.append(form);
+        form.submit();
+    }
+
+       function closeAlertModal() {
+        $(".alert-box-outer").hide()
+    }
+
+</script>
+{% endblock %}

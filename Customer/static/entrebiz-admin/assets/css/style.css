@@ -1,0 +1,257 @@
+.main-content {
+    min-height: calc(110vh - 118px) !important;
+}
+.sidenav-cust{
+    background-color: #fff;
+    margin-top: 5px;
+    height: 35rem;
+    overflow: hidden !important;
+
+
+}
+.sidenav-cust .navbar-nav li a{
+    font-weight:normal !important;
+}
+.navbar-vertical .navbar-nav>.nav-item .nav-link{
+    border-bottom: 1px solid #efefef;
+}
+.navbar-vertical .navbar-nav .nav-link.active {
+    border-radius:0;
+}
+.navbar-vertical.navbar-expand-xs .navbar-nav>.nav-item{
+    margin-top:0;
+}
+.sidenav.fixed-start+.main-content{
+    margin-left: 18.125rem;
+}
+.btn-refund{
+    background-color: orangered;
+    color: #000 !important;
+}
+.btn-w30{
+    padding: 5px 30px;
+    height: 40px;
+    background-color: #f66602;
+    color: #ffffff;
+    border: solid 1px #ff6600 !important;
+    border-radius: 5px;
+    font-weight: normal;
+}
+.btn-w30:hover{
+    color: #fff !important;
+    transform: none !important;
+}
+
+.transaction-details-container label{
+    color: #586168 !important;
+}
+    .details-content-holder {
+    display: flex;
+    align-items: flex-start;
+}
+    .det-label {
+        color: #586168;
+        padding: 10px 5px;
+        min-width: 180px;
+        font-size: 15px;
+    }
+
+    .det-show {
+        padding: 8px 10px;
+        font-weight: 500;
+        color: #586168;
+    }
+    .label-status{
+        font-size: larger;
+        font-weight: normal;
+        color: green;
+    }
+    .update-status-content{
+        margin-top:20px;
+    }
+    .update-status-content label{
+        font-size:16px;
+        font-weight:normal;
+    }
+    .inp-box{
+        border-radius: 5px;
+        padding: 10px 20px;
+        border: solid 1px #ccc;
+        font-size: 15px;
+        width: 100%;
+        color: #84878a;
+    }
+    textarea{
+        resize: none !important;
+        height: auto !important;
+    }
+    textarea:active, textarea:focus,.select-list:active, .select-list:focus{
+        outline: 0 !important;
+    }
+    .inp-box:focus{
+        border-color: transparent;
+        box-shadow: 1px 1px 10px 0 rgb(0 0 0 / 7%);
+    }
+    .btn-content{
+        margin-top:10px;
+        text-align:center;
+    }
+    .cmnt-container{
+       max-height: 150px;
+        border: solid 1px #efefef;
+        border-radius: 5px;
+        padding: 20px 15px;
+        overflow-y: auto;
+        color:#586168;
+        margin-bottom:30px;
+    }
+    .cmnt-inner-container span{
+        font-size:13px;
+    }
+    .cmnt-inner-container p{
+        font-size:15px;
+    }
+    .modal-form-transaction .modal-content {
+        padding: 20px;
+        position: relative;
+        width: 550px;
+        background: #fff;
+        margin: 10vh auto;
+        max-width: 95%;
+    }
+    .modal-form-transaction .modal-header label{
+        color: #586168;
+        font-size: 20px;
+        font-weight: normal;
+    }
+    .modal-form-transaction .modal-header{
+        border-bottom: solid 1px #ccc;
+        padding-top: 25px;
+        text-align: left;
+    }
+    .modal-form-transaction .modal-confirm-container{
+        width:500px;
+
+    }
+    .modal-form-transaction .modal-confirm-container .modal-content{
+        border-radius:0;
+    }
+    .modal-form-transaction .modal-confirm-container .modal-content .input-form-group{
+        text-align:left;
+        margin-bottom: 10px;
+    }
+    .modal-form-transaction .modal-confirm-container .modal-content .input-form-group label {
+        font-weight: 100;
+        font-size: 15px;
+        color: #84878a;
+        margin-bottom: 5px;
+        display: block;
+    }
+    .modal-form-transaction .modal-content .modal-close-btn {
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    background-color: transparent;
+    box-shadow: none;
+    border: none;
+    /* border: solid 1px #ddd; */
+    width: 25px;
+    height: 25px;
+    /* border-radius: 50%; */
+    line-height: 9px;
+}
+.modal-form-transaction .modal-content .modal-close-btn img {
+    width: 10px;
+    filter: invert(0.5);
+}
+
+
+.modal-confirm-container {
+	color: #636363;
+	width: 500px;
+}
+.modal-confirm-container .modal-content {
+	border-radius: 5px;
+	border: none;
+	text-align: center;
+	font-size: 14px;
+}
+.modal-confirm-container .modal-header {
+	border-bottom: none;
+	position: relative;
+}
+.modal-confirm-container h4 {
+	text-align: center;
+	font-size: 26px;
+	margin: 30px 0 -10px;
+}
+.modal-confirm-container .close {
+	position: absolute;
+	top: -5px;
+	right: -2px;
+}
+.modal-confirm-container .modal-body {
+	color: #999;
+}
+.modal-confirm-container .modal-footer {
+	border: none;
+	text-align: center;
+	border-radius: 5px;
+	font-size: 13px;
+	padding: 10px 15px 25px;
+}
+.modal-confirm-container .modal-footer a {
+	color: #999;
+}
+.modal-confirm-container .icon-box {
+	width: 80px;
+	height: 80px;
+	margin: 0 auto;
+	border-radius: 50%;
+	z-index: 9;
+	text-align: center;
+	border: 3px solid #f15e5e;
+}
+.modal-confirm-container .icon-box i {
+	color: #f15e5e;
+	font-size: 46px;
+	display: inline-block;
+	margin-top: 13px;
+}
+.modal-confirm-container .btn, .modal-confirm-container .btn:active {
+	border-radius: 4px;
+	text-decoration: none;
+	transition: all 0.4s;
+	line-height: normal;
+	min-width: 120px;
+	border: none;
+	min-height: 45px;
+	border-radius: 3px;
+	margin: 0 5px;
+}
+.modal-confirm-container .btn-secondary {
+	background: #c1c1c1;
+}
+.modal-confirm-container .btn-secondary:hover, .modal-confirm-container .btn-secondary:focus {
+	background: #a8a8a8;
+}
+.modal-confirm-container .btn-danger {
+	background: #f15e5e;
+}
+.modal-confirm-container .btn-danger:hover, .modal-confirm-container .btn-danger:focus {
+	background: #ee3535;
+}
+.btn-primary:hover{
+    padding: 0.75rem 1.5rem;
+}
+.modal-confirm-container input, .modal-confirm-container input:focus{
+    color:#84878a;
+}
+.rfnd-err-msg{
+    color:red;
+    font-size:14px;
+}
+.btn-reject{
+    padding: 0.75rem 1.5rem;
+    height:43px;
+}

@@ -1,0 +1,120 @@
+{% extends 'common/base.html' %}
+{% load static %}
+{% load util_tags %}
+
+
+{% block content %}
+<style>
+    .p-details-header{
+        font-weight:600;
+    }
+    .cust-row {
+
+    }
+    .cust-col{
+            padding-top: 10px;
+    padding-bottom: 20px;
+    border: 1px solid #efefef;
+    }
+    .input-edit{
+    display: block;
+    border: none;
+    box-shadow: none;
+    width: 100%;
+    color: #84878a;
+    }
+    .input-edit:focus{
+            outline: 0;
+    }
+    .otp-verify-content{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 260px;
+        padding: 15px;
+    }
+    .otp-verify-content .input-form-group{
+        margin:0;
+        padding-left:4em;
+    }
+    .succs-otp-block{
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+    .btn-submit-otp:hover{
+            padding: 0.75rem 1.5rem;
+    }
+</style>
+
+<div class=" balance-cover  mx-4 ">
+    <div class="row">
+        <div class=" balance-main">
+                {% if message %}
+            <div class="alert-box-outer">
+                <div class="{% if status %}success-alert{% else %}section-alert{% endif %}" style="display: block;" id="alertDiv">
+                    <button class="{% if status %}success-alert-close{% else %}section-alert-close{% endif %}" onclick="closeAlertModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <p style="text-align: center" id="errorField">{{message}}</p>
+                </div>
+            </div>
+            {% endif %}
+                <div class="row">
+                    <div class="form-group col-lg-6">
+
+                    </div>
+                    <div class="form-group col-lg-6">
+                    </div>
+                </div>
+                <div class="row">
+
+                    <div class="otp-verify-content">
+                        <div>
+                            <div style="text-align:center">
+                                <p>
+                                    {% generate_otp_type_string request  as otp_receivers%}
+                                    We have sent an OTP to {{otp_receivers|safe}}
+                                </p>
+                            </div>
+                            <form method="POST">
+                                {% csrf_token %}
+                                <div class="row input-form-group">
+                                            <div class="col-12 succs-otp-block">
+                                                <label>Enter OTP</label>
+                                            </div>
+                                            <input type="hidden" name="accessToken" id="accessToken" value="undefined">
+                                            <div class="col-sm-6 col-12 succs-otp-block">
+                                                <input type="password" name="otp" id="otp" value="" class="input-box form-control" placeholder="Enter OTP" autofocus="" required="">
+                                            </div>
+                                            <div class="col-sm-6 col-12 succs-otp-block">
+                                                <button class="btn btn-primary ripple-efct btn-submit-otp" type="submit">
+                                                    Submit
+                                                </button>
+                                            </div>
+                                        </div>
+                                   <div class="row input-form-group">
+                    <div class="col-12 succs-otp-block">
+                        <a  href="javascript:{}" onclick="document.getElementById('form-resend-otp').submit();">Resend OTP</a>
+                    </div>
+                </div>
+                            </form>
+                            <form method="post" id="form-resend-otp">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="action" value="resend">
+                                </form>
+                        </div>
+
+                    </div>
+                </div>
+
+
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+{% block extra_script %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+{% endblock %}

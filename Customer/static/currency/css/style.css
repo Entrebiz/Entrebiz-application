@@ -1,0 +1,89 @@
+.currency-card-inr{
+    position: relative;
+    display: flex;
+    justify-content: center;
+    min-height: 110px;
+    background-color: #fff;
+    border: 1px solid #efefef;
+    transition: .3s;
+}
+.bnk-curr-det{
+
+    width: 130px;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    min-height: 100px;
+    text-align: center;
+    justify-content: space-around;
+    position: relative;
+    margin-right: 5px;
+
+}
+
+.curr-name{
+        min-height: 55px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    font-family: "poppinsmedium";
+    color: #586168;
+}
+
+card-inr .bnk-curr-det .curr-name img {
+    border: solid 1px #ddd;
+    width: 23px;
+    max-height: 15px;
+    margin-right: 5px;
+    max-width: 100%;
+    height: auto;
+    vertical-align: middle;
+}
+
+.currency-card-inr:hover{
+box-shadow: 1px 1px 10px 1px rgb(0 0 0 / 20%);
+}
+
+.add-currency-card {
+    padding-left: 6px;
+    padding-right: 6px;
+    margin-bottom: 15px;
+}
+
+
+.add-currency-sec {
+    padding: 30px 20px;
+}
+.add-currency-card p{
+font-size:12px;
+}
+
+.add-currency-card .currency-card-inr .bnk-curr-det .acc-set p.acc-active {
+    font-size: 12px;
+    text-align: center;
+    background-color: #fa661d;
+    margin-bottom: 11px;
+    color: #fff;
+}
+
+.add-currency-card .currency-card-inr .bnk-curr-det .curr-name img {
+    border: solid 1px #ddd;
+    width: 23px;
+    max-height: 15px;
+    margin-right: 5px;
+}
+img {
+    max-width: 100%;
+    height: auto;
+    vertical-align: middle;
+}
+
+.acc-details-hldr p{
+    margin-bottom:0;
+}
+
+.acc-num{
+    color: #4078c0;
+    font-size: 15px !important;
+}

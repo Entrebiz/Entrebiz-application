@@ -1,0 +1,145 @@
+{% load static %}
+{% load util_tags %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entrebiz</title>
+    <link rel="icon" type="image/png" href="{% static 'dash/assets/img/favicon.png' %}">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,500,600,700" rel="stylesheet" />
+       <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
+       <link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="{% static 'personal-reg/style.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'dash/assets/css/soft-ui-dashboard.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'dash/assets/css/style.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'accounts/css/wSelect.css' %}">
+    <!-- <link rel="stylesheet" type="text/css" href="{% static 'dash/assets/css/custome.css' %}"> -->
+    {% block style %}
+    {% endblock %}
+</head>
+
+<body class="dashboard-bg dashboard-body-top">
+    {% if request.user.is_authenticated %}
+    <nav class="navbar navbar-main navbar-expand-lg d-xl-none px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur"
+        navbar-scroll="true">
+        <div class="container-fluid py-1 px-3">
+            <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
+                <ul class="navbar-nav  justify-content-end">
+                    <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
+                        <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">
+                            <div class="sidenav-toggler-inner">
+                                <i class="sidenav-toggler-line"></i>
+                                <i class="sidenav-toggler-line"></i>
+                                <i class="sidenav-toggler-line"></i>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="admin-navbar dashboard-top-nav">
+        <nav class="px-0 mx-4" style="margin-right: 1.5rem !important;">
+            <div class="container-fluid nav-cover navbar-row" style="margin-top:0px;box-shadow: none">
+                <div class="nav-collapse" id="User_Dropdown" style="">
+                    <ul class="navbar-nav-top" style="padding-top:14px;">
+                        <li>
+                            <div class="nav-verify nav-icon-none">
+                                <div class="verify-content">
+                                    <p class="v-label">Last Login</p>
+                                    <p class="v-content">{% get_last_login request.user %}</p>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="nav-verify">
+                                <div class="icon-hldr">
+                                    <img src="{% static 'dash/assets/img/tick.png' %}" alt="">
+                                </div>
+                                <div class="verify-content">
+                                    <p class="v-label">Email verified</p>
+                                    <p class="v-content">{% hide_characters request.user.email %}
+                                    </p>
+                                </div>
+                            </div>
+                        </li>
+
+                        <li>
+                            <div class="nav-verify {% if not request.user.customer_details.all.0.useracc_customer.all.0.phoneverified %}not-verified{% endif %}">
+                                <div class="icon-hldr">
+                                    <img src="{% static 'dash/assets/img/tick.png' %}" alt="">
+                                </div>
+                                <div class="verify-content  mobile-ver-pend">
+                                    {% if not request.user.customer_details.all.0.useracc_customer.all.0.phoneverified %}
+                                    <p class="v-label">Mobile verification pending</p>
+                                    <form method="post" action="/sendVerificationOTP" id="form-mob-verify">
+                                        <input type="hidden" name="verify_type" value="mobile">
+                                        {% csrf_token %}
+                                    </form>
+                                    <a class="v-label" href="javascript:{}"
+                                        onclick="document.getElementById('form-mob-verify').submit();"
+                                        style="color:#f6661e">Click to verify account</a>
+                                        {% else %}
+                                        <p class="v-label">Mobile verified</p>
+                                        {% endif %}
+                                    <p class="v-content">{% hide_characters request.user.customer_details.all.0.useracc_customer.all.0.phonenumber %}</p>
+                                </div>
+                            </div>
+                        </li>
+
+                        <li>
+                            <div class="nav-verify">
+                                <div class="icon-hldr">
+                                    <img src="{% static 'dash/assets/img/tick.png' %}" alt="">
+                                </div>
+                                <div class="verify-content">
+                                    <p class="v-label">Account verified</p>
+                                    <p class="v-content" title="{{request.user.customer_details.0.useracc_customer.0.firstname|default_if_none:''}} {{request.user.customer_details.0.useracc_customer.0.middlename|default_if_none:''}} {{request.user.customer_details.0.useracc_customer.0.lastname|default_if_none:''}}">{{request.user.customer_details.all.0.useracc_customer.all.0.firstname|default_if_none:''}} {{request.user.customer_details.all.0.useracc_customer.all.0.middlename|default_if_none:''}} {{request.user.customer_details.all.0.useracc_customer.all.0.lastname|default_if_none:''}}</p>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <a href="/logout" class="logout-btn" type="">
+                                <i class="fa fa-solid fa-power-off" style="margin-right:5px;"></i><span>Logout</span>
+                            </a>
+                            <div class="time-reminder justify-content-start" id="timerShow"></div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+    {% endif %}
+    <div class="preloader-container hide-loader">
+        <div id="loader"></div>
+    </div>
+    <div class="row-fluid acc-det-body acc-det-body-lg" {% if request.user.is_authenticated %} style="margin-top: 75px" {% endif %}>
+        {% block content %}
+        {% endblock %}
+    </div>
+
+</body>
+<footer>
+    <div class="footer-sec">
+        <p>&copy; 2021 Entrebiz. All Rights Reserved. &nbsp;&nbsp;</p>
+    </div>
+</footer>
+<script src="{% static 'dash/assets/js/validationFns.js' %}"></script>
+<script src="{% static 'dash/assets/js/validation.js' %}"></script>
+<script src="{% static 'dash/assets/js/jquery.min.js' %}"></script>
+<script src="{%static '/accounts/js/wSelect.min.js' %}"></script>
+<script>
+   function closeAlertModal() {
+        $(".alert-box-outer").hide()
+    }
+</script>
+{% block script %}
+
+{% endblock %}
+</html>

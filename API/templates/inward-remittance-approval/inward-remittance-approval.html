@@ -1,0 +1,421 @@
+{% extends 'common/admin-base.html' %}
+{% load static %}
+{% load util_tags %}
+{% block css %}
+<style>
+    .filter-sec {
+        padding: 15px 20px;
+        background-color: #fff;
+        /* box-shadow: 1px 1px 10px 1px rgb(0 0 0 / 10%); */
+        position: relative;
+        z-index: 1;
+    }
+
+    table {
+        border-collapse: collapse;
+        margin: 0.7em 0;
+        table-layout: fixed;
+        width: 100%;
+    }
+
+    .admin-table-def th {
+        font-weight: normal;
+        padding: 5px 10px;
+        text-align: left;
+        border-bottom: 1px solid #efefef;
+        color: #586168;
+        border-right: 1px solid #efefef;
+        font-size: 14px;
+    }
+
+    .td-slno {
+        width: 70px;
+    }
+
+    .admin-table-def td {
+        font-size: 14px;
+        padding: 10px 10px;
+        color: #586168;
+        border-color: #efefef;
+        word-break: break-all;
+    }
+
+    .modal-content .modal-title {
+        border-bottom: solid 1px #ccc;
+        padding-top: 25px;
+        text-align: left;
+    }
+
+    .otp-modal-content {
+        padding-top: 30px;
+        padding-left: 30px;
+        padding-right: 30px;
+    }
+
+    .input-box {
+        border-radius: 5px;
+        padding: 10px 20px;
+        border: solid 1px #ccc;
+        font-size: 15px;
+        width: 100%;
+        color: #84878a;
+    }
+
+    textarea {
+        resize: none;
+        height: auto;
+    }
+.tab-actn-btn {
+    border: solid 1px #f0f0f0;
+    border-radius: 5px;
+    /* padding: 2px 5px; */
+    text-align: center;
+    margin: 0 1px;
+    min-width: 20px;
+    display: inline-block;
+    color: #586168;
+    font-size: 12px;
+    min-height: 20px;
+}
+.tab-actn-btn img {
+    max-width: 16px;
+}
+</style>
+
+{% endblock %}
+{% block content %}
+<div class=" balance-cover  mx-4 ">
+    <div class="row">
+        <div class=" balance-main">
+            {% if message %}
+            <div class="alert-box-outer">
+                <div class="{% if status %}success-alert{% else %}section-alert{% endif %}" style="display: block;"
+                    id="alertDiv">
+                    <button class="{% if status %}success-alert-close{% else %}section-alert-close{% endif %}"
+                        onclick="closeAlertModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <p style="text-align: center" id="errorField">{{message}}</p>
+                </div>
+            </div>
+            {% endif %}
+            <!--  -->
+            <div class="filter-sec" style="min-height: 52px;">
+                <div id="multiSelectActions" style="display: none;">
+                    <div style="display: inline;"><span id="multiSelectCount">0</span> records selected</div>
+                    <div style="display: inline;margin-left: 65%;">
+                        <span style="font-weight: bold;">Action:&nbsp;</span>
+                        <a title="Approve" href="javascript:void(0)" onclick="showApproveConfirmModal()">
+                            <img height="20px%" width="20px" src="{% static 'dash/assets/img/approve.png' %}">
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="curr-conversion-sec">
+                <div class="admin-user-table-sec">
+                    <table class="admin-table-def" id="inwardRemittancePendingList">
+                        <thead>
+                            <tr>
+                                <th style="width: 30px;">
+                                    <input type="checkbox" id="multiSelectAll" onclick="multiSelectAllRow(this);">
+                                </th>
+                                <th class="td-slno">Sl No</th>
+                                <th>Account Name</th>
+                                <th>Account No</th>
+                                <th>Amount</th>
+                                <th style="width: 105px;">Transaction Type</th>
+                                <th style="width: 110px;">Created On</th>
+                                <th>Reject Reason</th>
+                                <th style="width: 90px;">Status</th>
+                                <th style="width: 100px;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for inwardrem_tr in inwardrem_trs %}
+                            <tr id="rows-{{inwardrem_tr.id}}" style="">
+                                <td id="column-{{inwardrem_tr.id}}">
+                                    {% if inwardrem_tr.approvallevel == 0 %}
+                                    <input class="inw-val" type="checkbox" data-row-id="{{inwardrem_tr.id}}"
+                                        onclick="multiSelectRow(this);">
+                                    {% endif %}
+                                </td>
+                                <td>{{forloop.counter}}</td>
+                                {% if inwardrem_tr.account.user_account.customer.customertype == 1 %}
+                                <td>{{inwardrem_tr.account.user_account.firstname}}
+                                    {{inwardrem_tr.account.user_account.middlename|default_if_none:''}}
+                                    {{inwardrem_tr.account.user_account.lastname}}</td>
+                                {% else %}
+                                <td>{{inwardrem_tr.account.user_account.customer|company_name}}</td>
+                                {% endif %}
+                                <td>{{inwardrem_tr.account.accountno}}
+                                    <br>({{inwardrem_tr.currency.code}})
+                                </td>
+                                <td>{{inwardrem_tr.amount}}</td>
+                                {% if inwardrem_tr.transactiontype.name == 'Inward Remittance' %}
+                                <td id="tr-type-{{inwardrem_tr.id}}">Add Money</td>
+                                {% elif inwardrem_tr.transactiontype.name == 'Other Charges' %}
+                                <td id="tr-type-{{inwardrem_tr.id}}">Add Charge</td>
+                                {% endif %}
+                                <td>{{inwardrem_tr.createdon|date:"d M Y"}}</td>
+                                {% if inwardrem_tr.approvallevel == 0 %}
+                                <td>-</td>
+                                <td>
+                                    <span style="color: orange;">Pending</span>
+                                </td>
+                                <td>
+                                    <span id="actions-{{inwardrem_tr.id}}" style="">
+                                        <a href="/inwardRemittancePending?slug={{inwardrem_tr.slug}}" class="tab-actn-btn" >
+                                            <img  src="{% static 'dash/assets/img/eye.png' %}">
+                                        </a>
+                                        &nbsp;
+                                        <a title="Approve" href="javascript:void(0)"
+                                            onclick="showApproveConfirmModal('{{inwardrem_tr.id}}')">
+                                            <img height="20%" width="20%"
+                                                src="{% static 'dash/assets/img/approve.png' %}">
+                                        </a>
+                                        &nbsp;
+                                        <a title="Reject" href="javascript:void(0)"
+                                            onclick="showRejectModal('{{inwardrem_tr.id}}')">
+                                            <img height="20%" width="20%"
+                                                src="{% static 'dash/assets/img/reject.png' %}">
+                                        </a>
+                                    </span>
+                                </td>
+                                {% elif inwardrem_tr.approvallevel == 1 %}
+                                <td>-</td>
+                                <td>
+                                    <span style="color: green;">Approved</span>
+                                </td>
+                                <td>
+                                    <span id="actions-{{inwardrem_tr.id}}">
+                                        -
+                                    </span>
+                                </td>
+                                {% elif inwardrem_tr.approvallevel == 2 %}
+                                <td>{{inwardrem_tr.reasonforreject}}</td>
+                                <td>
+                                    <span style="color: red;">Rejected</span>
+                                </td>
+                                <td>
+                                    <span id="actions-{{inwardrem_tr.id}}">
+                                        -
+                                    </span>
+                                </td>
+                                {% endif %}
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="8" style="text-align:center;font-size:20px;font-weight: 300;">No records found!</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+            <!--  -->
+        </div>
+    </div>
+</div>
+<!--  -->
+<div id="approval-confirm-modal" class="modal fade">
+    <div class="modal-dialog modal-confirm">
+        <div class="modal-content">
+            <div class="modal-header flex-column">
+                <input type="hidden" id="approveInwardRemittanceId">
+                <input type="hidden" id="approveTransactionType">
+                <div class="mail-inp-row">
+                    Do you really want to
+                    <div id="actionData"></div>
+                </div>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" style="background-color: #a8a8a8;padding: 0px 0px;"
+                    class="btn btn-primary ripple-efct btn-open-dlt-cnfrm-modal" data-bs-dismiss="modal">CANCEL</button>
+                <button type="button" onclick="approveInwardSubmit()"
+                    style="background-color: #fa661d;padding: 0px 0px;"
+                    class="btn btn-primary ripple-efct btn-open-dlt-cnfrm-modal">CONFIRM</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--  -->
+<!--  -->
+<div id="reject-modal" class="modal fade">
+    <div class="modal-dialog modal-confirm" style="width:100%;">
+        <form role="form" method="post" action="" id="rejectForm">
+            {% csrf_token %}
+            <div class="modal-content" style="text-align: left;">
+                <!-- <div class="modal-body"> -->
+                <div class="mail-modal-cover">
+                    <div class="modal-title">
+                        <h5>Reject Transaction</h5>
+                    </div>
+                    <div class="otp-modal-content">
+                        <input type="hidden" name="InwardRemittanceId" id="rejectInwardRemittanceId" value="">
+                        <input type="hidden" name="action_type" value="rejectInwardRemittance">
+                        <div class="form-group">
+                            <label for="rejectReason" style="font-size: 15px;">Reason for rejection</label>
+                            <textarea class="input-box documentFields rejectForm" name="ReasonForReject"
+                                id="rejectReason" cols="20" rows="5"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer justify-content-center">
+                        <button type="button" style="background-color: #a8a8a8;padding: 0px 0px;"
+                            class="btn btn-primary ripple-efct btn-open-dlt-cnfrm-modal"
+                            data-bs-dismiss="modal">CANCEL</button>
+                        <button onclick="return rejectInwardSubmit();"
+                            style="background-color: #fa661d;padding: 0px 0px;"
+                            class="btn btn-primary ripple-efct btn-open-dlt-cnfrm-modal">Submit</button>
+                    </div>
+                </div>
+                <!-- </div> -->
+            </div>
+        </form>
+    </div>
+</div>
+<!--  -->
+{% endblock %}
+{% block extra_script %}
+<script>
+    function showApproveConfirmModal(inwardRemId) {
+        if (inwardRemId) {
+            let transactionTypeName = $('#tr-type-' + inwardRemId).text();
+            document.getElementById('approveTransactionType').value = transactionTypeName;
+            document.getElementById('approveInwardRemittanceId').value = inwardRemId;
+            document.getElementById('actionData').innerHTML = `Approve the ${transactionTypeName} Request?`;
+            $("#approval-confirm-modal").modal("show")
+        } else {
+            document.getElementById('actionData').innerHTML = `Approve Selected Requests?`;
+            $("#approval-confirm-modal").modal("show")
+        }
+    }
+    function showRejectModal(inwardRemId) {
+        document.getElementById('rejectInwardRemittanceId').value = inwardRemId;
+        removeFormValidationMsgs('rejectForm');
+        $("#reject-modal").modal("show")
+    }
+    const inwardRemittanceRows = [];
+    function multiSelectRow(e) {
+        const rowId = e.attributes['data-row-id'].value;
+        const $inwardRow = document.getElementById(`rows-${rowId}`);
+        const $inwardRowColumn = document.getElementById(`column-${rowId}`);
+        const rowIndex = inwardRemittanceRows.indexOf(rowId);
+        const isSelected = e.checked;
+        if (isSelected) {
+            document.getElementById('multiSelectActions').style.display = 'block';
+            inwardRemittanceRows.push(rowId);
+            $inwardRow.style.backgroundColor = '#dde6ef';
+            document.getElementById(`actions-${rowId}`).style.display = 'none';
+            $inwardRowColumn.children[0].checked = true;
+        }
+        else {
+            rowIndex > -1 && inwardRemittanceRows.splice(rowIndex, 1);
+            document.getElementById(`actions-${rowId}`).style.removeProperty('display');
+            $inwardRow.style.removeProperty('background-color');
+            $inwardRowColumn.children[0].checked = false;
+        }
+        document.getElementById('multiSelectCount').innerText = String(inwardRemittanceRows.length);
+        if (!inwardRemittanceRows.length) {
+            document.getElementById('multiSelectActions').style.display = 'none';
+            document.getElementById('multiSelectAll').checked = false;
+        }
+    }
+    function multiSelectAllRow(e) {
+        $(".inw-val").each(function () {
+            const rowId = this.attributes['data-row-id'].value;
+            const $inwardRow = document.getElementById(`rows-${rowId}`);
+            const $inwardRowColumn = document.getElementById(`column-${rowId}`);
+            const rowIndex = inwardRemittanceRows.indexOf(rowId);
+            const isSelected = e.checked;
+            if (isSelected) {
+                document.getElementById('multiSelectActions').style.display = 'block';
+                inwardRemittanceRows.push(rowId);
+                $inwardRow.style.backgroundColor = '#dde6ef';
+                document.getElementById(`actions-${rowId}`).style.display = 'none';
+                $inwardRowColumn.children[0].checked = true;
+            }
+            else {
+                rowIndex > -1 && inwardRemittanceRows.splice(rowIndex, 1);
+                document.getElementById(`actions-${rowId}`).style.removeProperty('display');
+                $inwardRow.style.removeProperty('background-color');
+                $inwardRowColumn.children[0].checked = false;
+            }
+            document.getElementById('multiSelectCount').innerText = String(inwardRemittanceRows.length);
+            if (!inwardRemittanceRows.length) {
+                document.getElementById('multiSelectActions').style.display = 'none';
+                document.getElementById('multiSelectAll').checked = false;
+            }
+        })
+    }
+    function approveInwardSubmit() {
+        const inwardRemId = document.getElementById('approveInwardRemittanceId').value;
+        const inwardTransactionType = document.getElementById('approveTransactionType').value;
+        if (inwardRemId && inwardTransactionType) {
+            const form = document.createElement('form');
+            form.method = 'POST';
+            const Ids = [];
+            const element1 = document.createElement('input');
+            const element2 = document.createElement('input');
+            element1.name = 'InwardRemittanceIds';
+            Ids.push(inwardRemId);
+            element1.value = JSON.stringify(Ids);
+            element2.name = 'action_type';
+            element2.value = 'approve_confirm';
+            const inp_csrf = document.createElement('input');
+            inp_csrf.type = 'hidden';
+            inp_csrf.name = 'csrfmiddlewaretoken';
+            inp_csrf.value = '{{csrf_token}}';
+            form.appendChild(element1);
+            form.appendChild(element2);
+            form.appendChild(inp_csrf);
+            document.body.appendChild(form);
+            form.submit();
+            return true;
+        }
+        if (inwardRemittanceRows && inwardRemittanceRows.length) {
+            const form = document.createElement('form');
+            form.method = 'POST';
+            const element1 = document.createElement('input');
+            const element2 = document.createElement('input');
+            element1.name = 'InwardRemittanceIds';
+            element1.value = JSON.stringify(inwardRemittanceRows);
+            element2.name = 'action_type';
+            element2.value = 'approve_confirm';
+            const inp_csrf = document.createElement('input');
+            inp_csrf.type = 'hidden';
+            inp_csrf.name = 'csrfmiddlewaretoken';
+            inp_csrf.value = '{{csrf_token}}';
+            form.appendChild(element1);
+            form.appendChild(element2);
+            form.appendChild(inp_csrf);
+            document.body.appendChild(form);
+            form.submit();
+            return true;
+        }
+        window.location.reload();
+    }
+    function rejectInwardSubmit() {
+        if (validateForm('rejectForm', 'class')) {
+            document.getElementById('rejectForm').submit();
+        }
+        return false;
+    }
+    function removeFormValidationMsgs(f) {
+        if (document.forms[f]) {
+            for (let e = 0; e < document.forms[f].elements.length; e += 1) {
+                const event = document.forms[f].elements[e];
+                if (event.style.borderColor && event.style.borderColor === 'red') {
+                    event.style.borderColor = null;
+                }
+                const errMsgSelector = document.getElementById(`err-${event.id}`);
+                if (errMsgSelector) {
+                    errMsgSelector.remove();
+                }
+            }
+        }
+    }
+</script>
+
+{% endblock %}

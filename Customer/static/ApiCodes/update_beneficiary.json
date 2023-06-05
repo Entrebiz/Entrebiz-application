@@ -1,0 +1,122 @@
+{
+  "name": "Update Beneficiary",
+  "endpoint": "PATCH/update/{slug}",
+  "parameters": [
+    {
+      "name": "slug",
+      "required": true,
+      "description": "Slug must be provided as query parameter in order to update the beneficiary account."
+    }
+  ],
+  "languages": [
+    {
+      "name": "PHP",
+      "code": [
+        " <?php",
+        "$request = new HttpRequest();",
+        "$request->setUrl('https://api.entrebiz-pte.com/api/v1/beneficiary/update/<str:slug>');",
+        "$request->setMethod(HTTP_METH_PATCH);",
+        "$request->setHeaders(array(",
+        "'Cache-Control' => 'no-cache',",
+        "'Authorization' => 'Token eyJhbGc3OiJSUzI1NiIsInR5cCI6IkpXVCJ9.",
+        "eyJ1c2VySWQiOjI3NzIsImVtYWlsIjoic2l2YXByYXNhZEBzcGVyaWNvce4uY29tIiwsaWF",
+        "0IjoxNTcyMDA2MjUzLCJleHAiOjE1NzIwOTI2NTN9.DpjvqEwv-DWvSgvZJRV2tOluKlFbh",
+        "YLyLXjpI5IAOhV6QWXQW71wLT1WNJV1WRA2LU6KARXHCBzLBxojWLJjfA',",
+        "'Content-Type' => 'application/json'));",
+        "$request->setBody('{",
+        "accountnumber:10000###",
+        "receivername:ben,",
+        "}');",
+        " $response = $request->send();"
+      ],
+      "Response": [
+        "{",
+        "'status': true,",
+        "'data': {",
+        "'beneficiary': {",
+        "\t'slug': '1IaPwnDEoOQj3N5x',",
+        "\t'accountnumber': '1000###',",
+        "\t'first_name': 'Padma'",
+        "\t'last_name': 'KP',",
+        "\t'currency_code': 'EUR',",
+        "\t'receivername': 'ben',",
+        "\t'is_company': false",
+        "\t}",
+        "},",
+        "'message': 'beneficiary successfully updated!'",
+        "}"
+      ]
+    },
+
+    {
+      "name": "NodeJs",
+      "code": [
+        "var request = require('request');",
+        "var options = { method: 'PATCH',",
+        "url: 'https://api.entrebiz-pte.com/api/v1/beneficiary/update/<str:slug>',",
+        "headers: ",
+        "{ 'Cache-Control': 'no-cache',",
+        "'Authorization': 'Token eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ",
+        "1c2VySWQiOjY2ODQsImVtYWlsIjoibHA3N0BtYWlsaW5hdG9yLmNvbSIsImlhd",
+        "CI6MTU3MjAyNjQzNCwiZXhwIjoxNTcyMTEyODM0fQ.Unavq_6yo5fvkiiRG1",
+        "ki61qmIdXZ3O1jyuhb4-hI0cWw2plM-91kz1nWV_y2K1vUXoj2S17bhpgBm9tRA',",
+        "'Content-Type': 'application/json' },",
+        "body: { accountnumber: '10000###',receivername:bennnnn1111 },",
+        "json: true };",
+        "request(options, function (error, response, body) {",
+        "if (error) throw new Error(error);",
+        "console.log(body);",
+        "});"
+      ],
+      "Response": [
+        "{",
+        "'status': true,",
+        "'data': {",
+        "'beneficiary': {",
+        "\t'slug': '1IaPwnDEoOQj3N5x',",
+        "\t'accountnumber': '1000###',",
+        "\t'first_name': 'Padma'",
+        "\t'last_name': 'KP',",
+        "\t'currency_code': 'EUR',",
+        "\t'receivername': 'ben',",
+        "\t'is_company': false",
+        "\t}",
+        "},",
+        "'message': 'beneficiary successfully updated!'",
+        "}"
+      ]
+    },
+
+    {
+      "name": "Python",
+      "code": [
+        "import requests",
+        "url = 'https://api.entrebiz-pte.com/api/v1/beneficiary/update/<str:slug>'",
+        "payload = '{\n\t\"accountnumber\": \"10000###\",\n\t\"receivername\": \"bennnnn1111\"\n}'",
+        "headers = {",
+        "'Authorization': 'Token eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjY2ODQsImVtYWlsIjoibHA3N0BtYWlsaW5hdG9yLmNvbSIsImlhdCI6MTU3MjAyNjQzNCwiZXhwIjoxNTcyMTEyODM0fQ.Unavq_6yo5fvkiiRG1Hki61qmIdXZ3O1jyuhb4-hI0cWw2plM-91kz1nWV_y2K1vUXoj2S17bhpgBm9tL9QvRA'",
+        "'Cache-Control': 'no-cache'",
+        "}",
+        "response = requests.request('PATCH', url, data=payload, headers=headers)",
+        "print(response.text)"
+      ],
+      "Response": [
+        "{",
+        "'status': true,",
+        "'data': {",
+        "'beneficiary': {",
+        "\t'slug': '1IaPwnDEoOQj3N5x',",
+        "\t'accountnumber': '1000###',",
+        "\t'first_name': 'Padma'",
+        "\t'last_name': 'KP',",
+        "\t'currency_code': 'EUR',",
+        "\t'receivername': 'ben',",
+        "\t'is_company': false",
+        "\t}",
+        "},",
+        "'message': 'beneficiary successfully updated!'",
+        "}"
+      ]
+    }
+  ]
+}

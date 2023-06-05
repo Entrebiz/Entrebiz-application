@@ -1,0 +1,19 @@
+
+<div id="modal-delete-tracepayment" class="modal fade">
+	<div class="modal-dialog modal-confirm">
+		<div class="modal-content">
+			<div class="modal-header flex-column">
+				<h6 class="modal-title w-100">Do you really want to delete ?</h46>
+			</div>
+            <form method="POST">
+                {% csrf_token %}
+            <input type="hidden" name="action_type" value="delete_tracepayment" >
+			<div class="modal-footer justify-content-center">
+				<button type="button" style="background-color: #a8a8a8;padding: 0px 0px;" class="btn btn-primary ripple-efct btn-open-dlt-cnfrm-modal" data-bs-dismiss="modal">CANCEL</button>
+					<input type="hidden" class="tracepayment-id" name="tracepayment_id" value="">
+					<button type="submit" style="background-color: #fa661d;padding: 0px 0px;" class="btn btn-primary ripple-efct btn-open-dlt-cnfrm-modal">CONFIRM</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>

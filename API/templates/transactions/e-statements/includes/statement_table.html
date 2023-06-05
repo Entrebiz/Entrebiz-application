@@ -1,0 +1,124 @@
+{% load util_tags %}
+<div class="stmnt-table">
+    <style>
+    table td{
+        border-bottom:1px solid #efefef;
+        padding: 10px 10px 10px 10px;
+    }
+</style>
+<div class="table-content">
+<table class="" width="100%">
+            <thead>
+                <tr class="headingCenter" style="height:40px">
+                    <th class="stmt-th-date">Date</th>
+                    <th class="stmt-th-type">Type</th>
+                    <th class="stmt-th-det" style="width:200px">Details</th>
+                    <th class="stmt-th-amt">Amount</th>
+                    <th class="stmt-th-bal">Balance</th>
+                    <th class="stmt-th-actn">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for transaction in transactions %}
+                {% get_beneficiary transaction as beneficiary %}
+                {% get_transaction_type transaction as transactiontype %}
+                {% get_debit_amount transaction as debit_amount %}
+                {% is_debit_or_credit transaction account.accountno as debit_or_credit %}
+                {% get_recipient_accountnumber transaction as to_account %}
+                {% get_reference transaction as reference %}
+                {% get_balance_amount transaction as balance_amount %}
+                {% enable_view_action transaction request as enable_status %}
+                    <tr>
+                       <td>{{transaction.createdon|date:"M d Y"}}</td>
+                       <td title="{{transaction.transactiontype.name}}">{{transactiontype}}
+                        {% if debit_or_credit == 'debit' %}
+                           (Dr)
+                           {% else %}
+                           (Cr)
+                           {% endif %}
+                       </td>
+                       <td class="stmt-td-det">
+
+                            <b>Transaction No</b>: {{transaction.transactionno}}<br>
+                            <b>Beneficiary Name</b>: {{beneficiary.name}}<br>
+                            {% if reference %}<b>Ref</b>: {{reference}}{% endif %}
+                       </td>
+
+                       {% if debit_or_credit == 'debit' %}
+                            <td class="textRight" style="color: red;">
+                                <b>-{{ debit_amount|floatformat:2 }} {{account.currency.code}}</b>
+                            </td>
+                           <td class="textRight" style="color: {{balance_amount|to_color}};"><b>
+                                {{balance_amount|floatformat:2|default_if_none:'-'}}
+
+                       {% else %}
+                            <td class="textRight" style="color: green;">
+                                <b>+{{transaction.toamount|floatformat:2}} {{account.currency.code}}</b>
+                            </td>
+                           <td class="textRight" style="color: {{transaction.toaccountbalance|to_color}};"><b>
+                                {{transaction.toaccountbalance|floatformat:2}}
+                           {% endif %}
+                           {{account.currency.code}}
+                           </b>
+                           </td>
+                        <td style="text-align: center;">
+                            {% if request.path == '/getCustomerDetails' or from_page == 'customer_management' %}
+                            <form class="form-get-transactiondetails{{forloop.counter}}" method="post" action="/getStatements">
+                              <input type="hidden" name="slug" {% if request.GET.slug %}value="{{request.GET.slug}}" {% else %} value="{{slug}}" {% endif %}>
+                            {% else %}
+                            <form class="form-get-transactiondetails{{forloop.counter}}" method="post" action="/statements/transaction">
+                            {% endif %}
+                            <input type="hidden" name="action_type" value="get_trasnactiondetailsby_id">
+                            <input type="hidden" class="transaction_id" name="transaction_id" value="{{transaction.id}}">
+                            <input type="hidden" class="account_id" name="account_id" value="{{account.id}}">
+
+
+                        </form>
+                        {% if enable_status %}
+                       <a style="display:block" title="View Details" class="btn-get-transaction-details"  href="javascript:{}" onclick="submit_transactiondetails_form(document.getElementsByClassName('form-get-transactiondetails{{forloop.counter}}')[0])">
+                            View</a>&nbsp;
+                        {% else %}
+                        -
+                        {% endif %}
+                       </td>
+                   </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" style="text-align:center;border:none;">
+                    <span style="font-size:16px;">No records found</span>
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+</div>
+
+<hr>
+            <div class="row" style="margin-top:15px;margin-bottom:20px;">
+                <div class="col-sm-12" style="text-align:center">
+                    <div class="pagination" style="">
+                  {% if transactions.has_other_pages %}
+                        {% if transactions.has_previous %}
+                          <a class="btn-page" data-page-num="{{ transactions.previous_page_number }}">&laquo;</a>
+                        {% else %}
+                          <a class="disabled"><span>&laquo;</span></a>
+                        {% endif %}
+                        {% for i in transactions.paginator.page_range %}
+                          {% if transactions.number == i %}
+                            <a data-page-num="{{ i }}" class="active">{{ i }}</a>
+                          {% else %}
+                            <a class="btn-page" data-page-num="{{ i }}">{{ i }}</a>
+                          {% endif %}
+                        {% endfor %}
+                        {% if transactions.has_next %}
+                          <a class="btn-page" data-page-num="{{ transactions.next_page_number }}">&raquo;</a>
+                        {% else %}
+                          <a class="disabled"><span>&raquo;</span></a>
+                        {% endif %}
+                    {% endif %}
+                </div>
+                </div>
+
+            </div>
+</div>

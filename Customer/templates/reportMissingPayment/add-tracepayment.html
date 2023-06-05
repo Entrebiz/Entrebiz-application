@@ -1,0 +1,153 @@
+{% extends 'common/base.html' %}
+{% load static %}
+{% load util_tags %}
+{% block css %}
+<link rel="stylesheet" type="text/css" href="{% static 'accounts/css/wSelect.css' %}">
+{% endblock %}
+
+{% block content %}
+
+
+<div class=" balance-cover  mx-4 ">
+    <div class="row">
+        <div class=" balance-main">
+            {% if message %}
+            <div class="alert-box-outer">
+                <div class="{% if status %}success-alert{% else %}section-alert{% endif %}" style="display: block;"
+                    id="alertDiv">
+                    <button class="section-alert-close" onclick="closeAlertModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <p style="text-align: center" id="errorField">{{message}}</p>
+                </div>
+            </div>
+            {% endif %}
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="form-group col-lg-6 dr1">
+                        <label>Account Number</label>
+                        <select id="AccountId" name="AccountId" class="custom-select select-list Check"
+                            style="display:none">
+                            <option  value="" disabled="" selected> -Select Currency- </option>
+                            {% for account in accounts|acc_list:user_details %}
+                            <option
+                                data-icon="{% if account.currency.flag %}{{account.currency.flag.url}}{% else %}/other/no-image.jpg{% endif %}"
+                                value="{{account.id}}" {% if AccountId|to_int == account.id %}selected{% endif %}>
+                                {{account.accountno}} {{account.currency.code}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="internal form-group col-lg-6">
+                        <label>Senders Name</label><input id="senderName" type="text" name="senderName"
+                            placeholder="Enter sender Name" class="form-control" value="{{senderName}}" onblur="checkNonAsciiCharacters(this)">
+                    </div>
+                    <div class="form-group col-lg-6">
+                        <label>Senders Bank</label>
+                        <input type="text" name="SenderBank" id="SenderBank" placeholder="Senders Bank"
+                            class="form-control" value="{{SenderBank}}" onblur="checkNonAsciiCharacters(this)">
+                    </div>
+                    <div class="form-group col-lg-6">
+                        <label>Senders Acc.No</label><input id="senderAccountNo" type="text" name="senderAccountNo"
+                            placeholder="Enter sender Acc.No" value="{{senderAccountNo}}"
+                            onkeypress="return restrictAlphabets(event)" onblur="return formatAccount(event ,this.id)"
+                            maxlength="25" class="form-control">
+                    </div>
+                    <div class="form-group col-lg-6">
+                        <label>Amount</label><input type="text" id="amount" name="Amount"
+                            onblur="return formatAmount(event)" onkeypress="return restrictAmount(event)" maxlength="12"
+                            placeholder="Enter Amount" value="{{Amount}}" class="form-control Check">
+                    </div>
+                    <div class="form-group col-lg-6 dr2">
+                        <label>Currency</label>
+                        <select id="CurrencyId" name="CurrencyId" class="custom-select select-list Check" 
+                            style="display:none">
+                            <option value="" disabled="" selected> -Select Currency-
+                            </option>
+                            {% for currency in currencies %}
+                            <option
+                                data-icon="{% if currency.flag %}{{currency.flag.url}}{% else %}/other/no-image.jpg{% endif %}"
+                                value="{{currency.id}}" {% if CurrencyId|to_int == currency.id %}selected{% endif %}>
+                                {{currency.code}} {{currency.name}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group col-lg-6">
+                        <label>Booking Date</label>
+                        <input id="text2" type="date" name="BookingDate" class="form-control" value="{{BookingDate}}">
+                    </div>
+                    <div class="form-group col-lg-6">
+                        <label>Attach Proof of payment</label>
+                        <label class="btn btn-primary button-w w-100" for="my-file-selector">
+                            <input id="my-file-selector" name="invoice-doc" type="file" style="display:none"
+                                onchange="$('#upload-file-info').text(this.files[0].name);$('#upload-file-info').css('color', 'green');">
+                            Choose File
+                        </label>
+                        <span style="color: green;" class='label label-info' id="upload-file-info"></span>
+                        <div class="note">
+                            <p>- Allowed Files :
+                                jpeg, JPG, pdf, tiff, png
+                            </p>
+                            <p>- Maximum file size :
+                                10 MB
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="form-group col-lg-12">
+                        <label>Reference</label><input type="text" name="Reference" id="Reference"
+                            placeholder="Enter Reference" value="{{Reference}}" class="form-control" onblur="checkNonAsciiCharacters(this)">
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                <div class="form-group col-lg-6">
+                    <input type="submit" name="CANCEL" value="CANCEL" class="btn btn-light button-w w-100 btn-add-beneficiary" style="border: solid 1px #e1e1e1;border-radius: 5px;background-color: #fff;color: #646464">
+                </div>
+                <div class="form-group col-lg-6">
+                    <input type="submit" onclick="return validate()" name="CONFIRM" value="CONFIRM" class="btn btn-primary button-w w-100 btn-add-beneficiary">
+                </div>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+{% block extra_script %}
+<script src="{%static '/accounts/js/wSelect.min.js' %}"></script>
+<script>
+    $('#AccountId').wSelect();
+    $('#CurrencyId').wSelect();
+    function validate(){
+        let validationType = false;
+        allInputs = document.getElementsByClassName('Check');
+        for (let j = 0; j < allInputs.length; j += 1) {
+            if (['', null, undefined].includes(allInputs[j].value)) {
+                validationType=true
+                if (allInputs[j].id == 'AccountId') {
+                    $(".dr1").find('.wSelect-theme-classic').css('border-color', 'red');
+                }
+                else if (allInputs[j].id == 'CurrencyId') {
+                    $(".dr2").find('.wSelect-theme-classic').css('border-color', 'red');
+                }
+                else {
+                    $('#' + allInputs[j].id).css('border-color', 'red');
+                    showErrorField([allInputs[j]], 'Amount required');
+                }
+            }
+            else{
+                if (allInputs[j].id == 'AccountId') {
+                    $(".dr1").find('.wSelect-theme-classic').css('border-color', '');
+                }
+                else if (allInputs[j].id == 'CurrencyId') {
+                    $(".dr2").find('.wSelect-theme-classic').css('border-color', '');
+                }
+            }
+        }
+        if (validationType) return false;
+        return true;
+    }
+
+</script>
+{% endblock %}

@@ -1,0 +1,277 @@
+{% extends 'accounts/openaccount/personal-signup/reg-base.html' %}
+{% load static %}
+{% block content %}  
+<style>
+    input[type=checkbox]:checked{
+        background-color: rgb(255, 102, 0);
+    }
+    .checkmark-bs{
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    height: 18px;
+    width: 18px;
+    z-index: 10;
+    border-radius: 4px;
+    background-color: #C8C8C8;
+    }
+    .custom-checbox-hldr input:checked ~ .checkmark-bs {
+    background-color: rgb(255, 102, 0);
+}
+input[type="checkbox"] {
+    display: inline;
+    margin-right: 0.35em;
+}
+input[type="checkbox"] {
+    box-sizing: border-box;
+    padding: 0px;
+}
+.checkmark::after {
+    content: "";
+    position: absolute;
+    
+}
+.custom-checbox-hldr .checkmark-bs::after {
+    left: 7px;
+    top: 3px;
+    width: 5px;
+    height: 10px;
+    transform: rotate(45deg);
+    border-style: solid;
+    border-color: white;
+    border-image: initial;
+    border-width: 0px 2px 2px 0px;
+}
+</style> 
+<div class="row-fluid acc-det-body acc-det-body-lg">
+    <div class="container acc-det-container signup-confirm-container acc-det-lg">
+        <div class="acc-det business-confirm-body">
+            <div class="acc-det-logo signup-title-logo">
+                <a href="/">
+                    <img src="{% static 'dash/assets/img/logo-ct.png' %}" alt="">
+                </a>
+            </div>
+            <div class="row signup-title-row">
+                <div class="col-md-8 col-12 signup-title-block">
+                    <h2 class="confirm-sub-title">Confirm your details</h2>
+                </div>
+                <div class="col-md-4 col-12 signup-title-block">
+                    <a href="/register/business/?Edit=True" class="link-with-icn efct-txt-grn"><img class="anm-slide-lft" src="{% static 'dash/assets/img/pencil.png' %}" alt=""> Edit</a>
+                </div>
+                <!-- <div class="alert-box" id="alertDiv">
+                    <span id="errorField"></span>
+                </div> -->
+            </div>
+            <div class="acc-det-body-content">
+                <div class="confirm-content-block">
+                    <div class="row form-row-signup">
+                        <div class="col-md-6 col-12 confirm-data-group">
+                            <div class="confirm-data-label">
+                                Company Name
+                            </div>
+                            <div class="confirm-data-value">
+                                {{ request.session.businessaccount.companyName}}
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-12 confirm-data-group">
+                            <div class="confirm-data-label">
+                                Country of Incorporation
+                            </div>
+                            <div class="confirm-data-value">
+                                {{ request.session.businessaccount.countryName}}({{request.session.businessaccount.country}})
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row form-row-signup">
+                        <div class="col-md-6 col-12 confirm-data-group">
+                            <div class="confirm-data-label">
+                                Industry Type
+                            </div>
+                            <div class="confirm-data-value">
+                                {{ request.session.businessaccount.industryType }} 
+                            </div>
+                        </div>
+                        
+                            <div class="col-md-6 col-12 confirm-data-group">
+                                <div class="confirm-data-label">
+                                    Street Address
+                                </div>
+                                <div class="confirm-data-value">
+                                    {{ request.session.businessaccount.address }}
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-12 confirm-data-group">
+                                <div class="confirm-data-label">
+                                    City
+                                </div>
+                                <div class="confirm-data-value">
+                                    {{ request.session.businessaccount.city }}
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-12 confirm-data-group">
+                                <div class="confirm-data-label">
+                                    State / Region
+                                </div>
+                                <div class="confirm-data-value">
+                                    {{ request.session.businessaccount.state }}
+                                </div>
+                            </div>
+                            
+                    </div>
+                    <div class="row form-row-signup">
+                        <div class="col-md-6 col-12 confirm-data-group">
+                            <div class="confirm-data-label">
+                                Company URL
+                            </div>
+                            <div class="confirm-data-value">
+                                {{ request.session.businessaccount.companyUrl }}
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-12 confirm-data-group">
+                            <div class="confirm-data-label">
+                                Phone Number
+                            </div>
+                            <div class="confirm-data-value">
+                                {{ request.session.businessaccount.countryCode }}{{ request.session.businessaccount.phoneNo }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                
+
+
+                <div class="confirm-content-block confirm-block-gray">
+                    <h2 class="confirm-sub-title">User Details</h2>
+                    
+                    {% if request.session.businessaccount.users_lists %}
+                    {% for user in request.session.businessaccount.users_lists %}
+                    <div class="user-details-content-block">
+                        <div class="row form-row-signup">
+                            <div class="col-md-6 col-12 confirm-data-group">
+                                <div class="confirm-data-label">
+                                    First Name
+                                </div>
+                                <div class="confirm-data-value">
+                                    {{ user.firstName }}
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6 col-12 confirm-data-group">
+                                <div class="confirm-data-label">
+                                    Middle Name (optional)
+                                </div>
+                                
+                                    <div class="confirm-data-value" style="height: 33px;">
+                                        {{ user.middleName }}
+                                    </div>
+                                    
+                            </div>
+                            <div class="col-md-6 col-12 confirm-data-group">
+                                <div class="confirm-data-label">
+                                    Last Name
+                                </div>
+                                <div class="confirm-data-value">
+                                    {{ user.lastName }}
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-12 confirm-data-group">
+                                <div class="confirm-data-label">
+                                    Email
+                                </div>
+                                <div class="confirm-data-value">
+                                    {{ user.email }}
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-12 confirm-data-group">
+                                <div class="confirm-data-label">
+                                    User Type
+                                </div>
+                                <div class="confirm-data-value">
+                                    {% if user.userType == '1' %}Director{% elif user.userType == '2' %}Representative{% endif %}
+                                        
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-12 confirm-data-group">
+                                <div class="checkbox-container">
+
+                                    <label class="check-bx-cmpny-cnfrm custom-checbox-hldr">
+                                        {% if user.main_owner_list_new == '1' %}
+                                        <input type="checkbox" name="mainBusinessownernew" class="check-box" checked="checked" disabled>
+                                         <span style="border-radius: 0px" class="checkmark-cmpny-cnfrm"></span>
+                                         Ultimate Beneficial Owner
+                                         {% else %}
+                                         <input type="checkbox" name="mainBusinessownernew" class="check-box" disabled>
+                                         <span style="border-radius: 0px" class="checkmark-cmpny-cnfrm"></span>
+                                         Ultimate Beneficial Owner
+                                         {% endif %}
+                                     </label>
+
+                                   
+                                    
+                                </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+
+                </div>
+
+                <div class="confirm-content-block">
+                    <h2 class="confirm-sub-title">Currency</h2>
+                    <div class="row form-row-signup">
+                        <div class="col-md-6 col-12 confirm-data-group">
+                            <div class="confirm-data-label">
+                                1st Currency
+                            </div>
+                            <div class="confirm-data-value">
+                                <span class="confirm-currency"><img
+                                                src="/public/assets/flags/US-32.png?accessKey=qxypn26fz"
+                                                alt="">{{first_currency.name}} ({{first_currency.code}})</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-12 confirm-data-group">
+                            <div class="confirm-data-label">
+                                2nd Currency
+                            </div>
+                            <div class="confirm-data-value">
+                                <span class="confirm-currency"><img
+                                                src="/public/assets/flags/IN-32.png?accessKey=qxypn26fz"
+                                                alt="">{{second_currency.name}} ({{second_currency.code}})</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <form id="businessFormConfirm" name="businessFormConfirm" action="" method="post" onsubmit="showLoader()">
+                    {% csrf_token %}
+                    <div class="acc-det-body-content acc-det-body-signup">
+                        <div class="row form-row-signup form-row-signup-btn">
+                            <p style="display: none">
+                                <input type="checkbox" name="termsConditions" id="terms-checkbox" value="true" checked>
+                                
+                            </p>
+                            <button class="btn-primary signup-btn ripple-efct signUpButton" id="signUpSubmit" type="submit">
+                                Finish
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="acc-det-footer">
+                <div class="acc-bnt-sec">
+                    <a href="/login" class="acc-back-btn efct-link-dark"><img src="{% static 'dash/assets/img/arrow.png' %}" alt=""> Back to &nbsp;
+                        <span class="secondary-clr">Login</span></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    {% endblock %}
+{% block script %}
+
+    
+
+{% endblock %}

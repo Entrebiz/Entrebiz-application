@@ -1,0 +1,100 @@
+{% load static %}
+<div class="user-details row">
+    <div class="form-group col-lg-6 user-det">
+        <label for="Boxno">Box No</label>
+        {% if prevData and prevData.Boxno %}
+        <input id="Boxno" name="Boxno" placeholder="Enter Box No" type="text" class="form-control validationClass"
+            value="{{prevData.Boxno}}" maxlength="20" >
+        {% else %}
+        <input id="Boxno" name="Boxno" placeholder="Enter Box No" type="text" class="form-control validationClass" maxlength="20"
+            >
+        {% endif %}
+    </div>
+
+    <div class="form-group col-lg-6 user-det">
+        <label for="Street">Street</label>
+        {% if prevData and prevData.Street %}
+        <input id="Street" name="Street" placeholder="Enter Street" type="text" class="form-control validationClass"
+            value="{{prevData.Street}}" maxlength="100" >
+        {% else %}
+        <input id="Street" name="Street" placeholder="Enter Street" type="text" class="form-control validationClass" maxlength="100"
+            >
+        {% endif %}
+    </div>
+
+    <div class="form-group col-lg-6 user-det">
+        <label for="userCity">City</label>
+        {% if prevData and prevData.userCity %}
+        <input id="userCity" name="userCity" placeholder="Enter City" type="text" class="form-control validationClass"
+            value="{{prevData.userCity}}" maxlength="30" >
+        {% else %}
+        <input id="userCity" name="userCity" placeholder="Enter City" type="text" class="form-control validationClass" maxlength="50"
+            >
+        {% endif %}
+    </div>
+
+    <div class="form-group col-lg-6 user-det">
+        <label for="State">State</label>
+        {% if prevData and prevData.State %}
+        <input id="State" name="State" placeholder="Enter State" type="text" class="form-control validationClass"
+            value="{{prevData.State}}" maxlength="30" >
+        {% else %}
+        <input id="State" name="State" placeholder="Enter State" type="text" class="form-control validationClass" maxlength="30"
+            >
+        {% endif %}
+    </div>
+
+    <div class="form-group col-lg-6 user-det">
+        <label for="userCountry">User Country</label>
+        <div>
+            <select id="userCountry" name="userCountry" class="custom-select select-list validationClass" >
+                <option value="">Select Country</option>
+                {% if prevData and prevData.userCountry %}
+                {% for country in countries %}
+                <option value="{{country.name}}" {% if prevData.userCountry == country.name %}selected{% endif %}>
+                    {{country.name}}</option>
+                {% endfor %}
+                {% else %}
+                {% for country in countries %}
+                <option value="{{country.name}}">{{country.name}}</option>
+                {% endfor %}
+                {% endif %}
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group col-lg-6 user-det">
+        <label for="Phoneno">Tel/Mob No.</label>
+        {% if prevData and prevData.Phoneno %}
+        <input id="Phoneno" name="Phoneno" placeholder="+9526295008" type="text" class="form-control validationClass"
+            value="{{prevData.Phoneno}}" minlength="10" maxlength="20" >
+        {% else %}
+        <input id="Phoneno" name="Phoneno" placeholder="+9526295008" type="text" class="form-control validationClass" minlength="10"
+            maxlength="20" >
+        {% endif %}
+    </div>
+</div>
+<script>
+        if (document.forms.length) {
+            for (let f = 0; f < document.forms.length; f += 1) {
+                for (let e = 0; e < document.forms[f].elements.length; e += 1) {
+                    document.forms[f].elements[e].addEventListener('focus', (event) => {
+                        if (event.target.style.borderColor && event.target.style.borderColor === 'red') {
+                            event.target.style.borderColor = null;
+                        }
+                        const errMsgSelector = document.getElementById(`err-${event.target.id}`);
+                        if (errMsgSelector) {
+                            errMsgSelector.remove();
+                        }
+                    });
+                }
+            }
+        }
+    $('#Phoneno').on('keypress', function (evt) {
+            var charCode = (evt.which) ? evt.which : event.keyCode
+            if (charCode != 43 && charCode > 31 && (charCode < 48 || charCode > 57))
+            return false;
+            return true
+       
+         });
+</script>

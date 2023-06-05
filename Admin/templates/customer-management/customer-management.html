@@ -1,0 +1,393 @@
+{% extends 'common/admin-base.html' %}
+{% load static %}
+{% load util_tags %}
+{% block css %}
+<style>
+    .mail-modal-cover {
+        padding-top: 30px;
+    }
+
+    .mail-modal-cover .mail-inp-row {
+        display: flex;
+        margin-bottom: 25px;
+        align-items: center;
+    }
+
+    .mail-modal-cover .mail-inp-row .mail-inp-label {
+        text-align: left;
+        flex: 0 0 100px;
+    }
+
+    .mail-modal-cover .mail-inp-row .mail-inp-cover {
+        flex-grow: 1;
+    }
+
+    .mail-modal-cover .mail-inp-row .mail-inp-box {
+        width: 100%;
+        border: none;
+        border-bottom: solid 1px #efefef;
+        font-size: 15px;
+        padding: 5px 15px;
+    }
+
+    .mail-modal-cover .mail-inp-row.last-mail-inp {
+        margin-bottom: 5px;
+    }
+
+    .mail-modal-cover .mail-body {
+        margin-top: 15px;
+        border-radius: 5px;
+        border: solid 1px #efefef;
+        width: 100%;
+        padding: 5px 15px;
+        font-size: 15px;
+    }
+
+    .mail-modal-cover .otp-modal-content {
+        padding: 10px !important;
+    }
+    .btn-primary:hover{
+            padding: 10px 58px !important;
+    }
+    .btn-cnf:hover {
+        padding: 0px 0px !important;
+        background: #fff !important;
+        border-radius: 3px !important;
+        color: #ff671e !important;
+    }
+</style>
+{% endblock %}
+{% block content %}
+<div class=" balance-cover  mx-4 " style="min-height: 421px;">
+    <div class="row">
+        <div class=" balance-main">
+            {% if message %}
+            <div class="alert-box-outer">
+                <div class="{% if status %}success-alert{% else %}section-alert{% endif %}" style="display: block;"
+                    id="alertDiv">
+                    <button class="{% if status %}success-alert-close{% else %}section-alert-close{% endif %}"
+                        onclick="closeAlertModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <p style="text-align: center" id="errorField">{{message}}</p>
+                </div>
+            </div>
+            {% endif %}
+            <div class="row">
+                <div class="form-group col-lg-2">
+                    <input type="text" name="Name" id="Name" value="" class="form-control" placeholder="Name"
+                        autocomplete="off">
+                </div>
+                <div class="form-group col-lg-2">
+                    <input type="text" name="CompanyName" id="CompanyName" value="" class="form-control"
+                        placeholder="Company name" autocomplete="off">
+                </div>
+                <div class="form-group col-lg-2">
+                    <input type="email" name="Email" id="Email" value="" class="form-control" placeholder="Email"
+                        autocomplete="off">
+                </div>
+                <div class="form-group col-lg-2">
+                    <input type="text" name="PhoneNo" id="PhoneNo" value="" class="form-control" placeholder="Phone"
+                        autocomplete="off">
+                </div>
+                <div class="form-group col-lg-2">
+                    <input type="text" name="AccountNo" id="AccountNo" value="" class="form-control"
+                        placeholder="Account" autocomplete="off">
+                </div>
+                <div class="form-group col-lg-2">
+                    <select class="custom-select select-list" id="AccountType" name="AccountType">
+                        <option value="">Both</option>
+                        <option value="1">Personal</option>
+                        <option value="2">Business</option>
+                    </select>
+                </div>
+                <div class="form-group col-lg-3">
+                    <select class="custom-select select-list" name="Status" id="Status">
+                        <option selected="" value="">-Select status-</option>
+                        <option value="Not Verified">Not verified</option>
+                        <option value="Verified">Verified</option>
+                        <option value="Deactivated by UBO">Deactivated By UBO</option>
+                        <option value="Rejected">Rejected</option>
+                        <option value="Suspended">Suspended</option>
+                    </select>
+                </div>
+                <div class="form-group col-lg-2">
+                    <select class="custom-select select-list" name="pageNo" id="pageNo">
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                        <option value="200">200</option>
+                    </select>
+                </div>
+                <div class="form-group col-lg-2">
+                    <button onclick="filterList(this);" class="btn btn-primary button-w">Search</button>
+                </div>
+                <!--  -->
+            </div>
+            {% include 'customer-management/filter-customer.html' %}
+
+        </div>
+
+    </div>
+    <!--  -->
+
+</div>
+<!--  -->
+</div>
+<!-- custom mail modal-->
+<div id="modal-mail-send" class="modal fade">
+    <div class="modal-dialog modal-confirm" style="width:100%;">
+        <form id="customerMailSent" role="form" method="post" action="/sendMail"
+            onsubmit="return validateForm('customerMailSent', 'form')">
+            {% csrf_token %}
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="mail-modal-cover">
+                        <div class="mail-inp-row">
+                            <div class="mail-inp-label">
+                                To
+                            </div>
+                            <div class="mail-inp-cover">
+                                <label for="SenderMail" style="display: none">Sender mail</label>
+                                <input style="outline: 0;" type="email" name="SenderMail" id="SenderMail"
+                                    class="mail-inp-box">
+                            </div>
+                        </div>
+                        <div class="mail-inp-row">
+                            <label for="Subject" style="display: none">Subject</label>
+                            <div class="mail-inp-label">
+                                Subject
+                            </div>
+                            <div class="mail-inp-cover">
+                                <input style="outline: 0;" type="text" name="Subject" id="Subject" class="mail-inp-box">
+                            </div>
+                        </div>
+                        <div class="mail-inp-row last-mail-inp">
+                            <label for="Content" style="display: none">Mail Content</label>
+                            <div class="mail-inp-cover">
+                                <textarea style="outline: 0;" name="Content" id="Content" class="mail-body"
+                                    rows="5"></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer justify-content-center">
+                            <button type="button" style="background-color: #fff;color: #ff6600;"
+                                class="btn btn-bordered"
+                                data-bs-dismiss="modal">CANCEL</button>
+                            <button type="submit" style="background-color: #fa661d;padding: 0px 0px;"
+                                class="btn btn-primary btn-cnf ripple-efct btn-open-dlt-cnfrm-modal">Submit</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<!--  -->
+<!-- lock user modal-->
+<form method="POST">
+    {% csrf_token %}
+    <div id="modal-lock-unlock" class="modal fade">
+        <div class="modal-dialog modal-confirm">
+            <div class="modal-content">
+                <div class="modal-header flex-column">
+                    <h6 style="font-weight: 100;" class="modal-title w-100">Do you really want to
+                        <span id="statusSpan"> <b></b></span>?
+                    </h6>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="button" style="background-color: #fff;color: #ff6600;"
+                        class="btn btn-bordered"
+                        data-bs-dismiss="modal">CANCEL</button>
+                    <input type="hidden" name="action_type" value="user_lock_unlock">
+                    <input type="hidden" name="emailLockUnlock" id="Email-Lock-Unlock">
+                    <input type="hidden" name="typeLockUnlock" id="Type-Lock-Unlock">
+                    <button type="submit" style="background-color: #fa661d;padding: 0px 0px;"
+                        class="btn btn-primary btn-cnf ripple-efct btn-open-dlt-cnfrm-modal">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<!--  -->
+<!-- delete user modal-->
+<form method="POST">
+    {% csrf_token %}
+    <div id="modal-delete-user" class="modal fade">
+        <div class="modal-dialog modal-confirm">
+            <div class="modal-content">
+                <div class="modal-header flex-column">
+                    <h6 style="font-weight: 100;" class="modal-title w-100">Do you really want to
+                        <span id="delstatusSpan"><b></b></span>?
+                    </h6>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="button" style="background-color: #fff;color: #ff6600;"
+                        class="btn btn-bordered"
+                        data-bs-dismiss="modal">CANCEL</button>
+                    <input type="hidden" id="userAccountId" name="userAccountId" value="">
+                    <input type="hidden" name="action_type" value="delete_user">
+                    <button type="submit" style="background-color: #fa661d;padding: 0px 0px;"
+                        class="btn btn-primary btn-cnf ripple-efct btn-open-dlt-cnfrm-modal">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<!--  -->
+<!-- show confirmation email modal-->
+<form method="POST" action="/password-reset-mail">
+    {% csrf_token %}
+    <div id="modal-show-confirmation" class="modal fade">
+        <div class="modal-dialog modal-confirm">
+            <div class="modal-content">
+                <div class="modal-header flex-column">
+                    <h6 style="font-weight: 100;" class="modal-title w-100">A password reset link will be sent to the
+                        <span id="emailSpan"><b></b></span>
+                    </h6>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="button" style="background-color: #fff;color: #ff6600;"
+                        class="btn btn-bordered"
+                        data-bs-dismiss="modal">CANCEL</button>
+                    <input type="hidden" id="userAccountID" name="userAccountID" value="">
+                    <button type="submit" style="background-color: #fa661d;padding: 0px 0px;"
+                        class="btn btn-primary btn-cnf ripple-efct btn-open-dlt-cnfrm-modal">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<!--  -->
+<!-- allow wallet transfer modal -->
+<form method="POST">
+    {% csrf_token %}
+    <div id="modal-allow-wallet-transfer" class="modal fade">
+        <div class="modal-dialog modal-confirm">
+            <div class="modal-content">
+                <div class="modal-header flex-column">
+                    <h6 style="font-weight: 100;" class="modal-title w-100">Do you really want to allow Wallet Withdrawal ?
+                    </h6>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="button" style="background-color: #fff;color: #ff6600;"
+                        class="btn btn-bordered"
+                        data-bs-dismiss="modal">CANCEL</button>
+                    <input type="hidden" name="action_type" value="allow_wallet_withdrawal">
+                    <input type="hidden" id="userID" name="userAccountId" value="">
+                    <button type="submit" style="background-color: #fa661d;padding: 0px 0px;"
+                        class="btn btn-primary btn-cnf ripple-efct btn-open-dlt-cnfrm-modal">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<!--  -->
+{% endblock %}
+{% block extra_script %}
+<script>
+    $(document).on("click", ".btn-page", function () {
+        next_page = $(this).attr("data-page-num")
+        var name = $('#Name').val()
+        var companyName = $('#CompanyName').val()
+        var email = $('#Email').val()
+        var phoneNo = $('#PhoneNo').val()
+        var accountNo = $('#AccountNo').val()
+        var accountType = $('#AccountType option:selected').val()
+        var status = $('#Status option:selected').val()
+        var pageNo = $('#pageNo').val()
+        $.get('/filter-customers',
+            {
+                'name': name,
+                'companyName': companyName,
+                'email': email,
+                'phoneNo': phoneNo,
+                'accountNo': accountNo,
+                'accountType': accountType,
+                'status': status,
+                'pageNo': pageNo,
+                'page': next_page,
+                'is_paginate': "true"
+            },
+            function (data, status) {
+                $(".customer-table").replaceWith(data.customer_details);
+            });
+
+    })
+    function filterList(e) {
+        var name = $('#Name').val()
+        var companyName = $('#CompanyName').val()
+        var email = $('#Email').val()
+        var phoneNo = $('#PhoneNo').val()
+        var accountNo = $('#AccountNo').val()
+        var accountType = $('#AccountType option:selected').val()
+        var status = $('#Status option:selected').val()
+        var pageNo = $('#pageNo').val()
+        $.get('/filter-customers',
+            {
+                'name': name,
+                'companyName': companyName,
+                'email': email,
+                'phoneNo': phoneNo,
+                'accountNo': accountNo,
+                'accountType': accountType,
+                'status': status,
+                'pageNo': pageNo,
+            },
+            function (data, status) {
+                $(".customer-table").replaceWith(data.customer_details);
+            });
+    }
+    function deleteConfirmation(id, email) {
+        const HtmlContent = document.getElementById('delstatusSpan');
+        HtmlContent.innerHTML = '';
+        HtmlContent.innerHTML = `Delete <b>${email}</b>`;
+        document.getElementById('userAccountId').value = id;
+        $("#modal-delete-user").modal("show")
+        return false
+
+    }
+    function showConfirmationMail(id, email) {
+        const HtmlContent = document.getElementById('emailSpan');
+        HtmlContent.innerHTML = '';
+        HtmlContent.innerHTML = `<b>${email}</b>`;
+        document.getElementById('userAccountID').value = id;
+        $("#modal-show-confirmation").modal("show")
+        return false
+    }
+    function allowWalletWithdrawal(id) {
+        document.getElementById('userID').value = id;
+        $("#modal-allow-wallet-transfer").modal("show")
+        return false
+    }
+    function changeUserLock(type, email) {
+        var HtmlContent = document.getElementById('statusSpan');
+        HtmlContent.innerHTML = '';
+        HtmlContent.innerHTML = (type === 1) ? `Unlock <b>${email}</b>` : `Lock <b>${email}</b>`;
+        document.getElementById('Email-Lock-Unlock').value = email;
+        document.getElementById('Type-Lock-Unlock').value = type;
+        $("#modal-lock-unlock").modal("show")
+        return false
+    }
+    function sendMailToCustomer(emailObj) {
+        const elem = document.getElementById('SenderMail');
+        elem.value = '';
+        document.getElementById('Subject').value = '';
+        document.getElementById('Content').value = '';
+        if (emailObj.email) {
+            elem.value = emailObj.email;
+            $("#modal-mail-send").modal("show")
+            document.getElementById('Subject').focus();
+        }
+        return false
+    }
+    function openInNewTab(url) {
+        var win = window.open(url, '_blank');
+        win.focus();
+    }
+    function showModal(id, name) {
+        $("#modal-delete-bank").find("#slug").val(id)
+        $("#modal-delete-bank").find(".modal-title").text('Do you really want to Delete ' + name + ' ?')
+        $("#modal-delete-bank").modal("show")
+        return false
+    }
+</script>
+{% endblock %}

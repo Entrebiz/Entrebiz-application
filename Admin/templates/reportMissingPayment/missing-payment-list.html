@@ -1,0 +1,77 @@
+{% extends 'common/base.html' %}
+{% load static %}
+{% load util_tags %}
+{% block content %}
+
+
+<div class=" balance-cover  mx-4 ">
+    <div class="row">
+        <div class=" balance-main">
+            {% if message %}
+            <div class="alert-box-outer">
+                <div class="{% if status %}success-alert{% else %}section-alert{% endif %}" style="display: block;"
+                    id="alertDiv">
+                    <button class="{% if status %}success-alert-close{% else %}section-alert-close{% endif %}"
+                        onclick="closeAlertModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <p style="text-align: center" id="errorField">{{message}}</p>
+                </div>
+            </div>
+            <br>
+            {% endif %}
+
+                <div class="row">
+                    <div class="form-group col-lg-12" style="margin-bottom: 0;">
+                        <a href="/tracePayment/addTracePayment" class="btn btn-primary button-w"
+                            style="float:right;padding: 0.75rem 1.5rem;"><i class="fa fa-solid fa-plus"></i>&nbspAdd
+                            Missing Payment</button></a>
+                    </div>
+                </div>
+
+            <table class="table table-striped" style="font-size:13px">
+                <tr>
+                    <th>Sl.No</th>
+                    <th>Senders Name</th>
+                    <th>Account Number</th>
+                    <th>Senders Bank </th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+                {% for tracepayment_list in tracepayment_lists %}
+                <tr>
+                    <td>{{forloop.counter}}</td>
+                    <td>{{tracepayment_list.sendername|value_change}}</td>
+                    <td>{{tracepayment_list.senderaccountno|value_change}}</td>
+                    <td>{{tracepayment_list.senderbank|value_change}}</td>
+                    <td style="color: green;">{{tracepayment_list.amount}} {{tracepayment_list.currency.code}}</td>
+                    <td>{{tracepayment_list.status}}</td>
+
+                    <td>
+                        <a onclick="return showModal()" href="" class="btn-open-del-ben"
+                            data-attr="{{tracepayment_list.id}}"><i class="far fa-trash-alt"></i></a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="8" style="text-align:center;font-size:20px;font-weight: 300;">No records found!</td>
+                </tr>
+                {% endfor %}
+            </table>
+
+        </div>
+    </div>
+</div>
+{% include 'reportMissingPayment/modal-delete-tracepayment.html' %}
+{% endblock %}
+{% block extra_script %}
+<script>
+    function showModal() {
+        let id = $('.btn-open-del-ben').attr("data-attr")
+        $("#modal-delete-tracepayment").find(".tracepayment-id").val(id)
+        $("#modal-delete-tracepayment").modal("show")
+        return false
+    }
+</script>
+{% endblock %}

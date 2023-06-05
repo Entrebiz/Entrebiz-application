@@ -1,0 +1,196 @@
+{% extends 'common/admin-base.html' %}
+{% load static %}
+{% load util_tags %}
+{% block css %}
+<style>
+    .btn-white {
+        background-color: #fff !important;
+        color: #fa661d !important;
+        border: solid 1px #fa661d !important;
+        border-radius: 5px !important;
+        height: 40px !important;
+        padding: 5px 20px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        margin-left:30px;
+    }
+    .hidden {
+    display: none;
+}
+
+    .btn-rgt {
+        float: right !important;
+    }
+    .filtr-content{
+        padding-left:25px;
+    }
+    .filtr-content .col-lg-2, .filtr-content .col-lg-3{
+        padding-left:15px;
+    }
+    .tab-actn-btn{
+            border: solid 1px #e1e1e1;
+    border-radius: 5px;
+    padding: px 5px;
+    text-align: center;
+    margin: 0 1px;
+    min-width: 25px;
+    display: inline-block;
+    color: #586168;
+    font-size: 12px;
+    min-height: 25px;
+    }
+    .tab-actn-btn:hover{
+        color: #787e83;
+    }
+</style>
+{% endblock %}
+{% block content %}
+<div class=" balance-cover  mx-4 " style="min-height: 450px;">
+    <div class="row">
+        <div class=" balance-main">
+            <div id="alert-box-outer" class="alert-box-outer" style="display:none">
+                <div class="section-alert" style="display: block;" id="alertDiv">
+                    <button class="section-alert-close" onclick="closeAlertModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <p style="text-align: center" id="errorField" class="err-msg"></p>
+                </div>
+            </div>
+            <form method="post" class="request-type-form">
+                {% csrf_token %}
+                <div class="row filtr-content">
+                    <div class="form-group col-lg-4">
+                        <select class="custom-select select-list" id="request_type" name="request_type">
+                            <option value="Currency Conversion" {% if request_type == 'Currency Conversion' %}selected{% endif %}>Currency Conversion</option>
+                            <option value="Acccount To Account Transfer" {% if request_type == 'Acccount To Account Transfer' %}selected{% endif %}>Account To Account</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-lg-3" style="display:flex">
+                        <span style="padding-top:10px;margin-right:5px;">From</span><input type="date" class="form-control" id="fromdate" name="fromdate" value="{{fromdate}}">
+                    </div>
+                    <div class="form-group col-lg-3" style="display:flex">
+                        <span style="padding-top:10px;margin-right:5px;">To</span><input type="date" class="form-control" id="todate" name="todate" value="{{todate}}">
+                    </div>
+                    <div class="form-group col-lg-3" style>
+                        <select class="custom-select select-list" id="CurrencyId" name="currencycode">
+                            <option value="" selected="">Select Currency</option>
+                            {% for currency in currencies %}
+                            <option value="{{currency.code}}" {% if currencycode == currency.code %}selected{% endif %}>{{currency.code}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group col-lg-3">
+                        <select class="custom-select select-list" id="per_page" name="per_page">
+                            <option value="50" {% if per_page == '50' %}selected{% endif %}>50</option>
+                            <option value="100" {% if per_page == '100' %}selected{% endif %}>100</option>
+                            <option value="150" {% if per_page == '150' %}selected{% endif %}>150</option>
+                            <option value="200" {% if per_page == '200' %}selected{% endif %}>200</option>
+                            
+                        </select>
+                    </div>
+                    <input type="hidden" name="action_type" value="filter_transactions">
+                    <div class="form-group col-lg-2">
+                        <button type="submit" class="btn-white" style="padding: 0.75rem 1.5rem;margin-left: 52px;">Search</button>
+                    </div>
+
+                        <div class="col-sm-4" >
+                            <button class="btn btn-bordered btn-export-statement" data-attr="csv"{% if not crosscurrencyreports %}disabled="disabled" {% endif %} style="margin-left: 15px;"><img
+                                    src="{% static 'transaction/statements/img/CSV.svg' %}"
+                                    alt="" style="margin-right:5px">Download CSV
+                            </button>
+                        </div>
+                        <div class="checkbox-container {% if request_type != 'Acccount To Account Transfer' %}hidden{% endif %}" style="margin-left:10px;" >
+                            <input type="checkbox" id="checkbox" {% if checkbox == "on" %} checked {% endif %} class="check_box" name="checkbox" >
+                            <label for="myCheck">view all</label> 
+                        </div>
+            </form>
+            {% include 'crosscurrency/includes/currencyreport.html' %}
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
+{% block extra_script %}
+<script>
+    function closeAlertModal() {
+        const elem = document.getElementById('alert-box-outer');
+        if (elem) {
+            elem.style.display = 'none';
+        }
+    }
+$(document).ready(function() {
+    $("#request_type").on("change", function() {
+        
+        var dropdown = document.getElementById("request_type");
+        var selectedValue = dropdown.value;
+        
+        if(selectedValue=="Acccount To Account Transfer"){
+            $(".checkbox-container").show();
+        }
+        else{
+            $(".checkbox-container").hide();
+        }
+        
+    });
+})
+    
+
+$(document).on("click",".btn-page",function(){
+    next_page = $(this).attr("data-page-num")
+    if ( $('#request_type').val() == 'Currency Conversion'){
+        $('#checkbox').hide();
+        }
+
+    var formData = $('.request-type-form').serializeArray();
+    formData.push({ name: "page", value: next_page });
+    formData.push({ name: "is_paginate", value: "true" });
+    $.ajax({
+        type:'POST',
+        data:formData,
+        success: function(result) {
+            $(".tr-requests-content").replaceWith(result.statementtable_html)
+        }
+    });
+    
+})
+
+
+
+
+$(document).on("click",".btn-export-statement",function(e){
+    e.preventDefault()
+    $(".inp-action_type").val("export_statement")
+    $(".export_type").val($(this).attr("data-attr"))
+    var formData = $('.request-type-form').serializeArray();
+    formData.push({ name: "action_type", value: 'export_statement' });
+    for (var i = 0; i < formData.length; i++) {
+    if (formData[i].name === "action_type" && formData[i].value === "filter_transactions") {
+        formData.splice(i, 1);
+        break;
+    }
+    }
+    $.ajax({
+        type:'POST',
+        //url: '/statements',
+        data:formData,
+        success: function(result) {
+            $(".inp-action_type").val("export_statement")
+            if (result.status){
+                filepath = result.filepath
+                // create a tag
+                var download_file = $("<a>");
+                download_file.addClass("dwnld_file")
+                download_file.attr("download", filepath);
+                download_file.attr("href", filepath);
+                $('body').append(download_file);
+                download_file[0].click();
+                // $('.dwnld_file').remove(); // remove tag once file downloaded
+            }
+        }
+    });
+})
+
+</script>
+{% endblock %}

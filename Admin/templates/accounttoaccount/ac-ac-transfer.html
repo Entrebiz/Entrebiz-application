@@ -1,0 +1,233 @@
+{% extends 'common/base.html' %}
+{% load static %}
+{% load util_tags %}
+{% block css %}
+<link rel="stylesheet" type="text/css" href="{% static 'accounts/css/wSelect.css' %}">
+
+{% endblock %}
+{% block content %}
+
+
+<main class="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg ">
+   
+    
+    
+    <div class="balance-cover  mx-4 ">
+        {% if messagee %}
+       
+            <div class="alert-box-outer">
+                <div class="{% if status %}success-alert{% else %}section-alert{% endif %}" style="display: block;"
+                    id="alertDiv">
+                    <button class="{% if status %}success-alert-close{% else %}section-alert-close{% endif %}" onclick="closeAlertModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <p style="text-align: center" id="errorField">{{messagee}}</p>
+                </div>
+            </div>
+           
+            {% endif %}
+        <div class="row">
+            <div class=" balance-main">
+                <form method="post" action="">
+                    {% csrf_token %}
+                    <div class="row">
+                        
+                        <div class="form-group col-lg-12">
+                            <label for="debit_account">Debit Account</label>
+                            <div>
+                                
+                                <select id="debit_account" name="debit_account" class="custom-select select-list" required style="display:none">
+                                    <option value="">Select Currency</option>
+                                    {% if data and data.debit_account %}
+                                    {% for account in accounts|acc_list:user_details %}
+                                    <!-- <option value="{{account.accountno}}" {% if data.debit_account == account.accountno %}selected{% endif %}> {{account.accountno}}&nbsp;({{account.currency.code}}) </option> -->
+                                    <option data-icon="{% if account.currency.flag %}{{account.currency.flag.url}}{% else %}/other/no-image.jpg{% endif %}" value="{{account.accountno}}" {% if data.debit_account == account.accountno %}selected{% endif %}> {{account.accountno}}&nbsp;({{account.currency.code}}) </option>
+                                    {% endfor %}
+                                    {% else %}
+                                    {% for account in accounts|acc_list:user_details %}
+                                    <!-- <option value="{{account.accountno}}">
+                                        {{account.accountno}}&nbsp;({{account.currency.code}})</option> -->
+                                        <option data-icon="{% if account.currency.flag %}{{account.currency.flag.url}}{% else %}/other/no-image.jpg{% endif %}" value="{{account.accountno}}">
+                                            {{account.accountno}}&nbsp;({{account.currency.code}})</option>
+                                    {% endfor %}
+                                    {% endif %}
+                                </select>
+                            </div>
+                            
+                            <label style="display: none;" id="debit_account_bal">Available Balance:
+                                <span id="bal_amnt"></span>
+                            </label>
+
+                        </div>
+
+                        <div class="form-group col-lg-12">
+                            <label for="amount">Amount</label>
+                            {% if data and data.amount %}
+                            <input id="amount" name="amount" placeholder="Enter Amount" type="text" class="form-control"
+                                required value="{{data.amount}}" onkeypress='return restrictAmount(event)' onchange='return formatAmount(event)'
+                                onblur='return validateMaxAmount1(event,this)' maxlength="12">
+                            {% else %}
+                            <input id="amount" name="amount" placeholder="Enter Amount" type="text" class="form-control"
+                                required onkeypress='return restrictAmount(event)' onchange='return formatAmount(event)'
+                                onblur='return validateMaxAmount1(event,this)' maxlength="12">
+                            {% endif %}
+                           
+                        </div>
+
+                        <div class="form-group col-lg-12">
+                            <label for="beneficiary_account">Select from Beneficiary</label>
+                            <div>
+                                <select id="beneficiary_account" name="beneficiary_account"
+                                    class="custom-select select-list">
+                                    <option value="">Select Your Beneficiary Account</option>
+                                    {% if data and data.beneficiary_account %}
+                                    {% for beneficiary in internalbeneficiaries %}
+                                    <option value="{{beneficiary.account.accountno}}" {% if data.beneficiary_account == beneficiary.account.accountno %}selected{% endif %}>{{beneficiary.receivername}}
+                                        ({{beneficiary.account.accountno}})</option>
+                                    {% endfor %}
+                                    {% else %}
+                                    {% for beneficiary in internalbeneficiaries %}
+                                    <option value="{{beneficiary.account.accountno}}">{{beneficiary.receivername}}({{beneficiary.account.accountno}})</option>
+                                    {% endfor %}
+                                    {% endif %}
+                                </select>
+                                
+                            </div>
+                        </div>
+
+
+                        <div class="col-12 or-division or-division-brk"></div>
+                        <div class="form-group col-lg-12">
+                            <label for="beneficiary_accountnumber">Beneficiary Account No</label>
+                            {% if data and data.beneficiary_accountnumber %}
+                            <input id="beneficiary_accountnumber" name="beneficiary_accountnumber"
+                                placeholder="Enter Beneficiary Account No" type="text" class="form-control" value="{{data.beneficiary_accountnumber}}" onkeypress='return restrictAlphabets(event)' onchange="return formatAccount(event ,this.id)"
+                                onblur='clearFields()' required>
+                            {% else %}
+                            <input id="beneficiary_accountnumber" name="beneficiary_accountnumber"
+                                placeholder="Enter Beneficiary Account No" type="text" class="form-control" onkeypress='return restrictAlphabets(event)' onchange="return formatAccount(event ,this.id)"
+                                onblur='clearFields()' required>
+                            {% endif %}
+                        </div>
+
+
+
+
+
+                        <div class="form-group col-lg-12">
+                            <label for="text1">Note (optional)</label>
+                            {% if data and data.note %}
+                            <input id="note" name="note" placeholder="Enter Your Note" type="text"
+                                class="form-control" value="{{data.note}}">
+                            {% else %}
+                            <input id="note" name="note" placeholder="Enter Your Note" type="text"
+                                class="form-control">
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group">
+                            <button type="submit" id="submit-button" class="btn btn-primary button-w w-100">Transfer</button>
+                           
+                        </div>
+                    </div>
+                    <input type="hidden" id="account_balance" name="account_balance" value="">
+                </form>
+            </div>
+</main>
+{% endblock %}
+<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js"></script> -->
+{% block extra_script %}
+<script src="{%static '/accounts/js/wSelect.min.js' %}"></script>
+
+<script>
+   $('#debit_account').wSelect();
+   $(document).ready(function () {
+   $('#beneficiary_account').on('change', function () {
+            var beneficiary_account = $(this).val();
+            if (beneficiary_account) {
+                $.post("/interbeneficiarylist",
+                    {
+                     'beneficiary_account': beneficiary_account,
+                        'csrfmiddlewaretoken': '{{ csrf_token }}',
+                    },
+                    function (data, status) {
+                        $("#beneficiary_accountnumber").val(data['accountnumber']);
+                        
+                        
+                    });
+            }
+            else {
+                $("#beneficiary_accountnumber").val('');
+               
+            }
+
+        });
+
+        if ($('#debit_account').val()) {
+            var accountno = $('#debit_account').val();
+            if (accountno) {
+                $.post("/getaccountbalance",
+                    {
+                        'account_number': accountno,
+                        'csrfmiddlewaretoken': '{{ csrf_token }}',
+                    },
+                    function (data, status) {
+                        $("#debit_account_bal").show();
+                     $("#debit_account_bal").find('span').text(data['account_balance'] + ' ' + data['account_currency_code']).css("color", "#22bc51");
+                    $("#account_balance").val(data['account_balance']);
+                    });
+
+            }
+            else {
+                $("#debit_account_bal").hide();
+            }
+        }
+
+        $('#debit_account').on('change', function () {
+            var account_number = $(this).val();
+            if (account_number) {
+                $.post("/getaccountbalance",
+                    {
+                     'account_number': account_number,
+                        'csrfmiddlewaretoken': '{{ csrf_token }}',
+                    },
+                    function (data, status) {
+                     $("#debit_account_bal").show();
+                     $("#debit_account_bal").find('span').text(data['account_balance'] + ' ' + data['account_currency_code']).css("color", "#22bc51");
+                    $("#account_balance").val(data['account_balance']);
+                    });
+            }
+            else {
+               $("#debit_account_bal").hide();
+               
+            }
+
+        });
+       
+        setTimeout(() => {
+            document.getElementById('otpMsg').innerHTML = '';
+        }, 5000);
+
+
+        function myTrim(x) {
+    return x.slice(0, x.lastIndexOf(' '));
+  }
+
+  function validateMaxAmount1(e, elem) {
+    val = myTrim(document.getElementById('debit_account_bal').innerText)
+	if (parseFloat(elem.value) > parseFloat(val)) {
+        
+		return showErrorField([document.getElementById(elem.id)], 'Insufficient Amount');
+	}
+	if (parseFloat(elem.value) <= 0) {
+		return showErrorField([document.getElementById(elem.id)], 'Amount should be greater than zero!');
+	}
+
+	return true;
+}
+
+});
+
+</script>
+{% endblock %}
+

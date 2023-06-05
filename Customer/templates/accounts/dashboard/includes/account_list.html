@@ -1,0 +1,160 @@
+<div class="account-list-content">
+    <div class="tab-body-content-inner dashboard-block-bg">
+        <div class="add-currency-sec">
+            <div class="row m-0">
+
+
+                {% for account in pr_accounts %}
+                    <div class="col-xl-4 col-lg-6 col-md-6 col-12 add-currency-card">
+                        <div class="currency-card-inr">
+
+                            <div class="bnk-curr-det">
+
+                                <div class="curr-name"><img
+                                        src="{% if account.currency.flag %}{{account.currency.flag.url}}{% else %}other/no-image.jpg{% endif %}"
+                                        alt="">
+                                    {{account.currency.code}}
+                                </div>
+
+                                <div class="acc-set">
+                                    <span>
+                                    <p class="acc-primary acc-active"><b>Primary</b>
+
+                                    </p>
+                                        {% if account_length > 1 %}
+                                        <p><a class="acc-secondary updatecurrency" href="#"
+                                              data-attr="{{account.id}}"
+                                              data-status="2"
+                                              title="Set as secondary currency">Set as
+                                            secondary</a></p>
+                                        {% endif %}
+                                    </span>
+                                </div>
+
+                            </div>
+                            <div class="acc-details">
+                                <div class="acc-details-hldr">
+                                    <p>Account Number</p>
+                                    <p><strong>
+                                        <a class="acc-num" onclick="showLoader()"
+                                           title="Click here to see the statement"
+                                           href="/statements?accountNo={{account.accountno}}">{{account.accountno}}</a>
+                                    </strong></p>
+                                    <p class="acc-blnc">Account Balance</p>
+                                    <p class="acc-blnc-amt">
+                                        <strong>{{ account.balance|floatformat:2 }}</strong>
+                                    </p>
+                                    <p class="viewStatmentDashboard">
+                                        <a title="Click here to see the statement" onclick="showLoader()"
+                                           href="/statements?accountNo={{account.accountno}}"> View statement</a>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+
+                {% for account in sc_accounts %}
+                    <div class="col-xl-4 col-lg-6 col-md-6 col-12 add-currency-card">
+                        <div class="currency-card-inr">
+
+                            <div class="bnk-curr-det">
+
+                                <div class="curr-name"><img
+                                        src="{% if account.currency.flag %}{{account.currency.flag.url}}{% else %}other/no-image.jpg{% endif %}"
+                                        alt="">
+                                    {{account.currency.code}}
+                                </div>
+
+                                <div class="acc-set">
+                                                            <span>
+                                                <p class="acc-primary acc-active"><b>Secondary</b>
+                                                </p><p><a class="acc-primary updatecurrency" href="#"
+                                                          data-attr="{{account.id}}"
+                                                          data-status="1"
+                                                          title="Set as secondary currency">Set as
+                                                        primary</a></p>
+                                            </span>
+                            </div>
+
+                            </div>
+                            <div class="acc-details">
+                                <div class="acc-details-hldr">
+                                    <p>Account Number</p>
+                                    <p><strong>
+                                        <a class="acc-num" onclick="showLoader()"
+                                           title="Click here to see the statement"
+                                           href="/statements?accountNo={{account.accountno}}">{{account.accountno}}</a>
+                                    </strong></p>
+                                    <p class="acc-blnc">Account Balance</p>
+                                    <p class="acc-blnc-amt">
+                                        <strong>{{ account.balance|floatformat:2 }}</strong>
+                                    </p>
+                                    <p class="viewStatmentDashboard">
+                                        <a title="Click here to see the statement" onclick="showLoader()"
+                                           href="/statements?accountNo={{account.accountno}}"> View statement</a>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+
+                {% for account in accounts %}
+                <div class="col-xl-4 col-lg-6 col-md-6 col-12 add-currency-card">
+                    <div class="currency-card-inr">
+
+                        <div class="bnk-curr-det">
+
+                            <div class="curr-name"><img
+                                    src="{% if account.currency.flag %}{{account.currency.flag.url}}{% else %}other/no-image.jpg{% endif %}"
+                                    alt="">
+                                {{account.currency.code}}
+                            </div>
+
+                            <div class="acc-set" style="margin-top: 12px;">
+                                                        <span>
+
+                                                       <p style="margin-bottom:0"><a class="acc-primary updatecurrency"
+                                                                                     href="#"
+                                                                                     data-attr="{{account.id}}"
+                                                                                     data-status="1"
+                                                                                     name="98"
+                                                                                     title="Set as secondary currency">Set as
+                                                        primary</a></p>
+                                                            <p><a class="acc-secondary updatecurrency"
+                                                                  data-attr="{{account.id}}"
+                                                                  data-status="2" href="#"
+                                                                  name="98" title="Set as secondary currency">Set as
+                                                                secondary</a></p>
+                                                    </span>
+                            </div>
+
+
+                        </div>
+                        <div class="acc-details">
+                            <div class="acc-details-hldr">
+                                <p>Account Number</p>
+                                <p><strong>
+                                    <a class="acc-num" onclick="showLoader()"
+                                       title="Click here to see the statement"
+                                       href="/statements?accountNo={{account.accountno}}">{{account.accountno}}</a>
+                                </strong></p>
+                                <p class="acc-blnc">Account Balance</p>
+                                <p class="acc-blnc-amt">
+                                    <strong>{{ account.balance|floatformat:2 }}</strong>
+                                </p>
+                                <p class="viewStatmentDashboard">
+                                    <a title="Click here to see the statement" onclick="showLoader()"
+                                       href="/statements?accountNo={{account.accountno}}"> View statement</a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+
+            </div>
+        </div>
+    </div>
+</div>

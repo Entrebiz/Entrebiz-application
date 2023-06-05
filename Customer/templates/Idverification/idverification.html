@@ -1,0 +1,292 @@
+{% extends 'common/base.html' %}
+{% load static %}
+{% load util_tags %}
+
+{% block content %}
+
+<style>
+    .button-w {
+   
+    border-radius: 0px;}
+    .confirm-btn-holder button {
+       min-height: 40px;
+       height: auto;
+       font-size: 14px;
+       margin-bottom: 10px;
+       background-color: #ff6600;
+       color: #fff;
+       text-transform: uppercase;
+       display: flex;
+       align-items: center;
+       justify-content: center;
+       background-position: center;
+       transition: background 0.8s;
+       box-shadow: none;
+       border-radius: 5px;
+       border: none;
+       -webkit-appearance: button;
+       cursor: pointer;
+       overflow: visible;
+   
+   }
+   #documentStatus{
+       font-size: 14px;
+       color: #787a7c;
+       
+   }
+   .custom-input-file{
+       display: flex;
+       align-items: center;
+       justify-content: center;
+       min-height: 117px;
+       border: dashed 2px #f0f0f0;
+       background-color: #f8f9fa;
+       flex-direction: column;
+       position: relative;
+       cursor: pointer;
+       margin-bottom: 15px;
+   }
+   .sett-card-row{
+       margin: 0;
+       display: flex;
+       flex-wrap: wrap;
+       color: #586168;
+   
+   }
+   
+   
+   .m-0 {
+       margin: 0;
+   }
+   .row {
+       display: -webkit-box;
+       display: -ms-flexbox;
+       display: flex;
+       -ms-flex-wrap: wrap;
+       flex-wrap: wrap;
+       margin-right: -15px;
+       margin-left: -15px;
+   }
+   *, *::before, *::after {
+       box-sizing: inherit;
+   }
+   * {
+       box-sizing: border-box;
+   }
+   
+   div {
+       display: block;
+   }
+   .tab-layout .tab-body-layout .tab-body-content-inner {
+       color: #586168;
+       background-color: #fff;
+   }
+
+   h2{
+       margin-bottom: 0;
+       font-size: 16px;
+       font-weight: normal;
+       background-color: #fff;
+       z-index: 1;
+       display: inline-block;
+       padding-right: 20px;
+   }
+   .consum-num{
+    margin-bottom: 10px;
+    width: 380px;
+    max-width: 100%;
+    justify-content: flex-start;
+    height: auto;
+    min-height: 75px;
+    padding: 10px;
+    border: 1px solid #efefef;
+    display: flex;
+    align-items: center;
+
+   }
+   .form-grp-edit{
+    width: 100%;
+    min-width: 90%;
+
+   }
+  .input-edit{
+    max-width: 100%;
+    display: block;
+    border: none;
+    box-shadow: none;
+    width: 100%;
+    color: #84878a;
+
+  }
+  input[type="text"]{
+    appearance: none;
+  }
+  .file-upload-form-title{
+    margin-bottom: 15px;
+    position: relative;
+    z-index: 1;
+    color: #586168;
+  }
+</style>
+
+
+
+<div class=" balance-cover  mx-4 ">
+    <div class="row">
+        <div class=" balance-main">
+            {% if message %}
+            <div class="alert-box-outer">
+                <div class="{% if status %}success-alert{% else %}section-alert{% endif %}" style="display: block;"
+                    id="alertDiv">
+                    <button class="{% if status %}success-alert-close{% else %}section-alert-close{% endif %}" onclick="closeAlertModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <p style="text-align: center" id="errorField">{{message}}</p>
+                </div>
+            </div>
+            {% endif %}
+            <div class="row">
+                <div class="form-group col-sm-7 col-12 plr-0">
+                    <label class="tab-title settings-inr-title" style="font-size: 15px;"> Id Verification<label>
+                </div>
+                <div class="form-group col-sm-5 col-12 plr-0">
+                    {% if user_status and user_status == 'Verified' %}
+                    <div id="documentStatus" class="status-notification status-verified">
+                        <div class="icon-holdr">
+                            <img src="{% static 'dash/assets/img/tick.png' %}" alt="">
+                        </div>
+                        <div class="status-text">Verified</div>
+                    </div>
+                    {% elif user_status and user_status == 'Not Verified' %}
+                    <div id="documentStatus" class="status-notification status-rejected">
+                        <div class="icon-holdr">
+                            <img src="{% static 'dash/assets/img/tick.png' %}" alt="">
+                        </div>
+                        <div class="status-text">Account not verified</div>
+                    </div>
+                    {% elif user_status and user_status == 'Rejected' %}
+                    <div id="documentStatus" class="status-notification status-rejected">
+                        <div class="icon-holdr">
+                            <img src="{% static 'dash/assets/img/tick.png' %}" alt="">
+                        </div>
+                        <div class="status-text">Rejected</div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            <hr style="margin-top: -12px;">
+            <div class="set-verf-passport">
+                <div class="row file-upload-form sett-file-upload">
+                    <div class="col-lg-4 col-md-12 col-12">
+                        {% if customer_doc %}
+                            <div class="custom-input-file ">
+                                <label> Document uploaded <br>
+                                    successfully.</label>
+                            </div>
+                            <div class="custom-input-file ">
+                                <label> Document uploaded <br>
+                                    successfully.</label>
+                            </div>
+                            <div class="custom-input-file ">
+                                <label> Document uploaded <br>
+                                    successfully.</label>
+                            </div>
+                            {% if additional_doc %}
+                            <div class="custom-input-file ">
+                                    <label> Document uploaded <br>
+                                        successfully.</label>
+                            </div>
+                            {% endif %}
+                        
+                        {% endif %}
+                    </div>
+                    <div class="col-lg-8 col-md-12 col-12 file-upload-form-rgt">
+                    {% if customer_doc %}
+                        {% if document_id == 2 %}
+                            <!-- passport -->
+                            <div class="file-upload-form-title upload-title-br-0" style="margin-bottom: 4px;">
+                                <h2 style="color: #586168;">Passport</h2>
+                            </div>
+                           
+                            <div class="persn-det-card rec-mny-card consum-num">
+                                <div class="form-grp-edit">
+                                    <label> Validity</label>
+                                    <input class="input-edit pass-num" type="text" name="" value="{% if document_id == 2 and  validity %}{{validity}} {% endif %}" readonly="">
+                                </div>
+                            </div>
+                            <div class="persn-det-card rec-mny-card consum-num">
+                                <div class="form-grp-edit">
+                                    <label> Passport Number</label>
+                                    <input class="input-edit pass-num" type="text" name="" value="{% if document_id == 2 and  idproofnumber %}{{idproofnumber}}{% endif %}" readonly="">
+                                </div>
+                            </div>
+                        {% elif document_id == 6 %}
+                            <!-- driving -->
+                            <div class="file-upload-form-title upload-title-br-0" style="margin-bottom: 4px;">
+                                <h2 style="color: #586168;">Driving License</h2>
+                            </div>
+                            <div class="persn-det-card rec-mny-card consum-num">
+                                <div class="form-grp-edit">
+                                    <label> Valid To</label>
+                                    <input class="input-edit pass-num" type="text" name="" value="{% if document_id == 6 and  validity %}{{validity}} {% endif %}" readonly="">
+                                </div>
+                            </div>
+                            <div class="persn-det-card rec-mny-card consum-num">
+                                <div class="form-grp-edit">
+                                    <label> Driving License Number</label>
+                                    <input class="input-edit pass-num" type="text" name="" value="{% if document_id == 6 and  idproofnumber %}{{idproofnumber}}{% endif %}" readonly="">
+                                </div>
+                            </div>
+                        {% elif document_id == 8 %}
+                            <!-- idcard -->
+                            <div class="file-upload-form-title upload-title-br-0" style="margin-bottom: 4px;">
+                                <h2 style="color: #586168;">ID card</h2>
+                            </div>
+                            <div class="persn-det-card rec-mny-card consum-num">
+                                <div class="form-grp-edit">
+                                    <label> ID Card Number</label>
+                                    <input class="input-edit pass-num" type="text" name="" value="{% if document_id == 8 and  idproofnumber %}{{idproofnumber}}{% endif %}" readonly="">
+                                </div>
+                            </div>
+                        {% elif document_id == 9 %}
+                            <div class="file-upload-form-title upload-title-br-0" style="margin-bottom: 4px;">
+                                <h2 style="color: #586168;">Other</h2>
+                            </div>
+                            <div class="persn-det-card rec-mny-card consum-num">
+                                <div class="form-grp-edit">
+                                    <label> ID Proof Number</label>
+                                    <input class="input-edit pass-num" type="text" name="" value="{% if document_id == 9 and  idproofnumber %}{{idproofnumber}}{% endif %}" readonly="">
+                                </div>
+                            </div>
+                        {% endif %}
+                           
+                        {% endif %}  
+        
+                    </div>
+   
+                    <div class="form-group">
+                        <form action="" method="post">
+                            {% csrf_token %}
+                                <input type="hidden" name="VerificationType" id="VerificationType" value="1">
+                                <input type="hidden" name="documentId" id="documentId" value="1080">
+                            <button type="submit" class="btn btn-primary button-w btn-edit-beneficiary w-40">
+                                Click here to upload document
+                            </button>
+                        </form>
+                    </div>
+
+
+                       
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block extra_script %}
+<script>
+function closeAlertModal(){
+    $(".alert-box-outer").hide()
+}
+</script>
+{% endblock %}

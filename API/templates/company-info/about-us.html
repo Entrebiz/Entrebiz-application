@@ -1,0 +1,89 @@
+{% extends 'company-info/base.html' %}
+{% load static %}
+{% block link %}
+<link rel="stylesheet" type="text/css" href="{% static 'company-info/css/style.css' %}">
+{% endblock link %}
+{% block content %}
+<div class="banner-content">
+    <div class="container custom-container banner-container banner-container-abt" style=''>
+        <div class="page-title-cover">
+            <h1 class="title">About US</h1>
+        </div>
+    </div>
+</div>
+<section class="about-title-sec">
+    <div class="container custom-container">
+        <div class="row about-title-row">
+            <div class="col-md-4">
+                <div class="abt-title-cover-lft">
+                    <h2 class="title">We're here to<br> help you<br> when you need your<br> financial support</h2>
+                    <div class="custom-border"></div>
+                </div>
+                <div class="abt-img-lft">
+                    <img src="{{domain}}/static/company-info/img/abt-img-lft.png" alt="">
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="abt-text-cover-rgt">
+                    <h1 class="page-title">Our Story</h1>
+                    <p>Entrebiz is a digital platform with a perfect customer experience at its heart. Our vision is to
+                        walk with the customer into the dawn of a new way of digitalization you have never experienced
+                        before.</p>
+                    <p class="abt-label">No matter where you are in this world, you can open private/business accounts
+                        and transfer funds in real time.</p>
+                    <p>Entrebiz is an innovative idea from a group of experts who has spent long careers in the FinTech
+                        industry and has understood the difficulties of a customer to perform smooth transactions. Our
+                        team also includes specialists and accomplished
+                        professionals from IT, Customer Support, Compliance and many more.</p>
+                    <p>The idea behind Entrebiz germinated a few years ago where we spent adequate time to research,
+                        experience and evaluate various transaction systems and the growing need of customers,
+                        especially meeting expectations. Entrebiz places our
+                        customers at the center of all that we do. We are what we repeatedly do - so we constantly
+                        anticipate our customer’s needs and focus on making their lives better. Our ongoing efforts
+                        pivot around offering better products, superior
+                        customer experience and greater convenience.</p>
+                    <p>What makes Entrebiz different is its customer-centric approach. Driven by People, Product and
+                        Process, the brand believes in the motto “Always Value You” by delivering prompt customized
+                        services as per your financial needs.</p>
+                    <p>We believe our core values as integrity, commitment, trust and care.</p>
+                    <p>Could you ever imagine your money reaching the destination much before your anticipated time
+                        irrespective of the country or continent? Entrebiz makes it possible. Entrebiz takes your
+                        transactions beyond borders.</p>
+                    <p>Our journey never ends here. It’s a relentless process to make sure our customers are happy with
+                        their transactions. We strive to incorporate emerging technologies to give our customers an
+                        everlasting feeling – a lifetime of new transaction
+                        experience!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="our-team-block-sec">
+    <div class="row">
+        <div class="col-md-6 team-block-lft">
+            <h2 class="inner-sub-title">Our Team</h2>
+            <h2></h2>
+            <p>Our team is always listening to you.</p>
+            <p>Our journey never ends here. It’s a relentless process to make sure our customers are happy with their
+                transactions. We strive to incorporate emerging technologies to give our customers an everlasting
+                feeling – a lifetime of new transaction
+                experience!</p>
+            <p>Our customer support team is trained in international standards of service excellence and stands unique
+                in the world. Their meticulous, no-excuse, no-nonsense approach to real-world solutions is poised to
+                give you the best customer experience
+                ever. You will fall in love with our digital platform and unmatched customer support system. You know
+                why? Because it’s there when and wherever you need it.</p>
+            <p>Entrebiz is one of the leading digital platform and what stands us apart is that <b>“we believe in no
+                    excuses.”</b></p>
+            <p>For us, transaction means making a commitment to be there for you – our customer. It’s all about keeping
+                our customers first. And we plan to be there with you, with every step you take.</p>
+        </div>
+        <div class="col-md-6 team-block-rgt-img">
+            <img src="{% static 'company-info/img/abt-bnr.png' %}" alt="">
+        </div>
+    </div>
+</section>
+
+{% endblock content %}
+{% block social %}
+{% endblock social %}

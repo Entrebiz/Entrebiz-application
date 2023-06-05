@@ -1,0 +1,299 @@
+{% extends 'common/admin-base.html' %}
+{% load static %}
+{% load util_tags %}
+{% block css %}
+<style>
+    .filter-sec {
+        padding: 15px 20px;
+        background-color: #fff;
+        /* box-shadow: 1px 1px 10px 1px rgb(0 0 0 / 10%); */
+        position: relative;
+        z-index: 1;
+    }
+
+    table {
+        border-collapse: collapse;
+        margin: 0.7em 0;
+        table-layout: fixed;
+        width: 100%;
+    }
+
+    .admin-table-def th {
+        font-weight: normal;
+        padding: 5px 10px;
+        text-align: left;
+        border-bottom: 1px solid #efefef;
+        color: #586168;
+        border-right: 1px solid #efefef;
+        font-size: 14px;
+    }
+
+    .td-slno {
+        width: 70px;
+    }
+
+    .admin-table-def td {
+        font-size: 14px;
+        padding: 10px 10px;
+        color: #586168;
+        border-color: #efefef;
+        word-break: break-all;
+    }
+
+    .modal-content .modal-title {
+        border-bottom: solid 1px #ccc;
+        padding-top: 25px;
+        text-align: left;
+    }
+
+    .otp-modal-content {
+        padding-top: 30px;
+        padding-left: 30px;
+        padding-right: 30px;
+    }
+
+    .input-box {
+        border-radius: 5px;
+        padding: 10px 20px;
+        border: solid 1px #ccc;
+        font-size: 15px;
+        width: 100%;
+        color: #84878a;
+    }
+
+    textarea {
+        resize: none;
+        height: auto;
+    }
+.tab-actn-btn {
+    border: solid 1px #f0f0f0;
+    border-radius: 5px;
+    /* padding: 2px 5px; */
+    text-align: center;
+    margin: 0 1px;
+    min-width: 20px;
+    display: inline-block;
+    color: #586168;
+    font-size: 12px;
+    min-height: 20px;
+}
+.tab-actn-btn img {
+    max-width: 16px;
+}
+.btn-primary:hover{
+        background: #fff !important;
+        border-radius: 3px !important;
+        color: #ff671e !important;
+    }
+</style>
+
+{% endblock %}
+{% block content %}
+<div class=" balance-cover  mx-4 " style="min-height: 450px;">
+    <div class="row">
+        <div class=" balance-main">
+            {% if message %}
+            <div class="alert-box-outer">
+                <div class="{% if status %}success-alert{% else %}section-alert{% endif %}" style="display: block;"
+                    id="alertDiv">
+                    <button class="{% if status %}success-alert-close{% else %}section-alert-close{% endif %}"
+                        onclick="closeAlertModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <p style="text-align: center" id="errorField">{{message}}</p>
+                </div>
+            </div>
+            {% endif %}
+            <!--  -->
+            <div class="filter-sec" style="min-height: 52px;">
+                <div id="multiSelectActions" style="display: none;">
+                    <div style="display: inline;"><span id="multiSelectCount">0</span> records selected</div>
+                    <div style="display: inline;margin-left: 65%;">
+                        <span style="font-weight: bold;">Action:&nbsp;</span>
+                        <a title="Approve" href="javascript:void(0)" onclick="showApproveConfirmModal()">
+                            <img height="20px%" width="20px" src="{% static 'dash/assets/img/approve.png' %}">
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="curr-conversion-sec">
+                {% include 'inward-remittance-approval/inward-remittance-approval-table.html' %}
+
+            </div>
+            <!--  -->
+        </div>
+    </div>
+</div>
+<!--  -->
+<div id="approval-confirm-modal" class="modal fade">
+    <div class="modal-dialog modal-confirm">
+        <div class="modal-content">
+            <div class="modal-header flex-column">
+                <input type="hidden" id="approveInwardRemittanceId">
+                <input type="hidden" id="approveTransactionType">
+                <div class="mail-inp-row">
+                    Do you really want to
+                    <div id="actionData"></div>
+                </div>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" style="background-color: #fff;color: #ff6600;"
+                    class="btn btn-bordered" data-bs-dismiss="modal">CANCEL</button>
+                <button type="button"
+                    style="background-color: #fa661d;padding: 0px 0px;"
+                    class="btn btn-primary ripple-efct btn-open-dlt-cnfrm-modal">CONFIRM</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--  -->
+<!--  -->
+<div id="reject-modal" class="modal fade">
+    <div class="modal-dialog modal-confirm" style="width:100%;">
+        <form role="form" method="post" action="" id="rejectForm">
+            {% csrf_token %}
+            <div class="modal-content" style="text-align: left;">
+                <!-- <div class="modal-body"> -->
+                <div class="mail-modal-cover">
+                    <div class="modal-title">
+                        <h5>Reject Transaction</h5>
+                    </div>
+                    <div class="otp-modal-content">
+                        <input type="hidden" name="InwardRemittanceId" id="rejectInwardRemittanceId" value="">
+                        <input type="hidden" name="action_type" value="rejectInwardRemittance">
+                        <div class="form-group">
+                            <label for="rejectReason" style="font-size: 15px;">Reason for rejection</label>
+                            <textarea class="input-box documentFields rejectForm" name="ReasonForReject"
+                                id="rejectReason" cols="20" rows="5"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer justify-content-center">
+                        <button type="button" style="background-color: #fff;color: #ff6600;"
+                            class="btn btn-bordered"
+                            data-bs-dismiss="modal">CANCEL</button>
+                        <button onclick="return rejectInwardSubmit();"
+                            style="background-color: #fa661d;padding: 0px 0px;"
+                            class="btn btn-primary ripple-efct btn-open-dlt-cnfrm-modal">Submit</button>
+                    </div>
+                </div>
+                <!-- </div> -->
+            </div>
+        </form>
+    </div>
+</div>
+<!--  -->
+{% endblock %}
+{% block extra_script %}
+<script>
+    function showApproveConfirmModal(inwardRemId) {
+        if (inwardRemId) {
+            let transactionTypeName = $('#tr-type-' + inwardRemId).text();
+            document.getElementById('approveTransactionType').value = transactionTypeName;
+            document.getElementById('approveInwardRemittanceId').value = inwardRemId;
+            document.getElementById('actionData').innerHTML = `Approve the ${transactionTypeName} Request?`;
+            $("#approval-confirm-modal").modal("show")
+        } else {
+            document.getElementById('actionData').innerHTML = `Approve Selected Requests?`;
+            $("#approval-confirm-modal").modal("show")
+        }
+    }
+    function showRejectModal(inwardRemId) {
+        document.getElementById('rejectInwardRemittanceId').value = inwardRemId;
+        removeFormValidationMsgs('rejectForm');
+        $("#reject-modal").modal("show")
+    }
+    const inwardRemittanceRows = [];
+    function multiSelectRow(e) {
+        const rowId = e.attributes['data-row-id'].value;
+        const $inwardRow = document.getElementById(`rows-${rowId}`);
+        const $inwardRowColumn = document.getElementById(`column-${rowId}`);
+        const rowIndex = inwardRemittanceRows.indexOf(rowId);
+        const isSelected = e.checked;
+        if (isSelected) {
+            document.getElementById('multiSelectActions').style.display = 'block';
+            inwardRemittanceRows.push(rowId);
+            $inwardRow.style.backgroundColor = '#dde6ef';
+            document.getElementById(`actions-${rowId}`).style.display = 'none';
+            $inwardRowColumn.children[0].checked = true;
+        }
+        else {
+            rowIndex > -1 && inwardRemittanceRows.splice(rowIndex, 1);
+            document.getElementById(`actions-${rowId}`).style.removeProperty('display');
+            $inwardRow.style.removeProperty('background-color');
+            $inwardRowColumn.children[0].checked = false;
+        }
+        document.getElementById('multiSelectCount').innerText = String(inwardRemittanceRows.length);
+        if (!inwardRemittanceRows.length) {
+            document.getElementById('multiSelectActions').style.display = 'none';
+            document.getElementById('multiSelectAll').checked = false;
+        }
+    }
+    function multiSelectAllRow(e) {
+        $(".inw-val").each(function () {
+            const rowId = this.attributes['data-row-id'].value;
+            const $inwardRow = document.getElementById(`rows-${rowId}`);
+            const $inwardRowColumn = document.getElementById(`column-${rowId}`);
+            const rowIndex = inwardRemittanceRows.indexOf(rowId);
+            const isSelected = e.checked;
+            if (isSelected) {
+                document.getElementById('multiSelectActions').style.display = 'block';
+                if (!inwardRemittanceRows.includes(rowId)){
+                inwardRemittanceRows.push(rowId);
+                }
+                $inwardRow.style.backgroundColor = '#dde6ef';
+                document.getElementById(`actions-${rowId}`).style.display = 'none';
+                $inwardRowColumn.children[0].checked = true;
+            }
+            else {
+                rowIndex > -1 && inwardRemittanceRows.splice(rowIndex, 1);
+                document.getElementById(`actions-${rowId}`).style.removeProperty('display');
+                $inwardRow.style.removeProperty('background-color');
+                $inwardRowColumn.children[0].checked = false;
+            }
+            document.getElementById('multiSelectCount').innerText = String(inwardRemittanceRows.length);
+            if (!inwardRemittanceRows.length) {
+                document.getElementById('multiSelectActions').style.display = 'none';
+                document.getElementById('multiSelectAll').checked = false;
+            }
+        })
+    }
+    function rejectInwardSubmit() {
+        if (validateForm('rejectForm', 'class')) {
+            document.getElementById('rejectForm').submit();
+        }
+        return false;
+    }
+    function removeFormValidationMsgs(f) {
+        if (document.forms[f]) {
+            for (let e = 0; e < document.forms[f].elements.length; e += 1) {
+                const event = document.forms[f].elements[e];
+                if (event.style.borderColor && event.style.borderColor === 'red') {
+                    event.style.borderColor = null;
+                }
+                const errMsgSelector = document.getElementById(`err-${event.id}`);
+                if (errMsgSelector) {
+                    errMsgSelector.remove();
+                }
+            }
+        }
+    }
+
+    $(document).on("click",".btn-page",function(){
+    next_page = $(this).attr("data-page-num")
+    $.ajax({
+        type:'POST',
+        data:{
+            "page" : next_page,
+            "action_type" : "filterinwardremitance",
+            "csrfmiddlewaretoken" : '{{csrf_token}}'
+
+        },
+        success: function(result) {
+            $(".admin-user-table-sec").replaceWith(result.inwardrem_data)
+        }
+    })
+    })
+</script>
+
+{% endblock %}

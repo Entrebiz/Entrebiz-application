@@ -1,0 +1,161 @@
+{
+    "name": "Account to Account Transfer",
+    "endpoint": "POST/transaction/account-to-account",
+    "parameters": [
+      {
+        "name": "debit_account",
+        "required": true,
+        "description": "The account number to be debited"
+      },
+      {
+        "name": "beneficiary_account",
+        "required": true,
+        "description": "The account number to be credited"
+      },
+      {
+        "name": "amount",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "note",
+        "required": false,
+        "description": "Add additional note for transaction"
+      }
+    ],
+    "languages": [
+      {
+        "name": "PHP",
+        "code": [
+          " <?php",
+          "$request = new HttpRequest();",
+          "$request->setUrl('https://api.entrebiz-pte.com/api/v1/transaction/account-to-account');",
+          "$request->setMethod(HTTP_METH_POST);",
+          "$request->setHeaders(array(",
+          "'Cache-Control' => 'no-cache',",
+          "'Authorization' => 'Token eyJhbGc3OiJSUzI1NiIsInR5cCI6IkpXVCJ9.",
+          "eyJ1c2VySWQiOjI3NzIsImVtYWlsIjoic2l2YXByYXNhZEBzcGVyaWNvce4uY29tIiwsaWF",
+          "0IjoxNTcyMDA2MjUzLCJleHAiOjE1NzIwOTI2NTN9.DpjvqEwv-DWvSgvZJRV2tOluKlFbh",
+          "YLyLXjpI5IAOhV6QWXQW71wLT1WNJV1WRA2LU6KARXHCBzLBxojWLJjfA',",
+          "'Content-Type' => 'application/json'));",
+          "$request->setBody('[{",
+          "\"debit_account\": \"10000###\",",
+          "\"beneficiary_account\": \"10000###\",",
+          "\"amount\": \"0.00\",",
+          "\"note\": \"text\",",
+          "}]');",
+          " $response = $request->send();"
+        ],
+        "Response": [
+  
+                        "{",
+                    "'status': true,",
+                    "'data': {",
+                        "'transaction_details': {",
+                            "\t'transaction_number': 10000###,",
+                            "\t\t'debit_amount': '50.25',",
+                            "\t\t'beneficiary_name': '',",
+                            "\t\t'credit_amount': '3767.09',",
+                            "\t\t'net_amount': '50.00',",
+                            "\t\t'conversion_fee': '0.25',",
+                            "\t\t'note': '',",
+                            "\t'debit_account': {",
+                                "\t\t'account_number': '1000###',",
+                                "\t\t'currency_code': 'USD'",
+                            "\t\t},",
+                            "\t'credit_account': {",
+                                "\t\t'account_number': '1000###',",
+                                "\t\t'currency_code': 'INR'",
+                            "\t\t}",
+                        "\t}",
+                    "\t},",
+                "},"
+  
+        ]
+      },
+      {
+        "name": "NodeJs",
+        "code": [
+          "var request = require('request');",
+          "var options = { method: 'POST',",
+          "url: 'https://api.entrebiz-pte.com/api/v1/transaction/account-to-account',",
+          "headers: ",
+          "{ 'Cache-Control': 'no-cache',",
+          "Authorization: 'Token eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ",
+          "1c2VySWQiOjY2ODQsImVtYWlsIjoibHA3N0BtYWlsaW5hdG9yLmNvbSIsImlhd",
+          "CI6MTU3MjAyNjQzNCwiZXhwIjoxNTcyMTEyODM0fQ.Unavq_6yo5fvkiiRG1",
+          "ki61qmIdXZ3O1jyuhb4-hI0cWw2plM-91kz1nWV_y2K1vUXoj2S17bhpgBm9tRA',",
+          "'Content-Type': 'application/json' },",
+          "body: { debitAccount: '10000####', beneficiary_account: '10000####',",
+          "amount: '0.00', note: 'text' },",
+          "json: true };",
+          "request(options, function (error, response, body) {",
+          "if (error) throw new Error(error);",
+          "console.log(body);",
+          "});"
+        ],
+        "Response": [
+                "{",
+                "'status': true,",
+                "'data': {",
+                    "'transaction_details': {",
+                        "\t'transaction_number': 10000###,",
+                        "\t\t'debit_amount': '50.25',",
+                        "\t\t'beneficiary_name': '',",
+                        "\t\t'credit_amount': '3767.09',",
+                        "\t\t'net_amount': '50.00',",
+                        "\t\t'conversion_fee': '0.25',",
+                        "\t\t'note': '',",
+                        "\t'debit_account': {",
+                            "\t\t'account_number': '1000###',",
+                            "\t\t'currency_code': 'USD'",
+                        "\t\t},",
+                        "\t'credit_account': {",
+                            "\t\t'account_number': '1000###',",
+                            "\t\t'currency_code': 'INR'",
+                        "\t\t}",
+                    "\t}",
+                "\t},",
+            "},"
+            ]
+      },
+      {
+        "name": "Python",
+        "code": [
+          "import requests",
+          "url = 'https://api.entrebiz-pte.com/api/v1/transaction/account-to-account'",
+          "payload = '{\n\t\"debitAccount\": \"1000###\",\n\t\"beneficiary_account\": \"1000###\",\n\t\"amount\": \"0.00\",\n\t\"note\": \"text\"\n}'",
+          "headers = {",
+          "'Authorization': 'Token eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjY2ODQsImVtYWlsIjoibHA3N0BtYWlsaW5hdG9yLmNvbSIsImlhdCI6MTU3MjAyNjQzNCwiZXhwIjoxNTcyMTEyODM0fQ.Unavq_6yo5fvkiiRG1Hki61qmIdXZ3O1jyuhb4-hI0cWw2plM-91kz1nWV_y2K1vUXoj2S17bhpgBm9tL9QvRA'",
+          "'Cache-Control': 'no-cache'",
+          "}",
+          "response = requests.request('POST', url, data=payload, headers=headers)",
+          "print(response.text)"
+        ],
+        "Response": [
+          "{",
+          "'status': true,",
+          "'data': {",
+              "'transaction_details': {",
+                  "\t'transaction_number': 10000###,",
+                  "\t\t'debit_amount': '50.25',",
+                  "\t\t'beneficiary_name': '',",
+                  "\t\t'credit_amount': '3767.09',",
+                  "\t\t'net_amount': '50.00',",
+                  "\t\t'conversion_fee': '0.25',",
+                  "\t\t'note': '',",
+                  "\t'debit_account': {",
+                      "\t\t'account_number': '1000###',",
+                      "\t\t'currency_code': 'USD'",
+                  "\t\t},",
+                  "\t'credit_account': {",
+                      "\t\t'account_number': '1000###',",
+                      "\t\t'currency_code': 'INR'",
+                  "\t\t}",
+              "\t}",
+          "\t},",
+      "},"
+      ]
+      }
+    ]
+  }

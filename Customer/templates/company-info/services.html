@@ -1,0 +1,125 @@
+{% extends 'company-info/base.html' %}
+{% load static %}
+{% block link %}
+<link rel="stylesheet" type="text/css" href="{% static 'company-info/css/style.css' %}">
+{% endblock link %}
+{% block content %}
+<div class="banner-content">
+    <div class="container custom-container banner-container banner-container-abt">
+        <div class="page-title-cover">
+            <h1 class="title">OUR SERVICES</h1>
+        </div>
+    </div>
+</div>
+<section class="service-img-sec">
+    <div class="container custom-container">
+        <div class="row">
+            <div class="col-md-6 img-block">
+                <img src="{% static 'company-info/img/serv-1.png' %}" alt="">
+            </div>
+            <div class="col-md-6 serv-block-text">
+                <div class="serv-text-inner-cover">
+                    <div class="title-btm-br">
+                        <h2 class="inner-sub-title">Real-time account opening</h2>
+                    </div>
+                    <p>Opening an Account in Entrebiz is a simple process for Business and Personal customers. You can
+                        open account from any part of the world using a valid identification document, a proof of
+                        address, email id and a working mobile phone number.</p>
+                    <div class="title-btm-br">
+                        <h2 class="inner-sub-title">Personal &amp; Business accounts</h2>
+                    </div>
+                    <p>In Entrebiz, you can open a personal and/or Business accounts based on your requirements.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="acc-feature-sec">
+    <div class="container custom-container">
+        <div class="row acc-feature-row">
+            <div class="col-lg-6 col-md-12 acc-feat-block">
+                <div class="title-btm-br btm-br-full">
+                    <h2 class="inner-sub-title">Personal Accounts</h2>
+                </div>
+                <ul class="acc-feat-list">
+                    <li>Customer can open Personal account in Entrebiz with valid ID proof and address proof along with
+                        other details.</li>
+                    <li>Once you open a personal account your account will be verified instantly, after that you are
+                        entering in to a world of transaction which provide you unlimited opportunities.</li>
+                    <li>You can review payment, send payment and hold funds in Entrebiz in any currencies that you wish.
+                    </li>
+                    <li>You are facilitated with currency conversion, account to account transfer and international wire
+                        transfer instantly and globally.</li>
+                    <li>You will have the provision to view the statement and download it according to your need with
+                        the Web or Mobile application.</li>
+                </ul>
+            </div>
+            <div class="col-lg-6 col-md-12 acc-feat-block acc-feat-block-business">
+                <div class="title-btm-br btm-br-full">
+                    <h2 class="inner-sub-title">Business account</h2>
+                </div>
+                <ul class="acc-feat-list">
+                    <li>Customer can open Business account in Entrebiz with Certificate of Incorporation, valid ID proof
+                        of Directors and address proof along with other details.</li>
+                    <li>Convert currencies between your accounts for ultra-competitive exchange rates.</li>
+                    <li>You can review payment, send payment and hold funds in Entrebiz in any currencies that you wish.
+                    </li>
+                    <li>Transact with instant fund crediting, worldwide</li>
+                    <li>Live tracking of incoming and outgoing transfers.</li>
+                    <li>Transfer money to other Entrebiz accounts instantly.</li>
+                    <li>Assign responsible multiple users to manage and access your business accounts</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="serv-card-sec">
+    <div class="container custom-container">
+        <div class="row">
+            <div class="col-lg-6 col-md-12 serv-card serv-card-rt pl-0">
+                <div class="serv-card-cover serv-card-sm">
+                    <div class="title-btm-br btm-br-full">
+                        <h2 class="inner-sub-title">Multicurrency<br> Account to Account transfer.</h2>
+                    </div>
+                    <div class="details">
+                        <p>You can transfer funds to another Entrebiz account instantly irrespective of the country,
+                            currency and the amount, free of charges. *</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-12 serv-card pr-0 serv-card-lt">
+                <div class="serv-card-cover serv-card-sm">
+                    <div class="title-btm-br btm-br-full">
+                        <h2 class="inner-sub-title">Currency<br> Conversion.</h2>
+                    </div>
+                    <div class="details">
+                        <p>Entrebiz enables instant conversion of currencies based on the current currency values around
+                            the world. As a leading digital platform, our goal is to provide customers with
+                            ultra-competitive exchange rates.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 serv-card pr-0 pl-0">
+                <div class="serv-card-cover serv-card-lg">
+                    <div class="title-btm-br btm-br-full">
+                        <h2 class="inner-sub-title">International Wire transfer</h2>
+                    </div>
+                    <div class="details">
+                        <p>Our unique cross border platform is formulated in a way that, it would allow you to send and
+                            receive funds globally in the minimum possible time. We offer competitive and attractive
+                            volume based pricing models for a seamless and
+                            secure international wire transfer. Our backend solutions make sure the fund is received at
+                            the beneficiary without failure and that too in no time.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="btm-note">
+        <p>* Currency conversion charges applicable, if any</p>
+    </div>
+</section>
+{% endblock content %}
+{% block social %}
+{% endblock social %}

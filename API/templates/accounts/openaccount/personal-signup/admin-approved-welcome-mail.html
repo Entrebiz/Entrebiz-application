@@ -1,0 +1,184 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>E-Mail</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700' rel='stylesheet' type='text/css'>
+    <style type="text/css">
+        div {
+            box-sizing: border-box;
+        }
+
+        p {
+            margin-bottom: 30px;
+            color: #000;
+        }
+
+        .container {
+            font-family: 'Source Sans Pro', sans-serif;
+            padding: 5% 5% 3%;
+            border: solid 1px #f2f2f2;
+            max-width: 800px;
+            width: 100%;
+            color: #000;
+            margin: 0 auto;
+        }
+
+        .header-logo {
+            text-align: center;
+            padding: 10px;
+        }
+
+        .content-body {
+            font-family: 'Source Sans Pro', sans-serif;
+        }
+
+        .txt-grn {
+            color: #38761d;
+        }
+
+        .det-row {
+            min-height: 50px;
+            border-top: solid 1px #ccc;
+            display: block;
+            box-sizing: border-box;
+            padding: 10px 0;
+            overflow: hidden;
+        }
+
+        .det-lft {
+            width: 250px;
+            float: left;
+        }
+
+        .det-rgt {
+            float: left;
+            width: calc(100% - 250px);
+            padding-left: 15px;
+        }
+
+        .copyrights {
+            margin-top: 80px;
+        }
+
+        .copyrights p {
+            margin-bottom: 20px;
+            color: #222;
+        }
+
+        .acc-det-tab {
+            margin-top: 30px;
+        }
+
+        @media(max-width: 768px) {
+            .container {
+                padding: 20px !important;
+            }
+
+            .header-logo img {
+                width: 150px;
+            }
+
+            .det-lft {
+                width: 100% !important;
+            }
+
+            .det-rgt {
+                padding-top: 5px !important;
+                width: 100% !important;
+                padding-left: 0 !important;
+            }
+
+            .copyrights {
+                margin-top: 40px !important;
+            }
+        }
+
+        @media(max-width: 450px) {
+            .container {
+                padding: 15px !important;
+            }
+
+            .header-logo img {
+                width: 110px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container"
+        style="color: #000; font-family: 'Source Sans Pro', sans-serif; padding: 5% 5% 3%; border: solid 1px #f2f2f2; max-width: 800px; width: 100%; margin: 0 auto;">
+        <div class="header-logo"><img src="{{domain}}/static/dash/assets/img/logo-acc.png" alt=""
+                style="max-width: 100%;"></div>
+        <div class="content-body" style="font-size: 18px; font-family: 'Source Sans Pro', sans-serif;">
+            <p style="font-family: 'Source Sans Pro', sans-serif; margin-bottom: 30px;">Dear PlaceholderkeyUserValue,
+            </p>
+            <p style="margin-bottom: 15px;">
+                Welcome to the world class digital banking experience at Entrebiz....<br />
+                We are pleased to inform you that the Entrebiz Multi currency account has been activated.
+            </p>
+            <p style="margin-bottom: 15px;">
+                <!--<b><span class="txt-grn" style="color: #38761d;">Great news!​</span></b>-->
+                The account numbers are:<br />
+                <b>1. PlaceholderkeyPrimaryAccValue</b><br />
+                <b>2. PlaceholderkeySecondaryAccValue</b>
+            </p>
+            <p>Please note the Client Fund Holding Accounts for major currencies:<br>
+                <br>
+                <b>USD</b><br>
+                Account Name: Entre Biz Pte. Ltd<br>
+                Account number: 2000751093<br>
+                Account currency: USD<br>
+                Bank Name: CIMB Bank Berhad<br>
+                Bank Address: 50 Raffles Place #09-01, Singapore Land Tower, Singapore 048623<br>
+                BIC/SWIFT: CIBBSGSGXXX<br>
+                <br>
+                <b>SGD</b><br>
+                Account Name: Entre Biz Pte. Ltd<br>
+                Account number: 2000751081<br>
+                Account currency: SGD<br>
+                Bank Name: CIMB Bank Berhad<br>
+                Bank Address: 50 Raffles Place #09-01, Singapore Land Tower, Singapore 048623<br>
+                BIC/SWIFT: CIBBSGSGXXX<br>
+                <b>EUR</b><br>
+                Account Name: Entre Biz Pte. Ltd<br>
+                Account number: 2000751100<br>
+                Account currency: EUR<br>
+                Bank Name: CIMB Bank Berhad<br>
+                Bank Address: 50 Raffles Place #09-01, Singapore Land Tower, Singapore 048623<br>
+                BIC/SWIFT: CIBBSGSGXXX<br>
+            </p>
+            <p style="margin-bottom: 15px;color: red;">Please quote your Entrebiz Account Number in the “reference
+                field”
+                for any Inward Remittance.
+            </p>
+            <p style="margin-bottom: 15px;">For more information about our products and services please visit <a
+                    href="#" style="font-size: 15px; font-weight: 600; color: #2966d1;">www.entrebiz.com</a>.</p>
+            <p style="margin-bottom: 15px;">If you have any queries, feel free to dial
+                <b>+44-2081 331344</b> or mail to <a href="#"
+                    style="font-size: 15px; font-weight: 600; color: #2966d1;">​support@entrebiz.com</a>.
+            </p>
+        </div>
+        <div style="border-top: solid 1px #000; font-size: 18px; font-family: 'Source Sans Pro', sans-serif;">
+            <p style="margin-bottom: 0; margin-top: 25px;">Thanks & Warm Regards,</p>
+            <p style="margin-top: 0;">Entrebiz Team</p>
+        </div>
+        <div class="copyrights"
+            style="margin-top: 80px; text-align: center; font-size: 12px; color: #717171; font-family: 'Source Sans Pro', sans-serif;">
+            <p style="color: #717171;">Please do not respond to this email. This mailbox is not monitored and you will
+                not receive a response.
+            </p>
+            <p style="color: #717171;">Entrebiz Pte. Ltd. is a company registered in Singapore with registered number
+                201802629R. Our registered office is at 16 Raffles Quay, Hong Leong Building, Singapore 048581.
+            </p>
+            <p style="color: #717171;">Copyright © PlaceholderkeyYearValue Entrebiz. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+
+</html>

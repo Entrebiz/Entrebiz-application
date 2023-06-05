@@ -1,0 +1,140 @@
+{% extends 'common/base.html' %}
+{% load static %}
+{% load util_tags %}
+{% block content %}
+<div class=" balance-cover  mx-4 ">
+    <div class="row">
+        <div class=" balance-main">
+            {% if message %}
+            <div class="alert-box-outer">
+                <div class="{% if status %}success-alert{% else %}section-alert{% endif %}" style="display: block;"
+                    id="alertDiv">
+                    <button class="{% if status %}success-alert-close{% else %}section-alert-close{% endif %}" onclick="closeAlertModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <p style="text-align: center" id="errorField">{{message}}</p>
+                </div>
+            </div>
+            {% endif %}
+            <div class="row">
+                <div class="form-group col-sm-7 col-12 plr-0">
+                    <label class="tab-title settings-inr-title" style="font-size: 15px;"> Address Verification<label>
+                </div>
+            </div>
+            <hr style="margin-top: -12px;">
+            <form action="" method="post" enctype="multipart/form-data" id="addressForm">
+                {% csrf_token %}
+            <div class="row">
+                <div class="col-lg-4 col-md-12 col-12 input-form-group" id="fileUpload" style="display: block">
+                    <div class="custom-input-file err-shw-inpfile">
+                        {% if customer_doc %}
+                        <img src="/" id="frontPage" class="imagLoad" alt="">
+                        <label for="idImageFile0" style="display: none;">upload your doc </label>
+                        <input type="file" class="" accept=".jpg,.png,.jpeg,.pdf,.JPG,.tiff,.tif,.TIFF,.PNG,.PDF,.JPEG"
+                            name="frontPage" id="idImageFile0" onfocus="clearErrorMessage(this)"
+                            onchange="readImageURL(this)" value="{{customer_doc|docFile}}">
+                        <!-- <input type="hidden" name="img" value=""> -->
+                        <label>your doc uploaded.<br>Click here to upload again.</label>
+                        {% else %}
+                        <img src="{% static 'dash/assets/img/upload1.png' %}" id="frontPage" class="imagLoad" alt="">
+                        <label for="idImageFile0" style="display: none;">upload your doc </label>
+                        <input type="file" class="" accept=".jpg,.png,.jpeg,.pdf,.JPG,.tiff,.tif,.TIFF,.PNG,.PDF,.JPEG"
+                            name="frontPage" id="idImageFile0" onfocus="clearErrorMessage(this)"
+                            onchange="readImageURL(this)" value="">
+                        <label>upload your doc</label>
+                        {% endif %}
+                    </div>
+                    <label id="frontPage-label" class="doc-upload-label"></label>
+                </div>
+                <div class="col-lg-8 col-md-12 col-12 file-upload-form-rgt">
+                    <div class="col-lg-7 plr-0 title-btn-rgt input-form-group">
+                        <label for="idProof">Address Type</label>
+                        <input type="hidden" value="2" id="selectDocType">
+                        <select name="idProof" id="idProof" class="select-list" onchange="showDocumentFields()"
+                            style="width: 77%;height: 45px;" required>
+                            <option  disabled="" value="">-Select address type-
+                            </option>
+                            {% if ad_proof %}
+                            {% for doc in address_docs %}
+                            <option value="{{doc.name}}"{% if ad_proof == doc.name %}selected{% endif %}>{{doc.name}}</option>
+                            {% endfor %}
+                            {% elif customer_doc %}
+                            {% for doc in address_docs %}
+                            <option value="{{doc.name}}"{% if customer_doc.documenttype.name == doc.name %}selected{% endif %}>{{doc.name}}</option>
+                            {% endfor %}
+                            {% else %}
+                            {% for doc in address_docs %}
+                            <option value="{{doc.name}}">{{doc.name}}</option>
+                            {% endfor %}
+                            {% endif %}
+                        </select>
+                    </div>
+                    <div class="row persn-det-row sett-card-row m-0" id="viewDetails">
+                        <div id="documentField">
+                            <div class="persn-det-card rec-mny-card consum-num"
+                                style="margin-left: -2%;margin-top: 3%;height: 95px;padding-left: 10px;padding: 5px;">
+                                <div class="form-grp-edit input-form-group " style="width: 80%;">
+                                    {% if customer_doc %}
+                                    <label for="docId">{{customer_doc|docFieldName}}</label>
+                                    <input type="text" id="docFieldId" name="doc_field_id" value="{{customer_doc|docField}}" style="display: none;">
+                                    <input type="text" maxlength="25" onkeypress="return restrictAlphabets(event)"
+                                        id="docId" name="field_value" class="form-control" onfocus="clearErrorMessage(this)"
+                                        placeholder="Enter Bill Number" value="{{docValue|default_if_none:''}}">
+                                    {% else %}
+                                    <label for="docId">Bill Number</label>
+                                    <input type="hidden" id="docFieldId" name="doc_field_id" value="">
+                                    <input type="text" maxlength="25" onkeypress="return restrictAlphabets(event)"
+                                        id="docId" name="field_value" class="form-control" onfocus="clearErrorMessage(this)"
+                                        placeholder="Enter Bill Number" value="{{docValue}}">
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <button id="saveDetails" type="submit" style="margin-top: 17px;margin-left: 0px;"
+                            class="btn btn-primary button-w btn-edit-beneficiary w-40">
+                            <!-- <img src="{% static 'dash/assets/img/tick.png' %}" alt="">  -->
+                            Save Details
+                        </button>
+                    </div>
+                </form>
+                </div>
+                <div class="col-md-6 col-12" id="formatType" style="display: block">
+                    <label>Note:&nbsp;<br />
+                        <small>- Allowed Files :
+                            jpeg, JPG, pdf, tiff, png
+                        </small>
+                        <br />
+                        <small>- Maximum file size :
+                            10 MB
+                        </small>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+{% block extra_script %}
+<script>
+    $(window).on('load', function() {
+        showDocumentFields()
+    });
+    function showDocumentFields() {
+        let id_proof= $('#idProof option:selected').val()
+        $.get('/documentVerification/addressEdit',
+            {
+                'id_proof': id_proof,
+                'for_field': true
+            },
+            function (data, status) {
+                $('#documentField').find('label').text(data.doc_fileds.fieldname)
+                $('#docFieldId').val(data.doc_fileds.id)
+                $('#docId').attr('placeholder', 'Enter ' + data.doc_fileds.fieldname)
+
+            });
+    }
+</script>
+{% endblock %}

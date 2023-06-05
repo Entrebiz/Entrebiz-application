@@ -1,0 +1,23 @@
+<div id="modal-confirm-delete" class="modal fade">
+	<div class="modal-dialog modal-confirm">
+		<div class="modal-content">
+			<div class="modal-header flex-column">
+				<div class="icon-box">
+					<i class="fas fa-times"></i>
+				</div>
+				<h4 class="modal-title w-100">Are you sure?</h4>
+			</div>
+			<div class="modal-body">
+				<p>Do you really want to delete ? This process cannot be undone.</p>
+			</div>
+			<div class="modal-footer justify-content-center">
+				<button type="button" class="btn btn-secondary btn-modal-close" data-dismiss="modal">Cancel</button>
+				<form method="POST">
+					{% csrf_token %}
+					<input type="hidden" class="accnt-id" name="account_id" value="">
+					<button type="submit" class="btn btn-danger btn-del-ben">Delete</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>

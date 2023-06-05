@@ -1,0 +1,321 @@
+{% extends 'common/base.html' %}
+{% load static %}
+
+
+{% block content %}
+<style>
+    .p-details-header{
+        font-weight:600;
+    }
+    .allow-transactions-restrict {
+        background-color: red;
+    }
+    .cust-col{
+            padding-top: 10px;
+    padding-bottom: 20px;
+    border: 1px solid #efefef;
+    }
+    .input-edit{
+    display: block;
+    border: none;
+    box-shadow: none;
+    width: 100%;
+    color: #84878a;
+    }
+    .input-edit:focus{
+            outline: 0;
+    }
+    .btn-edit{
+    float: right;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    box-shadow: none;
+    font-size: 15px;
+    margin-bottom: 0;
+}
+
+.btn-edit:hover, .btn-edit:focus{
+    transform:none !important;
+    box-shadow: none !important;
+    color:#99a0af;
+}
+.form-group{
+    margin-bottom:0px;
+}
+
+    table td{
+        border-bottom:1px solid #efefef;
+        padding: 10px 10px 10px 10px;
+    }
+.body-column-center{
+    text-align: center;
+}
+.body-column-left{
+text-align: left;
+padding: 0px 0px 0px 0px;
+}
+.btn-transactions{
+    height: 20px;
+    border-radius: 0px;
+    background-color: #fa661d;
+    color: #fff;
+    font-weight: normal;
+    font-size: 12px;
+    margin-bottom: 0px;
+    text-align: center;
+    vertical-align: middle;
+}
+.button-w-temp {
+    width:230px;
+}
+</style>
+
+<div class=" balance-cover  mx-4 ">
+    <div class="row">
+        <div class=" balance-main">
+
+
+            <form method="POST" class="ben-list-form" action="/settings/addNewUser">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="form-group col-lg-6">
+                        <h6>User Details</h6>
+
+                    </div>
+                    <input type="hidden" name="action" value="add">
+                    <div class="form-group col-lg-6" style="text-align: right;">
+                        <button class="btn btn-primary button-w" type="submit">
+                            <i class="fa fa-solid fa-plus"></i>&nbsp;Add More User
+                        </button>
+
+
+                    </div>
+                </div>
+                <hr style="margin-top:0px;">
+            </form>
+            {% if message %}
+            <div class="alert-box-outer">
+                <div class="{% if status %}success-alert{% else %}section-alert{% endif %}" style="display: block;"
+                     id="alertDiv">
+                    <button class="{% if status %}success-alert-close{% else %}section-alert-close{% endif %}"
+                            onclick="closeAlertModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <p style="text-align: center" id="errorField">{{message}}</p>
+                </div>
+            </div>
+            {% endif %}
+            
+            <table class="table table-striped" style="font-size:13px">
+                <tr>
+                    <th class="">Full Name</th>
+                    <th class="">User Type</th>
+                    <th class="">Email</th>
+                    <th class="">Permissions</th>
+                    <th class="">Action</th>
+                </tr>
+                
+                {% for user in user_details %}
+                <tr>
+                    <td>{{user.firstname}} {% if user.middlename %}{{user.middlename}}{% endif %} {{user.lastname}}</td>
+                    {% for transactionauthoritytype in transactionauthoritytypes %}
+                    {% if transactionauthoritytype.useraccount == user %}
+                    <td>{{transactionauthoritytype.transactionauthoritytype.name}}</td>
+                    {% endif %}
+                    {% endfor %}
+                    <td>{{user.customer.user.email}}</td>
+
+
+                    {% if user.ultimate_ben_user %}
+                    <td style="color: #fa661d;">Ultimate Beneficial <br>Owner</td>
+                     {% else %}
+                    <td style="text-align: left;">
+                    
+                     {% if user.activestatus == 'Deactivated by UBO' %}  
+                     {% if user.account_tran_status %}
+                     <button class="btn btn-primary button-w button-w-temp allow-transactions-restrict" type="button"
+                     style="margin-bottom:0px;font-size: 11px;" data-id="{{user.id}}" data-ubo="{{user.id}}" data-email="{{user.customer.user.email}}" disabled>Restrict Transactions</button>
+                     {% else %}
+                         <button class="btn btn-primary button-w button-w-temp allow-transactions" type="button"
+                         style="margin-bottom:0px;font-size: 11px;" data-id="{{user.id}}" data-ubo="{{user.id}}" data-email="{{user.customer.user.email}}" disabled>Allow Transactions</button>
+                     {% endif %}
+
+                    {% else %}
+                        {% if user.account_tran_status %}
+                        <button class="btn btn-primary button-w button-w-temp allow-transactions-restrict" type="button"
+                        style="margin-bottom:0px;font-size: 11px;" data-id="{{user.id}}" data-ubo="{{user.id}}" data-email="{{user.customer.user.email}}">Restrict Transactions</button>
+                        {% else %}
+                            <button class="btn btn-primary button-w button-w-temp allow-transactions" type="button"
+                            style="margin-bottom:0px;font-size: 11px;" data-id="{{user.id}}" data-ubo="{{user.id}}" data-email="{{user.customer.user.email}}">Allow Transactions</button>
+                        {% endif %}
+                    {% endif %}
+                    
+                    
+                    </td>
+                    {% endif %}
+                    <td>
+
+                        <div style="display: flex;">
+                            <form method="post" action="/settings/viewUserDetails" style="margin-right: 10px;">
+                                {% csrf_token %}
+                                <input name="user-id" type="hidden" value="{{user.id}}">
+                                <button type="submit" class="btn-edit-ben" style="all: unset;"><i class="far fa-eye"></i></button>
+                            </form>
+                            {% if not user.ultimate_ben_user %}
+                            <div style="margin-left: 10px;">
+                                {% if user.activestatus == 'Deactivated by UBO' %}
+                                <button type="button" style="all:unset;" class="" data-attr="{{user.id}}" data-email="{{user.customer.user.email}}"><i class="fa fa-solid fa-user-slash" data-id="{{user.id}}" title="The account is deactivated if you want to activate the account please contact support@entrebiz-pte.com "></i></button>
+                                {% else %}
+                                <button type="button" style="all:unset;" class="btn-open-modal" data-attr="{{user.id}}" data-email="{{user.customer.user.email}}"><i class="far fa-user" data-id="{{user.id}}" data-attr="{{user.id}}" data-email="{{user.customer.user.email}}"></i></button>
+                                {% endif %}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+             
+                {% endfor %}
+            </table>
+            
+        </div>
+    </div>
+</div>
+{% include 'accounts/openaccount/business/account-deactivate-modal.html' %}
+{% include 'accounts/openaccount/business/allow-trans-acc-not-verified-modal.html' %}
+{% include 'accounts/openaccount/business/allow-trans-acc-verified.html' %}
+{% include 'accounts/openaccount/business/restrict-trans-modal.html' %}
+{% endblock %}
+{% block extra_script %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+
+<script>
+    $(document).on("click",".fa-user",function(){
+// $(".btn-open-modal").click(function(){
+    $("#modal-acc-deactivate").find(".accnt-id").val($(this).attr('data-attr'))
+    $("#modal-acc-deactivate").find(".account_email").text($(this).attr('data-email'))
+    $('.btn-open-modal[data-attr="'+$(this).attr('data-attr')+'"]').removeClass('btn-open-modal');
+    $("#modal-acc-deactivate").modal("show")
+});
+
+$(".deactivate-acc").click(function(){
+    account_id = $(".accnt-id").val()
+    $.ajax({
+        type:'POST',
+        url:'/deactivate-account',
+        data:{
+        'csrfmiddlewaretoken': '{{ csrf_token }}',
+        'account_id':account_id,
+        'type':'deactivate'
+    },
+    success:function(status){
+        $('.fa-user[data-id="'+account_id+'"]').addClass('fa fa-solid fa-user-slash').removeClass('far fa-user');
+        $('.button-w[data-id="'+account_id+'"]').prop('disabled', true);
+        $('.fa-user-slash').attr('title', 'The account is deactivated if you want to activate the account please contact support@entrebiz-pte.com');
+        $("#modal-acc-deactivate").modal("hide")
+    }
+    })
+ 
+
+});
+$(document).on("click",".allow-transactions",function(){
+// $(".allow-transactions").click(function(){
+    account_id = $(this).attr('data-id');
+    ubo_acc_id = $(this).attr('data-ubo');
+    $("#modal-acc-not-verified").find(".accnt-id-allow-tr").val($(this).attr('data-id'))
+    $("#modal-acc-not-verified").find(".ubo-accnt-id-allow-tr").val($(this).attr('data-ubo'))
+    $("#modal-acc-verified").find(".accnt-id-allow").val($(this).attr('data-id'))
+    $("#modal-acc-verified").find(".ubo-accnt-id-allow").val($(this).attr('data-ubo'))
+    $("#modal-acc-verified").find(".account_email_allow").text($(this).attr('data-email'))
+    $.ajax({
+        type:'POST',
+        url:'/deactivate-account',
+        data:{
+        'csrfmiddlewaretoken': '{{ csrf_token }}',
+        'account_id':account_id,
+        'ubo_acc_id':ubo_acc_id,
+        'type':'check-account-verified'
+    },
+    success:function(data,status){
+    if (!data.ver_status){
+    $("#modal-acc-not-verified").modal("show");
+    }else{
+      $("#modal-acc-verified").modal("show");
+    }
+    }
+    })
+});
+
+$(".allow-trans").click(function(){
+    account_id = $(".accnt-id-allow").val()
+    ubo_acc_id = $(".ubo-accnt-id-allow").val()
+    $.ajax({
+        type:'POST',
+        url:'/deactivate-account',
+        data:{
+        'csrfmiddlewaretoken': '{{ csrf_token }}',
+        'account_id':account_id,
+        'ubo_acc_id':ubo_acc_id,
+        'type':'allow_transactions'
+    },
+    success:function(status){
+        $('.allow-transactions[data-id="'+account_id+'"]').addClass('allow-transactions-restrict').removeClass('allow-transactions');
+        $("#modal-acc-verified").modal("hide");
+        $('.allow-transactions-restrict').text('Restrict Transaction')
+    }
+    })
+ 
+
+});
+
+
+$(document).on("click",".allow-transactions-restrict",function(){
+    $("#modal-acc-not-verified").find(".accnt-id-allow-tr").val($(this).attr('data-id'))
+    $("#modal-acc-not-verified").find(".ubo-accnt-id-allow-tr").val($(this).attr('data-ubo'))
+    $("#modal-acc-restrict").find(".accnt-id-restrict").val($(this).attr('data-id'))
+    $("#modal-acc-restrict").find(".ubo-accnt-id-restrict").val($(this).attr('data-ubo'))
+    $("#modal-acc-restrict").find(".account_email_restrict").text($(this).attr('data-email'))
+    $.ajax({
+        type:'POST',
+        url:'/deactivate-account',
+        data:{
+        'csrfmiddlewaretoken': '{{ csrf_token }}',
+        'type':'check-account-verified'
+    },
+    success:function(data,status){
+    if (!data.ver_status){
+    $("#modal-acc-not-verified").modal("show");
+    }else{
+        $("#modal-acc-restrict").modal("show");    }
+    }
+    })
+    
+});
+
+$(".restrict-trans").click(function(){
+    account_id = $(".accnt-id-restrict").val()
+    ubo_acc_id = $(".ubo-accnt-id-restrict").val()
+    $.ajax({
+        type:'POST',
+        url:'/deactivate-account',
+        data:{
+        'csrfmiddlewaretoken': '{{ csrf_token }}',
+        'account_id':account_id,
+        'ubo_acc_id':ubo_acc_id,
+        'type':'restrict_transactions'
+    },
+    success:function(status){
+        $('.allow-transactions-restrict[data-id="'+account_id+'"]').addClass('allow-transactions').removeClass('allow-transactions-restrict');
+        $("#modal-acc-restrict").modal("hide");
+        $('.allow-transactions').text('Allow Transactions')
+    }
+    })
+ 
+
+});
+</script>
+
+
+
+{% endblock %}

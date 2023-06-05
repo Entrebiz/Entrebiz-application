@@ -1,0 +1,121 @@
+{% extends 'common/base.html' %}
+{% load static %}
+{% load util_tags %}
+
+{% block content %}
+<main class="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg ">
+   <!-- {% if messages %}
+   {% for message in messages %}
+   <p id="resMsg" class="mx-4" style="background-color: #cff4da;color: #0f5132;padding: 10px;text-align: center;margin-top: 10px;">{{message}}</p>                            
+   {% endfor %}
+   {% endif %} -->
+   <!--  -->
+ <!--  -->
+ <div class="balance-cover  mx-4">
+     <div class="container-fluid py-5 ">
+         <div class="row" style="align-items: center;justify-content: center;">
+             <div class="col-lg-11 col-md-10 col-12">
+                 <div class="conversion-confirm-sec">
+                     <div class="">
+                         <div class="curr-conversion-sec">
+                             <div class="row curr-conversion-row m-0" style="justify-content: center;">
+                                 <div class="col-lg-8 col-md-10 col-12 curr-conversion-card">
+                             
+                              <div class="confirm-title">
+                                 <h4>Confirm your details</h4>
+                             </div>
+                             <div class="confirm-tab-holder">
+                              <table class="confirm-table confirm-transactions" style="width: 100%;">
+                                  <tbody>
+                                      <tr>
+                                          <td>Debit Account</td>
+                                          <td><span>:</span>&nbsp;<strong>{{ request.session.accounttoaccounttransfer.debit_account }} ({{ request.session.accounttoaccounttransfer.currency_code_debit }})</strong>
+                                          </td>
+                                      </tr>
+                                      <tr>
+                                          <td>Credit Account</td>
+                                          <td><span>:</span>&nbsp;<strong>{{ request.session.accounttoaccounttransfer.beneficiary_accountnumber }} ({{ request.session.accounttoaccounttransfer.currency_code_beneficiary }})</strong>
+                                          </td>
+                                      </tr>
+                                      {% if request.session.accounttoaccounttransfer.beneficiary_name %}
+                                      <tr>
+                                          <td>Beneficiary Name</td>
+                                          <td><span>:</span>&nbsp;<strong>{% if request.session.accounttoaccounttransfer.beneficiary_name %}{{ request.session.accounttoaccounttransfer.beneficiary_name|value_change }}{% else %}NA{% endif %}</strong>
+                                          </td>
+                                      </tr>
+                                      {% endif %}
+                                     
+                                     
+                                      <tr class="">
+                                          <td>Net Amount</td>
+                                          <td><span>:</span>&nbsp;<strong>{{ request.session.accounttoaccounttransfer.amount }} {{ request.session.accounttoaccounttransfer.currency_code_debit }}</strong>
+                                          </td>
+                                      </tr>
+                                      <tr>
+                                       <td>Fee</td>
+                                       <td><span>:</span>&nbsp;<strong>{{ request.session.accounttoaccounttransfer.conversion_fee }} {{ request.session.accounttoaccounttransfer.currency_code_debit }}</strong>
+                                       </td>
+                                   </tr>
+                                   <tr>
+                                    <td>Debit Amount</td>
+                                    <td><span>:</span>&nbsp;<strong>{{ request.session.accounttoaccounttransfer.debit_amount }} {{ request.session.accounttoaccounttransfer.currency_code_debit }}</strong>
+                                    </td>
+                                </tr>
+                       
+                                      <tr style="background-color: #e8f8ed;">
+                                          <td><strong>Credit Amount</strong></td>
+                                          <td><span>:</span>&nbsp;<strong>{{ request.session.accounttoaccounttransfer.credit_amount }} {{ request.session.accounttoaccounttransfer.currency_code_beneficiary }}</strong>
+                                          </td>
+                                      </tr>
+                                      {% if request.session.accounttoaccounttransfer.note %}
+                                      <tr>
+                                          <td>Note</td>
+                                          <td><span>:</span><span
+                                                  class="confirm-note pl-0"><strong>{{request.session.accounttoaccounttransfer.note}}</strong></span>
+                                          </td>
+                                      </tr>
+                                      {% endif %}
+                                  </tbody>
+                              </table>
+
+                              <div class="row confirm-btn-holder">
+                                 <div class="col-12">
+                                 <form action="" method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" id="sendOtp" name="sendOtp" value="sendOtp">
+                                    <button class="btn btn-primary w-100 mt-2" type="submit">CONFIRM</button>
+                                 </form></div>
+                                 <div class="col-sm-6">
+                                    <a href="/transaction/acc/?Edit=True" class="btn btn-light w-100"
+                                       style="border: solid 1px #e1e1e1;border-radius: 5px;background-color: #fff;color: #646464"
+                                       type="button">EDIT</a>
+                                 </div>
+                                 <div class="col-sm-6">
+                                    <a href="/transactionCancel" class="btn btn-light w-100"
+                                       style="border: solid 1px #e1e1e1;border-radius: 5px;background-color: #fff;color: #646464"
+                                       type="button">CANCEL</a>
+                                 </div>
+                              </div>
+
+
+
+
+
+
+                              
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
+</div>
+</div>
+<!--  -->
+</main>
+
+{% endblock %}
+
+                           

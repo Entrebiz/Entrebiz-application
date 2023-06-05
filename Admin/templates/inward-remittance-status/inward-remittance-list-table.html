@@ -1,0 +1,94 @@
+{% load static %}
+{% load util_tags %}
+<div class="admin-user-table-sec">
+    <table class="admin-table-def" id="inwardRemittancePendingList">
+        <thead>
+            <tr>
+
+                <th class="td-slno">Sl No</th>
+                <th>Account Name</th>
+                <th>Account No</th>
+                <th>Amount</th>
+                <th style="width: 105px;">Transaction Type</th>
+                <th style="width: 110px;">Created On</th>
+                <th>Reject Reason</th>
+                <th style="width: 90px;">Status</th>
+
+            </tr>
+        </thead>
+        <tbody>
+
+            {% for inwardrem_tr in inwardrem_trs %}
+            <tr id="rows-{{inwardrem_tr.id}}">
+                <td>{{forloop.counter}}</td>
+                {% if inwardrem_tr.account.user_account.customer.customertype == 1 %}
+                <td>{{inwardrem_tr.account.user_account.firstname}}
+                    {{inwardrem_tr.account.user_account.middlename|default_if_none:''}}
+                    {{inwardrem_tr.account.user_account.lastname}}</td>
+                {% else %}
+                <td>{{inwardrem_tr.account.user_account.customer|company_name}}</td>
+                {% endif %}
+                <td>{{inwardrem_tr.account.accountno}}
+                    <br>({{inwardrem_tr.currency.code}})
+                </td>
+                <td>{{inwardrem_tr.amount|floatformat:2}}</td>
+                {% if inwardrem_tr.transactiontype.name == 'Inward Remittance' %}
+                <td>
+                    Add Money
+                </td>
+                {% elif inwardrem_tr.transactiontype.name == 'Other Charges' %}
+                <td>Add Charge</td>
+                {% endif %}
+                <td>{{inwardrem_tr.createdon|date:"d M Y"}}</td>
+                {% if inwardrem_tr.approvallevel == 0 %}
+                <td>-</td>
+                <td>
+                    <span style="color: orange;">Pending</span>
+                </td>
+                {% elif inwardrem_tr.approvallevel == 1 %}
+                <td>-</td>
+                <td>
+                    <span style="color: green;">Approved</span>
+                </td>
+                {% elif inwardrem_tr.approvallevel == 2 %}
+                <td>{{inwardrem_tr.reasonforreject}}</td>
+                <td>
+                    <span style="color: red;">Rejected</span>
+                </td>
+                {% endif %}
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="8" style="text-align:center;font-size:20;font-weight: 300;">No records
+                    found!</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <hr>
+    <div class="row" style="margin-top:15px;margin-bottom:20px;">
+        <div class="col-sm-12" style="text-align:center">
+            <div class="pagination" style="">
+                {% if inwardrem_trs.has_other_pages %}
+                {% if inwardrem_trs.has_previous %}
+                <a class="btn-page" data-page-num="{{ inwardrem_trs.previous_page_number }}">&laquo;</a>
+                {% else %}
+                <a class="disabled"><span>&laquo;</span></a>
+                {% endif %}
+                {% for i in inwardrem_trs.paginator.page_range %}
+                {% if inwardrem_trs.number == i %}
+                <a data-page-num="{{ i }}" class="active">{{ i }}</a>
+                {% else %}
+                <a class="btn-page" data-page-num="{{ i }}">{{ i }}</a>
+                {% endif %}
+                {% endfor %}
+                {% if inwardrem_trs.has_next %}
+                <a class="btn-page" data-page-num="{{ inwardrem_trs.next_page_number }}">&raquo;</a>
+                {% else %}
+                <a class="disabled"><span>&raquo;</span></a>
+                {% endif %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>

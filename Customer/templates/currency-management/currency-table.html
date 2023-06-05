@@ -1,0 +1,72 @@
+{% load static %}
+<div class="curr-conversion-sec">
+    <div class="admin-user-table-sec" style="margin-top: 16px;">
+        <table class="admin-table-def">
+            <thead>
+                <tr>
+                    <th style="display: none;">MarginId</th>
+                    <th class="td-slno">Sl No</th>
+                    <th>From Currency</th>
+                    <th>To Currency</th>
+                    <th>Margin in Percent</th>
+                </tr>
+            </thead>
+            <tbody>
+
+
+                {% for currcnmargin in currcnmargins %}
+                <tr>
+                    <td style="display: none;" id="">{{currcnmargin.id}}</td>
+                    <td>{{forloop.counter}}</td>
+                    <td>{{currcnmargin.fromcurrency.code}}</td>
+                    <td>{{currcnmargin.tocurrency.code}}</td>
+                    <td>
+                        <input class="curr-val" data-id="{{currcnmargin.id}}" id="from-cur-{{currcnmargin.id}}"
+                            type="hidden" value="{{currcnmargin.marginpercent}}">
+
+                        <label for="margin-id-{{currcnmargin.id}}" hidden="">Margin Percentage</label>
+                        <input id="margin-id-{{currcnmargin.id}}" name="margins"
+                            oninput="validatePercentageInputs(this);" class="form-control validationClass" type="text"
+                            maxlength="15" value="{{currcnmargin.marginpercent}}">
+                    </td>
+                </tr>
+
+                {% empty %}
+                <tr>
+                         <td colspan="4" style="text-align:center;font-size:20px;font-weight: 300;">No records found!</td>
+
+                </tr>
+                {% endfor %}
+
+
+            </tbody>
+        </table>
+    </div>
+    <hr>
+    <div class="row" style="margin-top:15px;margin-bottom:20px;">
+        <div class="col-sm-12" style="text-align:center">
+            <div class="pagination" style="">
+                {% if currcnmargins.has_other_pages %}
+                {% if currcnmargins.has_previous %}
+                <a class="btn-page" data-page-num="{{ currcnmargins.previous_page_number }}">&laquo;</a>
+                {% else %}
+                <a class="disabled"><span>&laquo;</span></a>
+                {% endif %}
+                {% for i in currcnmargins.paginator.page_range %}
+                {% if currcnmargins.number == i %}
+                <a data-page-num="{{ i }}" class="active">{{ i }}</a>
+                {% else %}
+                <a class="btn-page" data-page-num="{{ i }}">{{ i }}</a>
+                {% endif %}
+                {% endfor %}
+                {% if currcnmargins.has_next %}
+                <a class="btn-page" data-page-num="{{ currcnmargins.next_page_number }}">&raquo;</a>
+                {% else %}
+                <a class="disabled"><span>&raquo;</span></a>
+                {% endif %}
+                {% endif %}
+            </div>
+        </div>
+
+    </div>
+</div>

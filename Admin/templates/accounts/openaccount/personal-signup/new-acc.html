@@ -1,0 +1,59 @@
+{% load static %}
+<div class="details-body-sec">
+    <input type="hidden" name="acc_type" value="for_new_acc">
+    <div class="details-body-sub-block details-body-inner">
+        <div class="title-content-skip">
+            <div class="row title-skip-row title-brdr m-0">
+                <div class="col-12 title-block">
+                    <h2 class="header">Currency</h2>
+                    <p>
+                        <!--Lorem Ipsum is simply dummy text-->
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="row bus-det-curncy-form">
+            <div class="form-group col-lg-6">
+                <label for="primaryCurrency">1st Currency</label>
+                <div>
+                    <select id="primaryCurrency" name="primaryCurrency"
+                        class="custom-select select-list" required>
+                        <option value="">Select Currency</option>
+                        {% for currency in currencies %}
+                        <option
+                            data-icon="{% if currency.flag %}{{currency.flag.url}}{% else %}/other/no-image.jpg{% endif %}"
+                            value="{{currency.code}}" {% if primaryCurrency == currency.code %}selected{% endif %}>{{currency.code}} {{currency.name}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group col-lg-6">
+                <label for="secondaryCurrency">2nd Currency</label>
+                <div>
+                    <select id="secondaryCurrency" name="secondaryCurrency"
+                        class="custom-select select-list" required>
+                        <option value="">Select Currency</option>
+                        {% for currency in currencies %}
+                        <option
+                            data-icon="{% if currency.flag %}{{currency.flag.url}}{% else %}/other/no-image.jpg{% endif %}"
+                            value="{{currency.code}}" {% if secondaryCurrency == currency.code %}selected{% endif %}>{{currency.code}} {{currency.name}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <!--  -->
+
+            <div class="col-md-6 col-12">
+                <label>NOTE: You can add more currencies after sign up.</label>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% block script %}
+<script>
+    $('#secondaryCurrency').wSelect();
+    $('#primaryCurrency').wSelect();
+</script>
+{% endblock %}

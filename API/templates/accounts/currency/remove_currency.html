@@ -1,0 +1,88 @@
+{% extends 'common/base.html' %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" type="text/css" href="{% static 'accounts/css/wSelect.css' %}">
+
+{% endblock %}
+{% block content %}
+<style>
+    .balance-cover{
+        height:30rem;
+    }
+
+    .btn-open-dlt-cnfrm-modal:hover{
+            padding: 0.75rem 1.5rem;
+    }
+    .list-account-content{
+            padding: 50px 0px 0px 100px;
+    }
+</style>
+
+<div class=" balance-cover  mx-4 ">
+    <div class="row">
+        <div class=" balance-main">
+
+<h6>Remove Currency</h6>
+            <hr>
+{% if message %}
+            <div class="alert-box-outer">
+                <div class="{% if status %}success-alert{% else %}section-alert{% endif %}" style="display: block;" id="alertDiv">
+                    <button class="{% if status %}success-alert-close{% else %}section-alert-close{% endif %}" onclick="closeAlertModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <p style="text-align: center" id="errorField">{{message}}</p>
+                </div>
+            </div>
+            {% endif %}
+                    <div class="list-account-content">
+<!--                        <div>-->
+                            <p>
+                                You can only remove a currency when it has zero balance.
+                            </p>
+                                <div class="row">
+                                {% csrf_token %}
+
+                                            <input type="hidden" name="accessToken" id="accessToken" value="undefined">
+                                            <div class="col-sm-6  succs-otp-block">
+                                                <select class="select-list sel-account" name="account" required style="display:none">
+                                                    <option value="" disabled selected>Select Currency</option>
+                                                    {% for account in accounts %}
+                                                        <option data-icon="{% if account.currency.flag %}{{account.currency.flag.url}}{% else %}/other/no-image.jpg{% endif %}" value="{{account.slug}}">{{account.accountno}} {{account.currency.code}}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                            <div class="col-sm-6  succs-otp-block">
+                                                <button class="btn btn-primary ripple-efct btn-open-dlt-cnfrm-modal">
+                                                    Submit
+                                                </button>
+                                            </div>
+</div>
+
+                    </div>
+
+
+
+        </div>
+    </div>
+
+</div>
+{% include 'accounts/currency/includes/modal-account-delete-confirm.html' %}
+{% endblock %}
+{% block extra_script %}
+<script src="{%static '/accounts/js/wSelect.min.js' %}"></script>
+<script>
+$('.sel-account').wSelect();
+$(document).on("click",".btn-modal-close",function(){
+
+    $(this).closest(".modal").modal("hide")
+
+})
+    $(document).on("click",".btn-open-dlt-cnfrm-modal",function(){
+        if ($(".sel-account option:selected").val()){
+            $("#modal-confirm-delete").find(".accnt-id").val($(".sel-account option:selected").val())
+            $("#modal-confirm-delete").modal("show")
+        }
+    })
+</script>
+{% endblock %}

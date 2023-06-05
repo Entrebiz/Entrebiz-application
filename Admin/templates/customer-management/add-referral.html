@@ -1,0 +1,56 @@
+{% extends 'common/admin-base.html' %}
+{% load static %}
+{% block css %}
+<style>
+    .btn-back {
+    background: transparent;
+    box-shadow: none !important;
+    font-weight: normal !important;
+    font-size: 15px !important;
+    margin-bottom: 0 !important;
+}
+.btn-back a {
+    color: #67748f;
+}
+</style>
+{% endblock %}
+{% block content %}
+<div class=" balance-cover  mx-4 " style="min-height: 421px;">
+    <div class="row">
+        <div class=" balance-main">
+            {% if message %}
+            <div class="alert-box-outer">
+                <div class="{% if status %}success-alert{% else %}section-alert{% endif %}" style="display: block;"
+                    id="alertDiv">
+                    <button class="{% if status %}success-alert-close{% else %}section-alert-close{% endif %}"
+                        onclick="closeAlertModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <p style="text-align: center" id="errorField">{{message}}</p>
+                </div>
+            </div>
+            {% endif %}
+            <div style="width:100%;text-align:right">
+                <button class="btn btn-back"><a href="/getCustomerDetails?userDocument=referrals&slug={{referrerSlug}}"><img class="anm-slide-lft" src="/static/dash/assets/img/arrow-lft.png" alt=""> Back</a></button>
+                </div>
+            <div class="">
+                <form role="form" method="post" action="" id="addReferralForm"
+                    onsubmit="return validateForm('validationClass', 'class')">
+                    {% csrf_token %}
+                    <input type="hidden" name="referrerSlug" value="{{referrerSlug}}">
+                    <div class="row">
+                        <div class="col-sm-6" style="margin-left: 26%;margin-top: 3%;">
+                            <div>
+                                <label for="refereeEmail">Email</label>
+                                <input type="email" name="refereeEmail" value="{{refereeEmail}}" id="refereeEmail"
+                                    maxlength="100" class="form-control validationClass" placeholder="Enter Email">
+                            </div><br>
+                            <button type="submit" class="form-control btn btn-primary">Add</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

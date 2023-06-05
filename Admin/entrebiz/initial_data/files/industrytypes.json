@@ -1,0 +1,473 @@
+{
+    "IndustryTypes": [
+        {
+            "Id" : 1,
+            "Name" : "Healthcare",
+            "Description" : "Medical Suppliments",
+            "CreatedBy" : null,
+            "CreatedOn" : "2018-12-17T05:53:22.013Z",
+            "ModifiedBy" : null,
+            "ModifiedOn" : "2018-12-17T05:53:22.013Z",
+            "IsDeleted" : 0
+        },
+        {
+            "Id" : 2,
+            "Name" : "Aviation",
+            "Description" : "Travel and Logistics",
+            "CreatedBy" : null,
+            "CreatedOn" : "2018-12-17T05:53:22.040Z",
+            "ModifiedBy" : null,
+            "ModifiedOn" : "2018-12-17T05:53:22.040Z",
+            "IsDeleted" : 0
+        },
+        {
+            "Id" : 3,
+            "Name" : "Information Technology",
+            "Description" : "Technology and Customer services",
+            "CreatedBy" : null,
+            "CreatedOn" : "2018-12-17T05:53:22.073Z",
+            "ModifiedBy" : null,
+            "ModifiedOn" : "2018-12-17T05:53:22.073Z",
+            "IsDeleted" : 0
+        },
+        {
+            "Id" : 4,
+            "Name" : "Aerospace industry",
+            "Description" : "",
+            "CreatedBy" : null,
+            "CreatedOn" : "1899-12-31T18:30:00.000Z",
+            "ModifiedBy" : null,
+            "ModifiedOn" : "1899-12-31T18:30:00.000Z",
+            "IsDeleted" : 0
+        },
+        {
+            "Id" : 5,
+            "Name" : "Agriculture ",
+            "Description" : "",
+            "CreatedBy" : null,
+            "CreatedOn" : "1899-12-31T18:30:00.000Z",
+            "ModifiedBy" : null,
+            "ModifiedOn" : "1899-12-31T18:30:00.000Z",
+            "IsDeleted" : 0
+        },
+        {
+            "Id" : 6,
+            "Name" : "Fishing industry",
+            "Description" : "",
+            "CreatedBy" : null,
+            "CreatedOn" : "1899-12-31T18:30:00.000Z",
+            "ModifiedBy" : null,
+            "ModifiedOn" : "1899-12-31T18:30:00.000Z",
+            "IsDeleted" : 0
+        },
+        {
+            "Id" : 7,
+            "Name" : "Timber industry",
+            "Description" : "",
+            "CreatedBy" : null,
+            "CreatedOn" : "1899-12-31T18:30:00.000Z",
+            "ModifiedBy" : null,
+            "ModifiedOn" : "1899-12-31T18:30:00.000Z",
+            "IsDeleted" : 0
+        },
+        {
+            "Id" : 8,
+            "Name" : "Tobacco industry",
+            "Description" : "",
+            "CreatedBy" : null,
+            "CreatedOn" : "1899-12-31T18:30:00.000Z",
+            "ModifiedBy" : null,
+            "ModifiedOn" : "1899-12-31T18:30:00.000Z",
+            "IsDeleted" : 0
+        },
+        {
+            "Id" : 9,
+            "Name" : "Chemical industry",
+            "Description" : "",
+            "CreatedBy" : null,
+            "CreatedOn" : "1899-12-31T18:30:00.000Z",
+            "ModifiedBy" : null,
+            "ModifiedOn" : "1899-12-31T18:30:00.000Z",
+            "IsDeleted" : 0
+        },
+        {
+            "Id" : 10,
+            "Name" : "Pharmaceutical industry",
+            "Description" : "",
+            "CreatedBy" : null,
+            "CreatedOn" : "1899-12-31T18:30:00.000Z",
+            "ModifiedBy" : null,
+            "ModifiedOn" : "1899-12-31T18:30:00.000Z",
+            "IsDeleted" : 0
+        },
+        {
+            "Id" : 11,
+            "Name" : "Computer industry",
+            "Description" : "",
+            "CreatedBy" : null,
+            "CreatedOn" : "1899-12-31T18:30:00.000Z",
+            "ModifiedBy" : null,
+            "ModifiedOn" : "1899-12-31T18:30:00.000Z",
+            "IsDeleted" : 0
+        },
+        {
+            "Id" : 12,
+            "Name" : "Software industry",
+            "Description" : "",
+            "CreatedBy" : null,
+            "CreatedOn" : "1899-12-31T18:30:00.000Z",
+            "ModifiedBy" : null,
+            "ModifiedOn" : "1899-12-31T18:30:00.000Z",
+            "IsDeleted" : 0
+        },
+        {
+            "Id" : 13,
+            "Name" : "Construction industry",
+            "Description" : "",
+            "CreatedBy" : null,
+            "CreatedOn" : "1899-12-31T18:30:00.000Z",
+            "ModifiedBy" : null,
+            "ModifiedOn" : "1899-12-31T18:30:00.000Z",
+            "IsDeleted" : 0
+        },
+        {
+            "Id" : 14,
+            "Name" : "Defense industry",
+            "Description" : "",
+            "CreatedBy" : null,
+            "CreatedOn" : "1899-12-31T18:30:00.000Z",
+            "ModifiedBy" : null,
+            "ModifiedOn" : "1899-12-31T18:30:00.000Z",
+            "IsDeleted" : 0
+        },
+        {
+            "Id" : 15,
+            "Name" : "Arms industry",
+            "Description" : "",
+            "CreatedBy" : null,
+            "CreatedOn" : "1899-12-31T18:30:00.000Z",
+            "ModifiedBy" : null,
+            "ModifiedOn" : "1899-12-31T18:30:00.000Z",
+            "IsDeleted" : 0
+        },
+        {
+            "Id" : 16,
+            "Name" : "Education industry",
+            "Description" : "",
+            "CreatedBy" : null,
+            "CreatedOn" : "1899-12-31T18:30:00.000Z",
+            "ModifiedBy" : null,
+            "ModifiedOn" : "1899-12-31T18:30:00.000Z",
+            "IsDeleted" : 0
+        },
+        {
+            "Id" : 17,
+            "Name" : "Energy industry",
+            "Description" : "",
+            "CreatedBy" : null,
+            "CreatedOn" : "1899-12-31T18:30:00.000Z",
+            "ModifiedBy" : null,
+            "ModifiedOn" : "1899-12-31T18:30:00.000Z",
+            "IsDeleted" : 0
+        },
+        {
+            "Id" : 18,
+            "Name" : "Electrical power industry",
+            "Description" : "",
+            "CreatedBy" : null,
+            "CreatedOn" : "1899-12-31T18:30:00.000Z",
+            "ModifiedBy" : null,
+            "ModifiedOn" : "1899-12-31T18:30:00.000Z",
+            "IsDeleted" : 0
+        },
+        {
+            "Id" : 19,
+            "Name" : "Petroleum industry",
+            "Description" : "",
+            "CreatedBy" : null,
+            "CreatedOn" : "1899-12-31T18:30:00.000Z",
+            "ModifiedBy" : null,
+            "ModifiedOn" : "1899-12-31T18:30:00.000Z",
+            "IsDeleted" : 0
+        },
+        {
+            "Id" : 20,
+            "Name" : "Entertainment industry",
+            "Description" : "",
+            "CreatedBy" : null,
+            "CreatedOn" : "1899-12-31T18:30:00.000Z",
+            "ModifiedBy" : null,
+            "ModifiedOn" : "1899-12-31T18:30:00.000Z",
+            "IsDeleted" : 0
+        },
+        {
+            "Id" : 21,
+            "Name" : "Financial services industry",
+            "Description" : "",
+            "CreatedBy" : null,
+            "CreatedOn" : "1899-12-31T18:30:00.000Z",
+            "ModifiedBy" : null,
+            "ModifiedOn" : "1899-12-31T18:30:00.000Z",
+            "IsDeleted" : 0
+        },
+        {
+            "Id" : 22,
+            "Name" : "Insurance industry",
+            "Description" : "",
+            "CreatedBy" : null,
+            "CreatedOn" : "1899-12-31T18:30:00.000Z",
+            "ModifiedBy" : null,
+            "ModifiedOn" : "1899-12-31T18:30:00.000Z",
+            "IsDeleted" : 0
+        },
+        {
+            "Id" : 23,
+            "Name" : "Food industry",
+            "Description" : "",
+            "CreatedBy" : null,
+            "CreatedOn" : "1899-12-31T18:30:00.000Z",
+            "ModifiedBy" : null,
+            "ModifiedOn" : "1899-12-31T18:30:00.000Z",
+            "IsDeleted" : 0
+        },
+        {
+            "Id" : 24,
+            "Name" : "Fruit production",
+            "Description" : "",
+            "CreatedBy" : null,
+            "CreatedOn" : "1899-12-31T18:30:00.000Z",
+            "ModifiedBy" : null,
+            "ModifiedOn" : "1899-12-31T18:30:00.000Z",
+            "IsDeleted" : 0
+        },
+        {
+            "Id" : 25,
+            "Name" : "Health care industry",
+            "Description" : "",
+            "CreatedBy" : null,
+            "CreatedOn" : "1899-12-31T18:30:00.000Z",
+            "ModifiedBy" : null,
+            "ModifiedOn" : "1899-12-31T18:30:00.000Z",
+            "IsDeleted" : 0
+        },
+        {
+            "Id" : 26,
+            "Name" : "Hospitality industry",
+            "Description" : "",
+            "CreatedBy" : null,
+            "CreatedOn" : "1899-12-31T18:30:00.000Z",
+            "ModifiedBy" : null,
+            "ModifiedOn" : "1899-12-31T18:30:00.000Z",
+            "IsDeleted" : 0
+        },
+        {
+            "Id" : 27,
+            "Name" : "Information industry",
+            "Description" : "",
+            "CreatedBy" : null,
+            "CreatedOn" : "1899-12-31T18:30:00.000Z",
+            "ModifiedBy" : null,
+            "ModifiedOn" : "1899-12-31T18:30:00.000Z",
+            "IsDeleted" : 0
+        },
+        {
+            "Id" : 28,
+            "Name" : "Manufacturing",
+            "Description" : "",
+            "CreatedBy" : null,
+            "CreatedOn" : "1899-12-31T18:30:00.000Z",
+            "ModifiedBy" : null,
+            "ModifiedOn" : "1899-12-31T18:30:00.000Z",
+            "IsDeleted" : 0
+        },
+        {
+            "Id" : 29,
+            "Name" : "Automotive industry",
+            "Description" : "",
+            "CreatedBy" : null,
+            "CreatedOn" : "1899-12-31T18:30:00.000Z",
+            "ModifiedBy" : null,
+            "ModifiedOn" : "1899-12-31T18:30:00.000Z",
+            "IsDeleted" : 0
+        },
+        {
+            "Id" : 30,
+            "Name" : "Electronics industry",
+            "Description" : "",
+            "CreatedBy" : null,
+            "CreatedOn" : "1899-12-31T18:30:00.000Z",
+            "ModifiedBy" : null,
+            "ModifiedOn" : "1899-12-31T18:30:00.000Z",
+            "IsDeleted" : 0
+        },
+        {
+            "Id" : 31,
+            "Name" : "Pulp and paper industry",
+            "Description" : "",
+            "CreatedBy" : null,
+            "CreatedOn" : "1899-12-31T18:30:00.000Z",
+            "ModifiedBy" : null,
+            "ModifiedOn" : "1899-12-31T18:30:00.000Z",
+            "IsDeleted" : 0
+        },
+        {
+            "Id" : 32,
+            "Name" : "Steel industry",
+            "Description" : "",
+            "CreatedBy" : null,
+            "CreatedOn" : "1899-12-31T18:30:00.000Z",
+            "ModifiedBy" : null,
+            "ModifiedOn" : "1899-12-31T18:30:00.000Z",
+            "IsDeleted" : 0
+        },
+        {
+            "Id" : 33,
+            "Name" : "Shipbuilding industry",
+            "Description" : "",
+            "CreatedBy" : null,
+            "CreatedOn" : "1899-12-31T18:30:00.000Z",
+            "ModifiedBy" : null,
+            "ModifiedOn" : "1899-12-31T18:30:00.000Z",
+            "IsDeleted" : 0
+        },
+        {
+            "Id" : 34,
+            "Name" : "Mass media",
+            "Description" : "",
+            "CreatedBy" : null,
+            "CreatedOn" : "1899-12-31T18:30:00.000Z",
+            "ModifiedBy" : null,
+            "ModifiedOn" : "1899-12-31T18:30:00.000Z",
+            "IsDeleted" : 0
+        },
+        {
+            "Id" : 35,
+            "Name" : "Broadcasting",
+            "Description" : "",
+            "CreatedBy" : null,
+            "CreatedOn" : "1899-12-31T18:30:00.000Z",
+            "ModifiedBy" : null,
+            "ModifiedOn" : "1899-12-31T18:30:00.000Z",
+            "IsDeleted" : 0
+        },
+        {
+            "Id" : 36,
+            "Name" : "Film industry",
+            "Description" : "",
+            "CreatedBy" : null,
+            "CreatedOn" : "1899-12-31T18:30:00.000Z",
+            "ModifiedBy" : null,
+            "ModifiedOn" : "1899-12-31T18:30:00.000Z",
+            "IsDeleted" : 0
+        },
+        {
+            "Id" : 37,
+            "Name" : "Music industry",
+            "Description" : "",
+            "CreatedBy" : null,
+            "CreatedOn" : "1899-12-31T18:30:00.000Z",
+            "ModifiedBy" : null,
+            "ModifiedOn" : "1899-12-31T18:30:00.000Z",
+            "IsDeleted" : 0
+        },
+        {
+            "Id" : 38,
+            "Name" : "News media",
+            "Description" : "",
+            "CreatedBy" : null,
+            "CreatedOn" : "1899-12-31T18:30:00.000Z",
+            "ModifiedBy" : null,
+            "ModifiedOn" : "1899-12-31T18:30:00.000Z",
+            "IsDeleted" : 0
+        },
+        {
+            "Id" : 39,
+            "Name" : "Publishing",
+            "Description" : "",
+            "CreatedBy" : null,
+            "CreatedOn" : "1899-12-31T18:30:00.000Z",
+            "ModifiedBy" : null,
+            "ModifiedOn" : "1899-12-31T18:30:00.000Z",
+            "IsDeleted" : 0
+        },
+        {
+            "Id" : 40,
+            "Name" : "World Wide Web",
+            "Description" : "",
+            "CreatedBy" : null,
+            "CreatedOn" : "1899-12-31T18:30:00.000Z",
+            "ModifiedBy" : null,
+            "ModifiedOn" : "1899-12-31T18:30:00.000Z",
+            "IsDeleted" : 0
+        },
+        {
+            "Id" : 41,
+            "Name" : "Mining",
+            "Description" : "",
+            "CreatedBy" : null,
+            "CreatedOn" : "1899-12-31T18:30:00.000Z",
+            "ModifiedBy" : null,
+            "ModifiedOn" : "1899-12-31T18:30:00.000Z",
+            "IsDeleted" : 0
+        },
+        {
+            "Id" : 42,
+            "Name" : "Telecommunications industry",
+            "Description" : "",
+            "CreatedBy" : null,
+            "CreatedOn" : "1899-12-31T18:30:00.000Z",
+            "ModifiedBy" : null,
+            "ModifiedOn" : "1899-12-31T18:30:00.000Z",
+            "IsDeleted" : 0
+        },
+        {
+            "Id" : 43,
+            "Name" : "Internet",
+            "Description" : "",
+            "CreatedBy" : null,
+            "CreatedOn" : "1899-12-31T18:30:00.000Z",
+            "ModifiedBy" : null,
+            "ModifiedOn" : "1899-12-31T18:30:00.000Z",
+            "IsDeleted" : 0
+        },
+        {
+            "Id" : 44,
+            "Name" : "Transport industry",
+            "Description" : "",
+            "CreatedBy" : null,
+            "CreatedOn" : "1899-12-31T18:30:00.000Z",
+            "ModifiedBy" : null,
+            "ModifiedOn" : "1899-12-31T18:30:00.000Z",
+            "IsDeleted" : 0
+        },
+        {
+            "Id" : 45,
+            "Name" : "Water industry",
+            "Description" : "",
+            "CreatedBy" : null,
+            "CreatedOn" : "1899-12-31T18:30:00.000Z",
+            "ModifiedBy" : null,
+            "ModifiedOn" : "1899-12-31T18:30:00.000Z",
+            "IsDeleted" : 0
+        },
+        {
+            "Id" : 46,
+            "Name" : "Service",
+            "Description" : "",
+            "CreatedBy" : null,
+            "CreatedOn" : "1899-12-31T18:30:00.000Z",
+            "ModifiedBy" : null,
+            "ModifiedOn" : "1899-12-31T18:30:00.000Z",
+            "IsDeleted" : 0
+        },
+        {
+            "Id" : 47,
+            "Name" : "Direct Selling industry",
+            "Description" : "",
+            "CreatedBy" : null,
+            "CreatedOn" : "1899-12-31T18:30:00.000Z",
+            "ModifiedBy" : null,
+            "ModifiedOn" : "1899-12-31T18:30:00.000Z",
+            "IsDeleted" : 0
+        }
+    ]}

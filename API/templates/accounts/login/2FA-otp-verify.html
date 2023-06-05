@@ -1,0 +1,208 @@
+{% load static %}
+{% load util_tags %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png">
+    <link rel="icon" type="image/png" href="../assets/img/favicon.png">
+    <title>
+        Entrebiz
+    </title>
+    <!--     Fonts and icons     -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet"/>
+    <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
+    <!-- Nucleo Icons -->
+    <link href="{% static 'dash/assets/css/nucleo-icons.css' %}" rel="stylesheet"/>
+    <link href="{% static 'dash/assets/css/nucleo-svg.css' %}" rel="stylesheet"/>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+          integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+    <link href="{% static 'dash/assets/css/nucleo-svg.css' %}" rel="stylesheet"/>
+    <!-- CSS Files -->
+    <!-- <link rel="stylesheet" href="{% static 'dash/assets/css/bootstrap.min.css' %}"> -->
+    <link id="pagestyle" href="{% static 'dash/assets/css/soft-ui-dashboard.css' %}" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'dash/assets/css/style.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'dash/assets/css/beneficiary.css' %}">
+    <!-- CSS Files -->
+    <style>
+        .err-msg{
+            text-align: center;
+            color: orangered;
+        }
+
+    .cust-row{
+        padding-left: 4em;
+        padding-right: 3em;
+    }
+    .cust-row-p5{
+        padding-top: .5em;
+        padding-bottom: .5em;
+    }
+    .cust-footer{
+    bottom: 0;
+    width: 100%;
+    padding-bottom:1em;
+    }
+    a{
+    color:#4078c0;
+    }
+    .footer a:hover{
+        color:#4078c0;
+    }
+    .nav-cover{
+        margin-top:0;
+    }
+    .admin-navbar .navbar-row{
+        overflow-y:hidden;
+    }
+    .err-msg{
+            text-align: center;
+    color: orangered;
+    }
+    .err-msg p{
+        font-weight:600;
+    }
+    .btn-logout{
+            font-size: 15px;
+    font-weight: 600;
+    color: #748796;
+    border: none;
+    background: none;
+    }
+
+    </style>
+</head>
+<div class="admin-navbar dashboard-top-nav">
+    <nav class="px-0" style="">
+
+        <div class="container-fluid nav-cover navbar-row">
+            <div class="nav-collapse" id="User_Dropdown" style="">
+                <div class="row cust-row-p5">
+                    <div class="col-sm-6">
+                        <a class="navbar-brand m-0" href="#" target="_blank">
+                            <img src="/static/dash/assets/img/logo-ct.png" class="navbar-brand-img h-100"
+                                 alt="main_logo" style="width:20%">
+                        </a>
+                    </div>
+                    <div class="col-sm-6" style="    padding-top: .5em;
+    padding-right: 2em;">
+                        <div style="float:right">
+                            <a href="/logout" class="btn-logout" ><i class="fa fa-solid fa-power-off" style="margin-right:5px;"></i><span>Logout</span></a>
+                        </div>
+                        <!--                <ul class="navbar-nav-top">-->
+                        <!--                    <li>-->
+                        <!--                        <a href="/logout" class="logout-btn" type="">-->
+                        <!--                       <i class="fa fa-solid fa-power-off" style="margin-right:5px;"></i><span>Logout</span>-->
+                        <!--                        </a>-->
+                        <!--                        <div class="time-reminder justify-content-start" id="timerShow"></div>-->
+                        <!--                    </li>-->
+                        <!--                </ul>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+</div>
+<body class="g-sidenav-show" style="background-color: #dfdfdf !important;">
+
+<section>
+
+    <div class="container" style="padding-top:20em;">
+        <div class="row mt-md-n11 mt-n10">
+            <div class="col-xl-6 col-md-7 mx-auto">
+                <div class="card z-index-0" style="border-radius:10px">
+                    <div class="card-header text-center pt-4" style="padding-bottom:0;">
+                        <img src="{% static 'accounts/img/authentication.png' %}" class="navbar-brand-img h-100"
+                             alt="main_logo">
+                    </div>
+                    <div class="row px-xl-5 px-sm-4 px-3">
+
+                        <div class="mt-2 position-relative text-center">
+                            <p class="text-sm font-weight-bold mb-2 text-secondary text-border d-inline z-index-2 bg-white px-3">
+
+                            </p>
+                            <h5>Two-Factor Authentication</h5>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div style="text-align:center">
+                                <p>
+                                    {% generate_otp_type_string request  as otp_receivers%}
+                                    We have sent an OTP to {{otp_receivers|safe}}
+                                </p>
+                            </div>
+                        <form method="POST">
+                            {% csrf_token %}
+                            <div class="row cust-row">
+                                <div class="col-sm-6">
+                                    <input type="password" class="form-control" name="otp"
+                                           placeholder="Enter Your OTP Here"
+                                           aria-label="Email" aria-describedby="email-addon">
+                                </div>
+
+                                <div class="col-sm-6">
+                                    <button type="submit" class="btn btn-primary button-w">submit</button>
+                                </div>
+                                {% if message %}
+                                <div class="err-msg">
+                                    <p style="{% if status %}color:forestgreen{% endif %}">{{message}}</p>
+                                </div>
+                                {% endif %}
+                                <p class="text-sm mb-0"><a class="btn-resend-otp"  href="javascript:{}" onclick="document.getElementById('form-resend-otp').submit();">RESEND OTP</a></p>
+                            </div>
+                            </form>
+                            <div class="row">
+                            <div class="col-sm-4">
+                                <form method="post" id="form-resend-otp">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="action" value="resend">
+                                </form>
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</section>
+<!-- -------- START FOOTER 3 w/ COMPANY DESCRIPTION WITH LINKS & SOCIAL ICONS & COPYRIGHT ------- -->
+<footer class="footer cust-footer">
+    <hr>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-8 mx-auto text-center mt-1">
+                <p class="mb-0 text-secondary">
+                    © {% now "Y" %} Entrebiz. All Rights Reserved. <a href="/termsAndCondition">Terms & conditions</a> <a href="/privacyPolicy">Privacy
+                    policy</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+<!-- -------- END FOOTER 3 w/ COMPANY DESCRIPTION WITH LINKS & SOCIAL ICONS & COPYRIGHT ------- -->
+<!--   Core JS Files   -->
+<script src="../assets/js/core/popper.min.js"></script>
+<script src="../assets/js/core/bootstrap.min.js"></script>
+<script src="../assets/js/plugins/perfect-scrollbar.min.js"></script>
+<script src="../assets/js/plugins/smooth-scrollbar.min.js"></script>
+<script>
+    var win = navigator.platform.indexOf('Win') > -1;
+    if (win && document.querySelector('#sidenav-scrollbar')) {
+      var options = {
+        damping: '0.5'
+      }
+      Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+    }
+
+</script>
+<!-- Github buttons -->
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+<!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
+<script src="{% static 'assets/js/soft-ui-dashboard.min.js' %}"></script>
+<script src="{% static 'dash/assets/js/jquery-3.5.1.slim.min.js' %}"></script>
+
+</body>
+
+</html>

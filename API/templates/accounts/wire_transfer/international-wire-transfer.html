@@ -1,0 +1,466 @@
+{% extends 'common/base.html' %}
+{% load static %}
+{% load util_tags %}
+{% block css %}
+<link rel="stylesheet" type="text/css" href="{% static 'accounts/css/wSelect.css' %}">
+
+{% endblock %}
+{% block content %}
+<main class="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg ">
+    <div class=" balance-cover  mx-4 ">
+        <div class="row">
+            <div class=" balance-main">
+                {% if message %}
+                <div class="alert-box-outer">
+                    <div class="{% if status %}success-alert{% else %}section-alert{% endif %}" style="display: block;"
+                        id="alertDiv">
+                        <button class="{% if status %}success-alert-close{% else %}section-alert-close{% endif %}" onclick="closeAlertModal()">
+                            <i class="fas fa-times"></i>
+                        </button>
+                        <p style="text-align: center" id="errorField">{{message}}</p>
+                    </div>
+                </div>
+                {% endif %}
+                <form method="post" action="{% url 'international-wire-transfer' %}" enctype="multipart/form-data" onsubmit="return validateForm('validationClass', 'class')" >
+                    {% csrf_token %}
+                    <div class="row">
+                        
+                        <div class="form-group col-lg-12">
+                            <label for="select">Debit Account</label>
+                            <div>
+                                
+                                <select id="selectAccount" name="FromAccount" class="custom-select select-list" required style="display:none">
+                                    <option value="">Select Currency</option>
+                                    {% if prevData and prevData.FromAccount %}
+                                    {% for account in accounts|acc_list:user_details %}
+                                    <option data-icon="{% if account.currency.flag %}{{account.currency.flag.url}}{% else %}/other/no-image.jpg{% endif %}" value="{{account.accountno}}" {% if prevData.FromAccount == account.accountno %}selected{% endif %}> {{account.accountno}}&nbsp;({{account.currency.code}}) </option>
+                                    {% endfor %}
+                                    {% else %}
+                                    {% for account in accounts|acc_list:user_details %}
+                                    <option data-icon="{% if account.currency.flag %}{{account.currency.flag.url}}{% else %}/other/no-image.jpg{% endif %}" value="{{account.accountno}}">
+                                        {{account.accountno}}&nbsp;({{account.currency.code}})</option>
+                                    {% endfor %}
+                                    {% endif %}
+                                </select>
+                            </div>
+                            <label style="display: none;" id="user_account_bal">Availabe Balance:
+                                <span id="bal_amnt"></span>
+                            </label>
+                        </div>
+
+                        <div class="form-group col-lg-12">
+                            <label for="Amount">Amount</label>
+                            {% if prevData and prevData.Amount %}
+                            <input id="Amount" name="Amount" placeholder="Enter Amount"
+                             type="text" class="form-control validationClass" required value="{{prevData.Amount}}"
+                             onkeypress='return restrictAmount(event)' onchange='return formatAmount(event)'
+                             onblur='return validateMaxAmount1(event,this)' maxlength="12" >
+                            {% else %}
+                            <input id="Amount" name="Amount" placeholder="Enter Amount" 
+                            type="text" class="form-control validationClass" 
+                            onkeypress='return restrictAmount(event)' onchange='return formatAmount(event)'
+                            onblur='return validateMaxAmount1(event,this)' maxlength="12" required>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group col-lg-12">
+                            <label for="beneficiaryAccount">Select from Beneficiary</label>
+                            <div>
+                                <select id="beneficiaryAccount" name="beneficiaryAccount"
+                                    class="custom-select select-list">
+                                    <option value="">Select Your Beneficiary Account</option>
+                                    {% if prevData and prevData.BeneficiaryACNo %}
+                                    {% for externalbeneficiary in externalbeneficiaries %}
+                                    <option value="{{externalbeneficiary.accountnumber}}" {% if prevData.BeneficiaryACNo == externalbeneficiary.accountnumber %}selected{% endif %}>{{externalbeneficiary.name}} ({{externalbeneficiary.accountnumber}})</option>
+                                    {% endfor %}
+                                    {% else %}
+                                    {% for externalbeneficiary in externalbeneficiaries %}
+                                    <option value="{{externalbeneficiary.accountnumber}}">{{externalbeneficiary.name}} ({{externalbeneficiary.accountnumber}})</option>
+                                    {% endfor %}
+                                    {% endif %}
+                                </select>
+                                
+                            </div>
+                        </div>
+
+                        <div class="col-12 or-division or-division-brk"></div>
+                        <div class="form-group col-lg-12">
+                            <label for="BeneficiaryACNo">Beneficiary Account No</label>
+                            {% if prevData and prevData.BeneficiaryACNo %}
+                            <input id="BeneficiaryACNo" name="BeneficiaryACNo"
+                                placeholder="Enter Beneficiary Account No" type="text" class="form-control" 
+                                value="{{prevData.BeneficiaryACNo}}" 
+                                maxlength="50" onkeypress='return restrictAlphabets(event)' onchange="return formatAccount(event ,this.id)"
+                                onblur='clearFields()'
+                                required>
+                            {% else %}
+                            <input id="BeneficiaryACNo" name="BeneficiaryACNo"
+                                placeholder="Enter Beneficiary Account No" type="text" class="form-control" 
+                                maxlength="50" onkeypress='return restrictAlphabets(event)'
+                                onchange="return formatAccount(event ,this.id)"
+                                onblur='clearFields()'
+                                required>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group col-lg-6">
+                            <label for="BeneficiaryName">Beneficiary Name</label>
+                            {% if prevData and prevData.BeneficiaryName %}
+                            <input id="BeneficiaryName" name="BeneficiaryName" placeholder="Enter Beneficiary Name"
+                                type="text" class="form-control validationClass" value="{{prevData.BeneficiaryName}}" 
+                                maxlength="50" required>
+                            {% else %}
+                            <input id="BeneficiaryName" name="BeneficiaryName" placeholder="Enter Beneficiary Name"
+                                type="text" class="form-control validationClass" 
+                                maxlength="50" required>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group col-lg-6">
+                            <label for="BankName">Bank Name</label>
+                            {% if prevData and prevData.BankName %}
+                            <input id="BankName" name="BankName" placeholder="Enter Bank Name" type="text"
+                                class="form-control validationClass" value="{{prevData.BankName}}" maxlength="50" required>
+                            {% else %}
+                            <input id="BankName" name="BankName" placeholder="Enter Bank Name" type="text"
+                                class="form-control validationClass" maxlength="50" required>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group col-lg-6">
+                            <label for="SwiftCode">Bank SWIFT Code</label>
+                            {% if prevData and prevData.SwiftCode %}
+                            <input id="SwiftCode" name="SwiftCode" placeholder="Enter Bank SWIFT Code" type="text"
+                                class="form-control validationClass" value="{{prevData.SwiftCode}}" 
+                                maxlength="25" onkeypress="return restrictAlphabets(event)"
+                                required>
+                            {% else %}
+                            <input id="SwiftCode" name="SwiftCode" placeholder="Enter Bank SWIFT Code" type="text"
+                                class="form-control validationClass" 
+                                maxlength="25" onkeypress="return restrictAlphabets(event)"
+                                required>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group col-lg-6">
+                            <label for="City">Bank City</label>
+                            {% if prevData and prevData.City %}
+                            <input id="City" name="City" placeholder="Enter Bank City" type="text" class="form-control validationClass"
+                            value="{{prevData.City}}" maxlength="50" required>
+                            {% else %}
+                            <input id="City" name="City" placeholder="Enter Bank City" type="text" class="form-control validationClass"
+                            maxlength="50" required>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group col-lg-6">
+                            <label for="Country">Bank Country</label>
+                            <div>
+                                <select id="Country" name="Country" class="custom-select select-list" required>
+                                    <option value="">Select Country</option>
+                                    {% if prevData and prevData.Country %}
+                                    {% for country in countries %}
+                                    <option value="{{country.name}}" {% if prevData.Country ==  country.name %}selected{% endif %}>{{country.name}}</option>
+                                    {% endfor %}
+                                    {% else %}
+                                    {% for country in countries %}
+                                    <option value="{{country.name}}">{{country.name}}</option>
+                                    {% endfor %}
+                                    {% endif %}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-lg-6">
+                            <label for="Currency">Currency</label>
+                            <div>
+                                <select id="Currency" name="Currency" class="custom-select select-list" required style="display:none">
+                                    <option value="">Select Currency</option>
+                                    {% if prevData and prevData.Currency %}
+                                    {% for currency in currencies %}
+                                    <option data-icon="{% if currency.flag %}{{currency.flag.url}}{% else %}/other/no-image.jpg{% endif %}" value="{{currency.code}}" {% if currency.code == prevData.Currency %}selected{% endif %}>{{currency.code}} {{currency.name}}</option>
+                                    {% endfor %}
+                                    {% else %}
+                                    {% for currency in currencies %}
+                                    <option data-icon="{% if currency.flag %}{{currency.flag.url}}{% else %}/other/no-image.jpg{% endif %}" value="{{currency.code}}">{{currency.code}} {{currency.name}}</option>
+                                    {% endfor %}
+                                    {% endif %}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-lg-12">
+                            <label for="PurposeType">Purpose of remittance</label>
+                            <div>
+                                <select id="PurposeType" name="PurposeType" class="custom-select select-list" required>
+                                    <option value="">Select purpose of remittance</option>
+                                    {% if prevData and prevData.PurposeType %}
+                                    {% for transactionpurposetype in transactionpurposetypes %}
+                                    <option value="{{transactionpurposetype.transactionpurpose}}" {% if prevData.PurposeType == transactionpurposetype.transactionpurpose %}selected{% endif %}>
+                                        {{transactionpurposetype.transactionpurpose}}
+                                    </option>
+                                    {% endfor %}
+                                    {% else %}
+                                    {% for transactionpurposetype in transactionpurposetypes %}
+                                    <option value="{{transactionpurposetype.transactionpurpose}}">
+                                        {{transactionpurposetype.transactionpurpose}}
+                                    </option>
+                                    {% endfor %}
+                                    {% endif %}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-lg-12" id="otherPuporseReason" >
+                            {% if prevData and prevData.PurposeNote %}
+                            <input id="otherPurpose" name="PurposeNote" placeholder="Enter Other purpose" type="text" class="form-control" maxlength="25" value="{{prevData.PurposeNote}}">
+                            {% else %}
+                            <input id="otherPurpose" name="PurposeNote" placeholder="Enter Other purpose" type="text" class="form-control" maxlength="25" style="display: none" >
+                            {% endif %}
+                         </div>
+
+                         <div class="form-group col-lg-6">
+                            <label for="text1">Beneficiary Email (optional)</label>
+                            {% if prevData and prevData.Email %}
+                            <input id="text1" name="Email" placeholder="Enter Email" type="email" 
+                            class="form-control" value="{{prevData.Email}}" maxlength="50" >
+                            {% else %}
+                            <input id="text1" name="Email" placeholder="Enter Email" type="email" 
+                            class="form-control" maxlength="50" >
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group col-lg-6">
+                            <label for="text1">Note (optional)</label>
+                            {% if prevData and prevData.Note %}
+                            <input id="text1" name="Note" placeholder="Enter Your Note" type="text"
+                                class="form-control" value="{{prevData.Note}}" maxlength="50" onblur="checkNonAsciiCharacters(this)">
+                            {% else %}
+                            <input id="text1" name="Note" placeholder="Enter Your Note" type="text"
+                                class="form-control" maxlength="50" onblur="checkNonAsciiCharacters(this)">
+                            {% endif %}
+                        </div>
+
+                        <div class="col-lg-12" >
+                            <div class="confrm-checbox-outer">
+                                <label class="check-bx-cmpny-cnfrm custom-checbox-hldr">
+                                    {% if prevData and prevData.ownAccount == 'on' %}
+                                    <input id="ownAccount" type="checkbox" name="ownAccount" checked>
+                                    {% else %}
+                                    <input id="ownAccount" type="checkbox" name="ownAccount">
+                                    {% endif %}
+                                    <span style="border-radius: 0px" class="checkmark-cmpny-cnfrm"></span>
+                                    Own account
+                                </label>
+                            </div>
+                        </div>
+
+                         <!-- user details -->
+                            {% include 'accounts/wire_transfer/user-details.html' %}
+                            <!--  -->
+                            <div class="col-lg-6 user-det">
+                                <div class="confrm-checbox-outer">
+                                    <label class="check-bx-cmpny-cnfrm custom-checbox-hldr">
+                                        {% if prevInvoice and prevInvoice.invoice_doc %}
+                                        <input id="companyTr" type="checkbox" name="companyTr" checked>
+                                        {% else %}
+                                        <input id="companyTr" type="checkbox" name="companyTr">
+                                        {% endif %}
+                                        <span style="border-radius: 0px" class="checkmark-cmpny-cnfrm"></span>
+                                        Has Invoice
+                                    </label>
+                                </div>
+                            </div>
+                        
+                        
+                            <div class="form-group col-lg-6" style="display: none;" id="invoice-doc">
+                                <label for="text3">Attach invoice doc.</label>
+                                <br>
+                                <label class="btn btn-primary button-w w-100" for="my-file-selector">
+                                    <input id="my-file-selector" name="invoice-doc" type="file" style="display:none"
+                                        onchange="$('#upload-file-info').text(this.files[0].name);$('#upload-file-info').css('color', 'green');">
+                                    Choose File
+                                </label>
+                                {% if prevInvoice and prevInvoice.invoice_doc %}
+                                <span style="color: green;" class='label label-info' id="upload-file-info">{{prevInvoice.invoice_doc}}</span>
+                                {% else %}
+                                <span style="color: green;" class='label label-info' id="upload-file-info"></span>
+                                {% endif %}
+                            </div>
+                            
+                        <div class="form-group">
+                            <button type="submit" id="submit-button" class="btn btn-primary button-w w-100">Transfer</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+</main>
+{% endblock %}
+{% block extra_script %}
+<script src="{%static '/accounts/js/wSelect.min.js' %}"></script>
+<script>
+$('#selectAccount').wSelect();
+$('#Currency').wSelect();
+    $(document).ready(function () {
+        if ($('#selectAccount').val()) {
+            var accountno = $('#selectAccount').val();
+            if (accountno) {
+                $.post("/cutomer-account-balance",
+                    {
+                        accountno: accountno,
+                        'csrfmiddlewaretoken': '{{ csrf_token }}',
+                    },
+                    function (data, status) {
+                        $("#user_account_bal").show();
+                        $("#user_account_bal").find('span').text(data['customer_account_balance'] + ' ' + data['customer_account_currency_code']).css("color", "#22bc51");
+                    });
+
+            }
+            else {
+                $("#user_account_bal").hide();
+            }
+        }
+            $('#selectAccount').on('change', function () {
+                var accountno = $(this).val();
+                if (accountno) {
+                    $.post("/cutomer-account-balance",
+                        {
+                            accountno: accountno,
+                            'csrfmiddlewaretoken': '{{ csrf_token }}',
+                        },
+                        function (data, status) {
+                            $("#user_account_bal").show();
+                            $("#user_account_bal").find('span').text(data['customer_account_balance'] + ' ' + data['customer_account_currency_code']).css("color", "#22bc51");
+                        });
+
+                }
+                else {
+                    $("#user_account_bal").hide();
+                }
+            });
+        $('#beneficiaryAccount').on('change', function () {
+            var beneficiary_accountnumber = $(this).val();
+            if (beneficiary_accountnumber) {
+                $.post("/getbeneficiarylist",
+                    {
+                        beneficiary_accountnumber: beneficiary_accountnumber,
+                        'csrfmiddlewaretoken': '{{ csrf_token }}',
+                    },
+                    function (data, status) {
+                        $("#City").val(data['city']);
+                        $("#BeneficiaryACNo").val(data['accountnumber']);
+                        $("#BeneficiaryName").val(data['name']);
+                        $("#BankName").val(data['bankname']);
+                        $("#SwiftCode").val(data['swiftcode']);
+                        $("#Country").val(data['countrycode']).change();
+                        $("#Currency").val(data['currency']).change();
+                    });
+            }
+            else {
+                $("#City").val('');
+                $("#BeneficiaryACNo").val('');
+                $("#BeneficiaryName").val('');
+                $("#BankName").val('');
+                $("#SwiftCode").val('');
+                $("#Currency").val('');
+                $("#Currency").trigger('change');
+                $("#Country").val('');
+            }
+
+        });
+        $('#PurposeType').on('change', function () {
+            if ( $(this).val()== 'Other Remittance'){
+                $('#otherPurpose').show();
+            }
+            else{
+                $('#otherPurpose').hide();
+            }
+
+        });
+
+        // 
+        if ($('#companyTr').is(':checked')){
+            $('#invoice-doc').show()
+        }else{
+            $('#invoice-doc').hide()
+        }
+        if ($('#ownAccount').is(':checked')){
+            $(".user-details").replaceWith('<div class="user-details row"></div>');
+        }
+
+        $('#companyTr').on('change', function () {
+            if ($(this).is(':checked')) { 
+                $('#invoice-doc').show()
+             } else {
+         $('#upload-file-info').text('')
+         $("#my-file-selector").val('')
+         $('#invoice-doc').hide()
+         $('#submit-button').removeAttr('disabled');
+         }
+        });
+
+        $('#submit-button').on('click', function (e) {
+            if ($('#PurposeType').val()== 'Other Remittance' && $('#otherPurpose').val() ==''){
+            $('#otherPurpose').prop('required',true);
+            }
+            else if ($('#PurposeType').val()!= 'Other Remittance'){
+                $('#otherPurpose').prop('required',false);
+            }
+        if ($('#companyTr').is(':checked') && $('#upload-file-info').text().length !=0 ){
+            $('#submit-button').removeAttr('disabled');
+        }
+        else if ($('#companyTr').is(':checked') && $("#my-file-selector").val() == '') {
+            $('#upload-file-info').text('Please select document').css("color", "orangered");
+            e.preventDefault()
+            $('#submit-button').attr('disabled','disabled');
+        }
+        })
+
+        $('#my-file-selector').on('change', function () {
+            var file = $('#my-file-selector').val(); 
+            if (file) { 
+                $('#submit-button').removeAttr('disabled');
+             }
+        });
+
+        $('#otherPurpose').on('blur', function () {
+        if($('#otherPurpose').val() !=0)
+        {
+            $('#submit-button').removeAttr('disabled');
+        }
+         });
+
+         $('#PurposeType').on('blur', function () {
+        if($('#PurposeType').val() !='Other Remittance')
+        {
+            $('#submit-button').removeAttr('disabled');
+        }
+         });
+
+        //  
+        $('#Phoneno').on('keypress', function (evt) {
+            var charCode = (evt.which) ? evt.which : event.keyCode
+            if (charCode != 43 && charCode > 31 && (charCode < 48 || charCode > 57))
+            return false;
+            return true
+       
+         });
+
+        $('#ownAccount').on('change', function () {
+            if ($(this).is(':checked')) { 
+                $(".user-details").replaceWith('<div class="user-details row"></div>');
+             } else {
+                $.post('/show-user-details',
+                {
+                    'csrfmiddlewaretoken': '{{ csrf_token }}',
+                },
+                function (data, status) {
+                    $(".user-details").replaceWith(data.user_details);
+                });
+         }
+         
+        });
+         
+    });
+</script>
+{% endblock %}

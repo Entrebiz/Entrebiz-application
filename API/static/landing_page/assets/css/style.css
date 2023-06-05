@@ -1,0 +1,942 @@
+/*
+html5doctor.com Reset Stylesheet
+v1.6.1
+Last Updated: 2010-09-17
+Author: Richard Clark - http://richclarkdesign.com
+Twitter: @rich_clark
+*/
+
+html, body, div, span, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+abbr, address, cite, code,
+del, dfn, em, img, ins, kbd, q, samp,
+small, strong, sub, sup, var,
+b, i,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section, summary,
+time, mark, audio, video {
+    margin:0;
+    padding:0;
+    border:0;
+    outline:0;
+    font-size:100%;
+    vertical-align:baseline;
+    background:transparent;
+}
+
+body {
+    line-height:1;
+}
+
+article,aside,details,figcaption,figure,
+footer,header,hgroup,menu,nav,section {
+    display:block;
+}
+
+nav ul {
+    list-style:none;
+}
+
+blockquote, q {
+    quotes:none;
+}
+
+blockquote:before, blockquote:after,
+q:before, q:after {
+    content:'';
+    content:none;
+}
+
+a {
+    margin:0;
+    padding:0;
+    font-size:100%;
+    vertical-align:baseline;
+    background:transparent;
+}
+
+/* change colours to suit your needs */
+ins {
+    background-color:#ff9;
+    color:#000;
+    text-decoration:none;
+}
+
+/* change colours to suit your needs */
+mark {
+    background-color:#ff9;
+    color:#000;
+    font-style:italic;
+    font-weight:bold;
+}
+
+del {
+    text-decoration: line-through;
+}
+
+abbr[title], dfn[title] {
+    border-bottom:1px dotted;
+    cursor:help;
+}
+
+table {
+    border-collapse:collapse;
+    border-spacing:0;
+}
+
+/* change border colour to suit your needs */
+hr {
+    display:block;
+    height:1px;
+    border:0;  
+    border-top:1px solid #cccccc;
+    margin:1em 0;
+    padding:0;
+}
+
+input, select {
+    vertical-align:middle;
+}
+
+.social-part .fa{
+    padding-right:20px;
+}
+ul li a{
+    margin-right: 20px;
+}
+
+.top-det-content{
+    top:80px;
+}
+.navbar-expand-md{
+
+  transition:500ms ease;
+  background:#2c2c2c;
+    height:80px;
+}
+
+.navbar-expand-md a{
+  font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    font-weight: normal;
+  color: #fff;
+  
+} 
+
+.navbar-expand-md a span{
+  
+    font-weight: 500;
+  
+} 
+.navbar-expand-md.scrolled{
+  background:#2c2c2c;
+
+}
+
+.navbar-expand-md.scrolled a{
+ color: #fff;
+  
+}
+
+.bg-info {
+   background:url(../images/banner.jpg) center/cover no-repeat;
+}
+
+.download-btn{
+    padding: 8px 31px;
+    background: transparent;
+    color: #f60;
+    border: 1px solid #ccc;
+    border-radius: 50px;
+}
+
+.banner-content{
+    text-align: left;
+}
+
+.banner-content h2{
+    font-family: 'Poppins', sans-serif;
+    font-size: 34px;
+    font-weight: bold;
+    color: #fff;
+    padding-top: 30%;
+}
+
+.banner-content h2 span{
+   color: #ff6600;
+}
+
+.banner-content p{
+   font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    color: #aeaeae;
+    padding-top: 21px;
+    line-height: 24px;
+    padding-right: 150px;
+}
+
+.banner-btn{
+   font-size: 16px;
+    padding: 19px 50px;
+    border: none;
+    font-weight: 500;
+    background: #f60;
+    color: #fff;
+    margin-top: 33px;
+     border: 1px solid transparent;
+}
+
+.banner-btn:hover{
+  
+    background: transparent;
+   border: 1px solid #ccc;
+}
+
+.banner-btnwhite{
+   font-size: 16px;
+    padding: 19px 50px;
+    border: none;
+    font-weight: 500;
+    background: #fff;
+    color: #f60;
+    margin-top: 33px;
+    margin-left: 10px;
+}
+
+
+.banner-btnwhite:hover{
+    background: transparent;
+   border: 1px solid #ccc;
+}
+
+.banner-mobile{
+   width: auto;
+}
+
+.download-app{
+    text-align: center;
+    padding: 102px;
+}
+
+
+.download-app h2{
+      font-family: 'Poppins', sans-serif;
+   font-size: 25px;
+   color: #000000;
+   font-weight: bold;
+}
+
+
+.download-app h2 span{
+   
+   color: #ff6600;
+  
+}
+
+.download-app h4{
+      font-family: 'Poppins', sans-serif;
+   font-size: 18px;
+   color: #abafb8;
+   font-weight: 300;
+   padding: 10px 0px;
+}
+
+.download-cover{
+    background:#f7f7f7;
+    padding: 90px 0px;
+}
+
+.download-store{
+    
+    border-radius: 0px;
+    border: none;
+    text-align: center;
+   
+}
+
+.download-store h2{
+ font-family: 'Poppins', sans-serif;
+ font-size: 25px;
+ font-weight: bold;
+ text-align: center;
+ padding-top: 95px;
+}
+
+.download-store h2 span{
+ color: #ff6600;
+}
+
+.download-store h4{
+ font-family: 'Poppins', sans-serif;
+ font-size: 18px;
+ font-weight: 400;
+ color: #abafb8;
+ text-align: center;
+ padding-bottom: 45px;
+}
+
+
+
+
+.download-btn1{
+    width: 241px;
+    height: 79px;
+    background: #fff;
+    display: inline-block;
+    box-shadow: 0px 0px 5px #ccc;
+    padding: 16px 0px 0px 33px;
+    text-align: left;
+    margin: 0px 10px;
+
+}
+
+
+
+.download-btn1:hover{
+    text-decoration: none;
+    box-shadow: 0px 0px 16px #9d9d9d;
+}
+
+.download-btn1 img{
+  float: left;
+  padding-right: 10px;
+}
+
+.download-btn1 h5{
+font-family: 'Poppins', sans-serif;
+font-size: 13px;
+color: #abafb8;
+font-weight: normal;
+}
+
+.download-btn1 h3{
+font-family: 'Poppins', sans-serif;
+font-size: 21px;
+color: #000;
+font-weight: normal;
+line-height: 0px;
+}
+
+.features-cover{
+    text-align: left;
+    padding-top: 40px;
+}
+
+.features-cover h3{
+font-family: 'Poppins', sans-serif;
+font-size: 26px;
+font-weight: bold;
+padding-bottom: 40px;
+}
+.features-cover h5{
+font-family: 'Poppins', sans-serif;
+font-size: 16px;
+font-weight: 300;
+text-transform: uppercase;
+margin: 10px 0px 2px 0px;
+}
+
+.features-cover h5 span{
+color: #ff6600;
+}
+
+.feature-main{
+   width: 45%;
+    display: inline-flex;
+    padding:30px 0px 20px 25px;
+    box-shadow: 0px 0px 5px #cccccc8f;
+    margin-right: 15px;
+    margin-top: 15px;
+}
+
+.feature-main img{
+    margin-right: 10px;
+    width: 40px;
+    height: 40px;
+}
+
+.feature-main h5{
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    font-weight:500;
+}
+
+.feature-laptop{
+    width: auto;
+    padding-top: 55px;
+}
+
+
+
+.laptop-cover{
+padding: 0px;
+}
+
+
+.key-main{
+    background: url(../images/bg.png);
+    background-repeat: no-repeat;
+}
+
+.about-main{
+    margin-top: 300px;
+}
+
+
+.about-main h3{
+   font-family: 'Poppins', sans-serif;
+    font-size: 26px;
+    font-weight: bold;
+    padding-top: 65px;
+}
+
+.about-main h5{
+   font-family: 'Poppins', sans-serif;
+   font-size: 20px;
+   font-weight: normal;
+   padding-top: 26px;
+   color: #ff6600;
+}
+
+
+.about-main h5 span{
+ color: #abafb8;
+}
+
+.about-main  p{
+  font-family: 'Poppins', sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+  padding-top: 30px;
+}
+
+.about-img{
+    margin-top: 50 px;
+}
+
+.about-main  button{
+  font-family: 'Poppins', sans-serif;
+  font-size: 13px;
+  background: #ff6600;
+  padding: 10px 40px;
+  border: none;
+  border-radius: 50px;
+  color: #fff;
+  margin-top: 20px;
+}
+
+.key-main{
+    position: relative;
+    top: auto;
+}
+
+.about-content{
+
+}
+
+.parallax {
+  /* The image used */
+  background-image: url("../images/background.jpg");
+
+  /* Set a specific height */
+  min-height: 705px; 
+
+  /* Create the parallax scrolling effect */
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.bein-cover{
+    padding-top: 165px;
+}
+
+.bein-image{
+   width: auto;
+}
+
+.bein-cover h2{
+    font-family: 'Poppins', sans-serif;
+    font-size: 30px;
+    color: #fff;
+    font-weight: 500;
+}
+
+.bein-cover h2 span{
+  color: #ff6600;
+}
+
+.bein-cover h4{
+  font-family: 'Poppins', sans-serif;
+    font-size: 24px;
+    color: #abafb8;
+    font-weight: normal;
+    padding-top: 7px;
+    line-height: 30px;
+}
+.bein-cover ul {
+  margin-top: 20px;
+    width: 50%;
+    float: left;
+    padding-left: 37px;
+    line-height: 24px;
+    padding-bottom: 57px;
+}
+
+.bein-cover ul li{
+  font-family: 'Poppins', sans-serif;
+  font-size: 18px;
+  color: #fff;
+  list-style: url("../images/true.png");
+  padding-top: 20px;
+}
+
+.bein-cover ul li p{
+  position: relative;
+  top: -5px;
+}
+
+
+/*.bein-cover ul li:before{
+ content: url('../images/true.png');
+ vertical-align:  -10px;
+}
+*/
+
+.parallax2 {
+  /* The image used */
+  background-image: url("../images/parallax.jpg");
+
+  /* Set a specific height */
+  min-height: 320px; 
+
+  /* Create the parallax scrolling effect */
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.subscribe-cover{
+    padding-top: 70px;
+    text-align: center;
+}
+
+
+.subscribe-cover h2{
+     font-family: 'Poppins', sans-serif;
+     font-size: 26px;
+     font-weight: bold;
+     color: #fff;
+     padding-bottom: 40px;
+}
+
+.subscribe-cover .form-group{
+    padding: 0px 141px;
+}
+
+.form-control {
+    height: calc(1.9em + 0.75rem + 2px);
+  
+}
+
+.subscribe-cover  button{
+     font-family: 'Poppins', sans-serif;
+   font-size: 18px;
+    background: #fff;
+    color: #f60;
+    border: none;
+    border-radius: 50px;
+    padding:6px 30px 8px 30px;
+}
+
+.subscribe-cover  button img{
+   position: relative;
+   top: 5px;
+   right: 10px;
+}
+
+footer{
+    background-image: url("../images/footer.jpg");
+}
+
+.social-main{
+   width: 246px;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    background: #fff;
+    text-align: center;
+    padding: 10px 0px;
+    border-radius: 10px;
+    position: relative;
+    top: -113px;
+    box-shadow: 0px 0px 8px #cccccc7d;
+
+}
+
+
+.social-main ul a{
+    text-align: center;
+display: inline-block;
+    list-style: none;
+    width: 48px;
+    height: 48px;
+    background: #ccc;
+    border-radius: 10px;
+    color: #fff;
+    padding-top:7px;
+    margin: 0px 2px;
+}
+
+
+.social-main ul a:nth-child(1){
+   background: #254d85;
+}
+
+.social-main ul a:nth-child(2){
+   background: #00a6e0;
+}
+
+.social-main ul a:nth-child(3){
+   background: #dc543a;
+}
+
+.social-main ul a:nth-child(4){
+   background: #0083bf;
+}
+
+.footer-cover{
+    padding-top: 77px;
+    padding-bottom: 45px;
+}
+
+.footer-contact{
+   padding: 0px;
+}
+
+.footer-contact ul{
+  padding-top: 31px;
+}
+
+.footer-contact ul li{
+   font-family: 'Poppins', sans-serif;
+   font-size: 20px;
+   color: #000000;
+   list-style: none;
+}
+
+.footer-contact ul li img{
+ padding: 0px;
+}
+
+.footer-contact ul li:nth-child(1) img{
+ padding-right: 10px;
+}
+
+.footer-contact ul li:nth-child(2) img{
+padding-right: 10px;
+    padding-top: 11px;
+}
+
+.footer-contact ul li:nth-child(1) span{
+position: relative;
+    top: -1px;
+  
+}
+
+.footer-contact ul li:nth-child(2) span{
+position: relative;
+    top: -4px;
+   
+}
+
+.contact-menu{
+    padding: 0px;
+}
+
+.contact-menu a{
+    color: #000000;
+}
+
+.contact-menu a:hover{
+    color: #ff6600;
+   text-decoration: none;
+}
+
+.contact-menu a  li{
+   font-family: 'Poppins', sans-serif;
+   font-size: 16px;
+   list-style: none;
+   line-height: 40px;
+}
+
+.contact-menu a  li::before {
+  content: "■";
+  color:#ff6600;
+  font-weight: bold;
+  display: inline-block; 
+  width: 1em;
+  margin-left: -1em;
+
+}
+
+.footer-right{
+     font-family: 'Poppins', sans-serif;
+     font-size: 15px;
+    background: #d7e0e3;
+    text-align: center;
+    padding: 8px 0px;
+}
+
+.mobile-menu{
+    font-size:30px;
+    cursor:pointer; 
+    color: #fff;
+    display: none;
+}
+
+
+.overlay {
+  height: 0%;
+  width: 100%;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: rgb(0,0,0);
+  background-color:rgb(0 0 0 / 96%);
+  overflow-y: hidden;
+  transition: 0.5s;
+}
+
+.overlay-content {
+  position: relative;
+  top: 25%;
+  width: 100%;
+  text-align: center;
+  margin-top: 30px;
+}
+
+.overlay a {
+    padding: 20px 0px;
+    text-decoration: none;
+    font-size: 28px;
+    color: #ffffff;
+    display: block;
+    transition: 0.3s;
+}
+
+.overlay a:hover, .overlay a:focus {
+  color: #f1f1f1;
+}
+
+.overlay .closebtn {
+  position: absolute;
+    top: 16px;
+    right: 32px;
+    font-size: 48px;
+}
+
+@media only screen and (max-width: 1024px) {
+  .banner-mobile{
+   width: 250px;
+}
+
+
+.banner-content h2 {
+    padding-top: 20%;
+}
+
+.feature-laptop{
+    width: 100%;
+    /*padding-top: 40%;*/
+}
+
+.download-btn1 {
+    width: 196px;
+    height: 73px;
+    background: #fff;
+    display: inline-block;
+    box-shadow: 0px 0px 5px #ccc;
+    padding: 16px 0px 0px 13px;
+    text-align: left;
+    margin: 0px 3px;
+}
+}
+
+@media only screen and (max-width: 768px) {
+ 
+.banner-content{
+    text-align: center;
+}
+
+.banner-mobile {
+    
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+
+.banner-content p {
+   
+    padding-right: 0px;
+}
+
+.about-img {
+   margin-top: 0px;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+}
+
+.features-cover h3, h5{
+  
+    text-align: center;
+}
+
+.about-main {
+    margin-top: 0px;
+}
+
+.about-main {
+    margin-top: 0px;
+    text-align: center;
+}
+
+.about-main h3 {
+    padding-top: 0px;
+    /* position: relative; */
+    margin-top: -206px;
+}
+
+.bein-cover {
+    padding-top: 61px;
+    margin-top: 50px;
+    text-align: center;
+}
+
+.bein-image  {
+    width: 300px;
+}
+
+.bein-cover h2 {
+    padding-top: 23px;
+}
+
+.bein-cover ul li {
+    text-align: left;
+}
+
+.subscribe-cover .form-group {
+    padding: 0px 0px;
+}
+
+.bein-cover ul {
+    width: 100%;
+}
+
+.navbar-expand-md .navbar-collapse {
+    display: -ms-none !important;
+    display: none !important;
+    -ms-flex-preferred-size: auto;
+    flex-basis: auto;
+}
+
+.mobile-menu{
+   display: block;
+}
+
+
+
+}
+@media screen and (max-height: 450px) {
+  .overlay {overflow-y: auto;}
+  .overlay a {font-size: 20px}
+  .overlay .closebtn {
+  font-size: 40px;
+  top: 15px;
+  right: 35px;
+  }
+}
+
+@media only screen and (max-width: 425px) {
+.banner-content h2 {
+    padding-top: 30%;
+}
+
+.feature-main{
+   width: 100%;
+  
+}
+
+.about-img {
+   
+    width:200px;
+    margin-top: 100px;
+}
+
+
+
+.about-main h3 {
+    padding-top: 0px;
+    margin-top: -80px;
+}
+
+.download-btn1 {
+    margin: 8px 3px;
+}
+
+
+.bein-cover ul li {
+   
+    padding-top: 7px;
+}
+
+.bein-cover ul li p {
+    top: -7px;
+}
+
+.bein-cover ul {
+    padding-bottom: 10px;
+}
+
+.bein-cover {
+    padding-bottom: 20px;
+}
+
+.footer-contact {
+    padding-left: 15px;
+}
+
+.contact-menu {
+    padding-left: 30px;
+
+}
+
+.footer-cover {
+    padding-top: 20px;
+}
+
+.social-main {
+    top: -65px;
+}
+}
+
+@media only screen and (max-width: 375px) {
+.banner-content h2 {
+    font-size: 30px;
+}
+.banner-btn {
+        
+    width: 100%;
+}
+
+.banner-btnwhite{
+    width: 100%;
+    margin-left: 0px;
+}
+}

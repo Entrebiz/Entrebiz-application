@@ -1,0 +1,227 @@
+{% extends 'common/base.html' %}
+{% load static %}
+
+
+{% block content %}
+<main class="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg ">
+    
+
+      {% if messages %}
+      {% for message in messages %}
+      <p id="resMsg" class="mx-4" style="background-color: #cff4da;color: #0f5132;padding: 10px;text-align: center;margin-top: 10px;">{{message}}</p>                            
+      {% endfor %}
+      {% endif %}
+
+    <div class="balance-cover  mx-4">
+        <div class="container-fluid py-5 ">
+            <div class="row" style="align-items: center;justify-content: center;">
+                <div class="col-lg-11 col-md-10 col-12">
+                    <div class="conversion-confirm-sec">
+                        <div class="">
+                            <div class="curr-conversion-sec">
+                                <div class="row curr-conversion-row m-0" style="justify-content: center;">
+                                    <div class="col-lg-8 col-md-10 col-12 curr-conversion-card">
+                                        <div class="confirm-title">
+                                            <h4>Confirm your details</h4>
+                                        </div>
+                                        <div class="confirm-tab-holder">
+                                            <table class="confirm-table confirm-transactions" style="width: 100%;">
+                                                <tbody>
+                                                    <tr>
+                                                        <td>Debit Account</td>
+                                                        <td><span>:</span>&nbsp;<strong>{{request.session.domesticTransaction.FromAccount}}&nbsp;({{request.session.domesticTransaction.from_currency_code}})</strong>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Credit Account</td>
+                                                        <td><span>:</span>&nbsp;<strong>{{request.session.domesticTransaction.BeneficiaryACNo}} ({{request.session.domesticTransaction.recipient_currency_code}})</strong>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Beneficiary Name</td>
+                                                        <td><span>:</span>&nbsp;<strong>{{request.session.domesticTransaction.BeneficiaryName}}</strong>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Bank Name</td>
+                                                        <td><span>:</span>&nbsp;<strong>{{request.session.domesticTransaction.BankName}}</strong>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>{% if request.session.domesticTransaction.Currency == 'INR' %}IFSC CODE{% else %}ABA/ACH Routing Number{% endif %}</td>
+                                                        <td><span>:</span>&nbsp;<strong>{{ request.session.domesticTransaction.RoutingNumber }}</strong></td>
+                                                      </tr>
+                                                      
+                                                    <tr>
+                                                        <td>Bank City</td>
+                                                        <td><span>:</span>&nbsp;<strong>{{request.session.domesticTransaction.City}}</strong>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Bank Country</td>
+                                                        <td><span>:</span>&nbsp;<strong>{{request.session.domesticTransaction.Country}}</strong>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Currency</td>
+                                                        <td><span>:</span>&nbsp;<strong>{{request.session.domesticTransaction.Currency}}</strong>
+                                                        </td>
+                                                    </tr>
+                                                    {% if request.session.domesticTransaction.PurposeType == 'Other Remittance' %}
+                                                    <tr>
+                                                        <td>Purpose of remittance</td>
+                                                        <td><span>:</span>&nbsp;<strong>{{request.session.domesticTransaction.PurposeType}}&nbsp;({{request.session.domesticTransaction.PurposeNote}})</strong>
+                                                        </td>
+                                                    </tr>
+                                                    {% else %}
+                                                    <tr>
+                                                        <td>Purpose of remittance</td>
+                                                        <td><span>:</span>&nbsp;<strong>{{request.session.domesticTransaction.PurposeType}}</strong>
+                                                        </td>
+                                                    </tr>
+                                                    {% endif %}
+                                                    {% if request.session.domesticTransaction.Email %}
+                                                    <tr>
+                                                        <td>Beneficiary Email</td>
+                                                        <td><span>:</span>&nbsp;<strong>{{request.session.domesticTransaction.Email}}</strong>
+                                                        </td>
+                                                    </tr>
+                                                    {% endif %}
+                                                    <!--  -->
+                                                    {% if request.session.domesticTransaction.Boxno %}
+                                                    <tr class="">
+                                                        <td>Box No.</td>
+                                                        <td><span>:</span>&nbsp;<strong>{{request.session.domesticTransaction.Boxno}}</strong>
+                                                        </td>
+                                                    </tr>
+                                                    {% endif %}
+                                                    {% if request.session.domesticTransaction.Street %}
+                                                    <tr class="">
+                                                        <td>Street</td>
+                                                        <td><span>:</span>&nbsp;<strong>{{request.session.domesticTransaction.Street}}</strong>
+                                                        </td>
+                                                    </tr>
+                                                    {% endif %}
+                                                    {% if request.session.domesticTransaction.userCity %}
+                                                    <tr class="">
+                                                        <td>City</td>
+                                                        <td><span>:</span>&nbsp;<strong>{{request.session.domesticTransaction.userCity}}</strong>
+                                                        </td>
+                                                    </tr>
+                                                    {% endif %}
+                                                    {% if request.session.domesticTransaction.State %}
+                                                    <tr class="">
+                                                        <td>State</td>
+                                                        <td><span>:</span>&nbsp;<strong>{{request.session.domesticTransaction.State}}</strong>
+                                                        </td>
+                                                    </tr>
+                                                    {% endif %}
+                                                    {% if request.session.domesticTransaction.userCountry %}
+                                                    <tr class="">
+                                                        <td>User Country</td>
+                                                        <td><span>:</span>&nbsp;<strong>{{request.session.domesticTransaction.userCountry}}</strong>
+                                                        </td>
+                                                    </tr>
+                                                    {% endif %}
+                                                    {% if request.session.domesticTransaction.Phoneno %}
+                                                    <tr class="">
+                                                        <td>Tel/Mob No.</td>
+                                                        <td><span>:</span>&nbsp;<strong>{{request.session.domesticTransaction.Phoneno}}</strong>
+                                                        </td>
+                                                    </tr>
+                                                    {% endif %}
+                                                    {% if request.session.domesticTransaction.Note %}
+                                                    <tr>
+                                                        <td>Notes - Recipient Account Number</td>
+                                                        <td><span>:</span>&nbsp;<span
+                                                                class="confirm-note pl-0"><strong>{{request.session.domesticTransaction.Note}}</strong></span>
+                                                        </td>
+                                                    </tr>
+                                                    {% endif %}
+                                                    {% if request.session.invoice_document.invoice_doc %}
+                                                    <tr class="">
+                                                        <td>Invoice</td>
+                                                        <td><span>:</span>&nbsp;<strong>{{request.session.invoice_document.invoice_doc}}</strong>
+                                                        </td>
+                                                    </tr>
+                                                    {% endif %}
+                                                    <!--  -->
+                                                    <tr class="">
+                                                        <td>Net Amount</td>
+                                                        <td><span>:</span>&nbsp;<strong>{{request.session.domesticTransaction.Amount}}&nbsp;{{request.session.domesticTransaction.from_currency_code}}</strong>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Conversion Fee</td>
+                                                        <td><span>:</span>&nbsp;<strong>{{request.session.domesticTransaction.conversion_fee}}&nbsp;{{request.session.domesticTransaction.from_currency_code}}</strong>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Domestic Transfer Fee</td>
+                                                        <td><span>:</span>&nbsp;<strong>{{request.session.domesticTransaction.domestic_transfer_fee}}&nbsp;{{request.session.domesticTransaction.from_currency_code}}</strong>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Cable Charges</td>
+                                                        <td><span>:</span>&nbsp;<strong>{{request.session.domesticTransaction.cable_charge}}&nbsp;{{request.session.domesticTransaction.from_currency_code}}</strong>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Debit Amount</td>
+                                                        <td><span>:</span><strong>&nbsp;{{request.session.domesticTransaction.debit_amount}}&nbsp;{{request.session.domesticTransaction.from_currency_code}}</strong>
+                                                        </td>
+                                                    </tr>
+                                                    <tr style="background-color: #e8f8ed;">
+                                                        <td><strong>Credit Amount</strong></td>
+                                                        <td><span>:</span>&nbsp;<strong>{{request.session.domesticTransaction.credit_amount}}&nbsp;{{request.session.domesticTransaction.Currency}}</strong>
+                                                        </td>
+                                                    </tr>
+
+                                                </tbody>
+                                            </table>
+                                            <div class="row confirm-btn-holder">
+                                                <div class="col-lg-12" >
+                                                    <form action="" method="post">
+                                                        {% if not request.session.domesticTransaction.is_dom_ben %}
+                                                    <div class="confrm-checbox-outer">
+                                                        <label class="check-bx-cmpny-cnfrm custom-checbox-hldr" style="margin-top: 9px;
+                                                        margin-bottom: 6px;font-size: 14px;padding-top: 8px">
+                                                            <input id="save_ben" type="checkbox" name="save_ben">
+                                                            <span class="checkmark-cmpny-cnfrm" style="border-radius: 0px"></span>
+                                                            <strong style="font-weight: normal;"> Save as Beneficiary</strong>
+                                                        </label>
+                                                    </div>
+                                                    {% endif %}
+                                                </div>
+
+
+                                                <div class="col-12">
+                                                        {% csrf_token %}
+                                                        <input type="text" name="otp_sent" style="display: none;" value="otp_sent">
+                                                        <button type="submit"
+                                                            class="btn btn-primary w-100 mt-2">CONFIRM</button>
+                                                    </form>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <a href="/domestic-transfer/?Edit=True"
+                                                        class="btn btn-light w-100"
+                                                        style="border: solid 1px #e1e1e1;border-radius: 5px;background-color: #fff;color: #646464">EDIT</a>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <a href="/cancel-domestic-transfer" class="btn btn-light w-100"
+                                                        style="border: solid 1px #e1e1e1;border-radius: 5px;background-color: #fff;color: #646464">CANCEL</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--  -->
+</main>
+{% endblock %}

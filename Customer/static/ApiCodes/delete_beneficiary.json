@@ -1,0 +1,81 @@
+{
+  "name": "Delete Beneficiary",
+  "endpoint": "DELETE/beneficiary/delete/{slug}",
+   "parameters": [
+    {
+      "name": "slug",
+      "required": true,
+      "description": "Slug must be provided as query parameter in order to delete the beneficiary account."
+    }
+  ],
+  "languages": [
+    {
+      "name": "PHP",
+      "code": [
+        "<?php",
+        "$request = new HttpRequest();",
+        "$request->setUrl('https://api.entrebiz-pte.com/api/v1/beneficiary/delete/<str:slug>');",
+        "$request->setMethod(HTTP_METH_DELETE);",
+        "$request->setHeaders(array(",
+        "'Cache-Control' => 'no-cache',",
+        "'Authorization' => 'Token eyJhbGciOiJSUzI1NiIsInRhYLyLXjpI5IAOhV6QWXQW71wLT1WNJV1WRA2LU6KARXHCBzLBxojWLJjfA'",
+        "));",
+
+        "$response = $request->send();"
+      ],
+      "Response": [
+        "{",
+        "'status': true,",
+        "'message': 'beneficiary successfully deleted!'",
+        "}"
+      ]
+    },
+
+    {
+      "name": "NodeJs",
+      "code": [
+        "var request = require('request');",
+
+        "var options = { method: 'DELETE',",
+        "url: 'https://api.entrebiz-pte.com/api/v1/beneficiary/delete/<str:slug>',",
+        "headers: ",
+        "{ 'Postman-Token': '7d6a9abf-7820-46c1-8d4a-5859e42f7bb4',",
+        "'Cache-Control': 'no-cache',",
+        "Authorization: 'Token eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjI3NzIsImVtYWlsIjoic2l2YXByYXN' } };",
+
+        "request(options, function (error, response, body) {",
+        "if (error) throw new Error(error);",
+        "console.log(body);",
+        "});"
+      ],
+      "Response": [
+        "{",
+        "'status': true,",
+        "'message': 'beneficiary successfully deleted!'",
+        "}"
+      ]
+    },
+
+    {
+      "name": "Python",
+      "code": [
+        "import requests",
+        "url =, 'https://api.entrebiz-pte.com/api/v1/beneficiary/delete/<str:slug>',",
+        "headers = {",
+        "'Authorization': 'Token eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjI3NzIsImVtYWlsIjoic2l2YXByYXNhZEBzcGW71wLT1WNJV1WRA2LU6KARXHCBzLBxojWLJjfA',",
+        "'Cache-Control': 'no-cache'",
+        "}",
+
+        "response = requests.request('DELETE', url, headers=headers)",
+
+        "print(response.text)"
+      ],
+      "Response": [
+        "{",
+        "'status': true,",
+        "'message': 'beneficiary successfully deleted!'",
+        "}"
+      ]
+    }
+  ]
+}

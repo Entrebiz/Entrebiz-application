@@ -1,0 +1,172 @@
+{% extends 'accounts/openaccount/personal-signup/reg-base.html' %}
+{% load static %}
+{% block content %}
+<div class="container acc-det-container acc-det-lg">
+    <div class="acc-det">
+        <div class="acc-det-logo signup-title-logo">
+            <a class="navbar-brand" href="">
+                <img src="{% static 'dash/assets/img/logo.svg' %}" alt="">
+            </a>
+        </div>
+        {% if message %}
+        <div class="alert-box-outer">
+            <div class="{% if status %}success-alert{% else %}section-alert{% endif %}" style="display: block;"
+                id="alertDiv">
+                <button class="{% if status %}success-alert-close{% else %}section-alert-close{% endif %}"
+                    onclick="closeAlertModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+                <p style="text-align: center" id="errorField">{{message}}</p>
+            </div>
+        </div>
+        {% endif %}
+        <div class="row signup-title-row">
+            <div class="col-sm-7 col-12 signup-title-block">
+                <h2 class="signup-title">Sign up now</h2>
+            </div>
+            <div class="col-sm-5 col-12 signup-title-block">
+                <a href="/login" class="link-with-icn efct-txt-grn">
+                    <img class="anm-slide-lft" src="{% static 'dash/assets/img/arrow-lft.png' %}" alt="" />
+                    Back to Login
+                </a>
+            </div>
+        </div>
+        <div class="acc-det-body-content acc-det-body-signup">
+            <form id="personalForm" name="personalForm" action="" method="post"
+                onsubmit="return validateForm('personalForm', 'form')">
+                {% csrf_token %}
+                <input type="hidden" name="accountType" value="personal">
+
+                <div class="row form-row-signup">
+                    <div class="col-md-6 col-12 form-group">
+                        <label for="firstName">First Name</label>
+                        <input type="text" name="firstName" id="firstName" maxlength="150" value="{{firstName}}"
+                            class="form-control" onkeypress="return signUpFieldValidate(event)" autocomplete="off"
+                            onblur="return signUpFieldValidateOnchange(this)" placeholder="Enter Your First Name"
+                            minlength="3">
+                    </div>
+                    <div class="col-md-6 col-12 form-group">
+                        <label for="middleName">Middle Name&nbsp;<span class="input-optional">(optional)</span></label>
+                        <input type="text" name="middleName" id="middleName" maxlength="150" value="{{middleName}}"
+                            class="form-control" onkeypress="return signUpFieldValidate(event)" autocomplete="off"
+                            onblur="return signUpFieldValidateOnchange(this)" placeholder="Enter Your Middle Name">
+                    </div>
+                </div>
+                <div class="row form-row-signup">
+                    <div class="col-md-6 col-12 form-group">
+                        <label for="lastName">Last Name</label>
+                        <input type="text" name="lastName" id="lastName" maxlength="150" value="{{lastName}}"
+                            class="form-control" onkeypress="return signUpFieldValidate(event)" autocomplete="off"
+                            onblur="return signUpFieldValidateOnchange(this)" placeholder="Enter Your Last Name">
+                    </div>
+                    <div class="col-md-6 col-12 form-group">
+                        <label for="email">Email</label>
+                        <input type="email" name="email" id="email" value="{{email}}" maxlength="75"
+                            class="form-control" onkeypress="return signUpFieldValidate(event)" autocomplete="off"
+                            onblur="return signUpFieldValidateOnchange(this)" placeholder="Enter Your Email">
+                    </div>
+                </div>
+                <div class="details-body-sec">
+                    <div class="details-body-sub-block details-body-inner">
+                        <div class="title-content-skip">
+                            <div class="row title-skip-row title-brdr m-0">
+                                <div class="col-12 title-block">
+                                    <h2 class="header">Currency</h2>
+                                    <p>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row bus-det-curncy-form">
+                            <div class="form-group col-lg-6">
+                                <label for="primaryCurrency">1st Currency</label>
+                                <div>
+                                    <select id="primaryCurrency" name="primaryCurrency"
+                                        class="custom-select select-list" required>
+                                        <option value="">Select Currency</option>
+                                        {% for currency in currencies %}
+                                        <option
+                                            data-icon="{% if currency.flag %}{{currency.flag.url}}{% else %}/other/no-image.jpg{% endif %}"
+                                            value="{{currency.code}}" {% if primaryCurrency == currency.code %}selected{% endif %}>{{currency.code}} {{currency.name}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group col-lg-6">
+                                <label for="secondaryCurrency">2nd Currency</label>
+                                <div>
+                                    <select id="secondaryCurrency" name="secondaryCurrency"
+                                        class="custom-select select-list" required>
+                                        <option value="">Select Currency</option>
+                                        {% for currency in currencies %}
+                                        <option
+                                            data-icon="{% if currency.flag %}{{currency.flag.url}}{% else %}/other/no-image.jpg{% endif %}"
+                                            value="{{currency.code}}" {% if secondaryCurrency == currency.code %}selected{% endif %}>{{currency.code}} {{currency.name}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <!--  -->
+
+                            <div class="col-md-6 col-12">
+                                <label>NOTE: You can add more currencies after sign up.</label>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <p style="margin-left: 28%;margin-bottom: 5px;">
+                    <input type="checkbox" name="termsConditions" id="terms-checkbox" style="transform: scale(1.3);">
+                    <label>I accept</label>
+                    <a href="/termsAndCondition" target="_blank" title="Click to see the terms and conditions" class="terms-accpt">
+                        <label style="cursor: pointer;color: #4078c0;">terms & conditions</label>
+                    </a>
+                    <label>and</label>
+                    <a target="_blank" href="/privacyPolicy" title="Click to see the privacy policy" class="terms-accpt">
+                        <label style="cursor: pointer;color: #4078c0;">privacy policy</label>
+                    </a>
+                </p>
+                <div class="row form-row-signup form-row-signup-btn">
+
+                    <button class="btn btn-primary button-w signup-btn" id="signUpSubmit" type="submit">
+                        Sign Up
+                    </button>
+                </div>
+            </form>
+        </div>
+        <div class="acc-det-footer">
+            <div class="acc-bnt-sec">
+                <a href="/" class="acc-back-btn efct-link-dark"><img src="{% static 'dash/assets/img/arrow.png' %}"
+                        alt="">
+                    Back to
+                    &nbsp;
+                    <span class="secondary-clr">Home</span></a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block script %}
+<script>
+    $('#secondaryCurrency').wSelect();
+    $('#primaryCurrency').wSelect();
+    $(document).ready(function () {
+        $('#signUpSubmit').on('click', function (e) {
+            e.preventDefault()
+            if ($('#terms-checkbox').is(':checked')) {
+                $('#signUpSubmit').removeAttr('disabled');
+                $('#personalForm').submit()
+            }
+            else {
+                $('#signUpSubmit').attr('disabled', 'disabled');
+            }
+        })
+        $('#terms-checkbox').on('change', function () {
+            if ($(this).is(':checked')) {
+                $('#signUpSubmit').removeAttr('disabled');
+            }
+        })
+    });
+</script>
+{% endblock %}

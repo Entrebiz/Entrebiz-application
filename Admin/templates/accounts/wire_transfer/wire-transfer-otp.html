@@ -1,0 +1,263 @@
+{% extends 'common/base.html' %}
+{% load static %}
+{% load util_tags %}
+
+
+{% block content %}
+<main class="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg ">
+   
+    <!-- <div class="balance-cover  mx-4"> -->
+    <div class="balance-cover  mx-4">
+        {% if message %}
+        <div class="alert-box-outer">
+            <div class="{% if status %}success-alert{% else %}section-alert{% endif %}" style="display: block;"
+                id="alertDiv">
+                <button class="{% if status %}success-alert-close{% else %}section-alert-close{% endif %}" onclick="closeAlertModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+                <p style="text-align: center" id="errorField">{{message}}</p>
+            </div>
+        </div>
+        {% endif %}
+        <div class="container-fluid py-5 ">
+            <div class="row" style="align-items: center;justify-content: center;">
+                <div class="col-lg-11 col-md-10 col-12">
+                    <div class="conversion-confirm-sec">
+                        <div class="">
+                            <div class="curr-conversion-sec">
+                                <div class="row curr-conversion-row m-0" style="justify-content: center;">
+                                    <div class="col-lg-8 col-md-10 col-12 curr-conversion-card">
+                                        <div class="confirm-title">
+                                            <h4>Confirm your details</h4>
+                                        </div>
+                                        <div class="confirm-tab-holder">
+                                            <table class="confirm-table confirm-transactions mb-2" style="width: 100%;">
+                                                <tbody>
+                                                    <tr>
+                                                        <td>Debit Account</td>
+                                                        <td><span>:</span>&nbsp;<strong>{{request.session.internationalTransaction.FromAccount}}&nbsp;({{request.session.internationalTransaction.from_currency_code}})</strong>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td> Credit Account</td>
+                                                        <td><span>:</span>&nbsp;<strong>{{request.session.internationalTransaction.BeneficiaryACNo}}</strong>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Beneficiary Name</td>
+                                                        <td><span>:</span>&nbsp;<strong>{{request.session.internationalTransaction.BeneficiaryName}}</strong>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Bank Name</td>
+                                                        <td><span>:</span>&nbsp;<strong>{{request.session.internationalTransaction.BankName}}</strong>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Bank SWIFT Code</td>
+                                                        <td><span>:</span>&nbsp;<strong>{{request.session.internationalTransaction.SwiftCode}}</strong>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Bank City</td>
+                                                        <td><span>:</span>&nbsp;<strong>{{request.session.internationalTransaction.City}}</strong>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Bank Country</td>
+                                                        <td><span>:</span>&nbsp;<strong>{{request.session.internationalTransaction.Country}}</strong>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Currency</td>
+                                                        <td><span>:</span>&nbsp;<strong>{{request.session.internationalTransaction.Currency}}</strong>
+                                                        </td>
+                                                    </tr>
+                                                    {% if request.session.internationalTransaction.PurposeType == 'Other Remittance' %}
+                                                    <tr>
+                                                        <td>Purpose of remittance</td>
+                                                        <td><span>:</span>&nbsp;<strong>{{request.session.internationalTransaction.PurposeType}}&nbsp;({{request.session.internationalTransaction.PurposeNote}})</strong>
+                                                        </td>
+                                                    </tr>
+                                                    {% else %}
+                                                    <tr>
+                                                        <td>Purpose of remittance</td>
+                                                        <td><span>:</span>&nbsp;<strong>{{request.session.internationalTransaction.PurposeType}}</strong>
+                                                        </td>
+                                                    </tr>
+                                                    {% endif %}
+                                                    {% if request.session.internationalTransaction.Email %}
+                                                    <tr>
+                                                        <td>Beneficiary Email</td>
+                                                        <td><span>:</span>&nbsp;<strong>{{request.session.internationalTransaction.Email}}</strong>
+                                                        </td>
+                                                    </tr>
+                                                    {% endif %}
+                                                    <!--  -->
+                                                    <tr class="">
+                                                        <td>Box No.</td>
+                                                        <td><span>:</span>&nbsp;<strong>{{request.session.internationalTransaction.Boxno}}</strong>
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="">
+                                                        <td>Street</td>
+                                                        <td><span>:</span>&nbsp;<strong>{{request.session.internationalTransaction.Street}}</strong>
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="">
+                                                        <td>City</td>
+                                                        <td><span>:</span>&nbsp;<strong>{{request.session.internationalTransaction.userCity}}</strong>
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="">
+                                                        <td>State</td>
+                                                        <td><span>:</span>&nbsp;<strong>{{request.session.internationalTransaction.State}}</strong>
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="">
+                                                        <td>User Country</td>
+                                                        <td><span>:</span>&nbsp;<strong>{{request.session.internationalTransaction.userCountry}}</strong>
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="">
+                                                        <td>Tel/Mob No.</td>
+                                                        <td><span>:</span>&nbsp;<strong>{{request.session.internationalTransaction.Phoneno}}</strong>
+                                                        </td>
+                                                    </tr>
+                                                    {% if request.session.invoice_document.invoice_doc %}
+                                                    <tr class="">
+                                                        <td>Invoice</td>
+                                                        <td><span>:</span>&nbsp;<strong>{{request.session.invoice_document.invoice_doc}}</strong>
+                                                        </td>
+                                                    </tr>
+                                                    {% endif %}
+                                                    <!--  -->
+                                                    <tr class="">
+                                                        <td>Net Amount</td>
+                                                        <td><span>:</span>&nbsp;<strong>{{request.session.internationalTransaction.Amount}}&nbsp;{{request.session.internationalTransaction.from_currency_code}}</strong>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Conversion Fee</td>
+                                                        <td><span>:</span>&nbsp;<strong>{{request.session.internationalTransaction.conversion_fee}}&nbsp;{{request.session.internationalTransaction.from_currency_code}}</strong>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Wire Transfer Fee</td>
+                                                        <td><span>:</span>&nbsp;<strong>{{request.session.internationalTransaction.wire_transfer_fee}}&nbsp;{{request.session.internationalTransaction.from_currency_code}}</strong>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Cable Charges</td>
+                                                        <td><span>:</span>&nbsp;<strong>{{request.session.internationalTransaction.cable_charge}}&nbsp;{{request.session.internationalTransaction.from_currency_code}}</strong>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Debit Amount</td>
+                                                        <td><span>:</span><strong>&nbsp;{{request.session.internationalTransaction.debit_amount}}&nbsp;{{request.session.internationalTransaction.from_currency_code}}</strong>
+                                                        </td>
+                                                    </tr>
+                                                    <tr style="background-color: #e8f8ed;">
+                                                        <td><strong>Credit Amount</strong></td>
+                                                        <td><span>:</span>&nbsp;<strong>{{request.session.internationalTransaction.credit_amount}}&nbsp;{{request.session.internationalTransaction.Currency}}</strong>
+                                                        </td>
+                                                    </tr>
+                                                    {% if request.session.internationalTransaction.Note %}
+                                                    <tr>
+                                                        <td>Note</td>
+                                                        <td><span>:</span>&nbsp;<span
+                                                                class="confirm-note pl-0"><strong>{{request.session.internationalTransaction.Note}}</strong></span>
+                                                        </td>
+                                                    </tr>
+                                                    {% endif %}
+                                                </tbody>
+                                            </table>
+                                            <!-- otp -->
+                                            
+                                                <div
+                                                    class="signed-succs-otp-sec otp-sec-sm otp-curr-convers tab-sec-gray" 
+                                                    style="background-color: #f6f8f9;
+                                                    display: flex;align-items: center;
+                                                    justify-content: center;">
+                                                    <div class="succs-otp-sec-inner">
+                                                        <p id="otpsend" class="mt-3" style="text-align: center;color: #586168;font-size: 13px;margin-bottom: 15px;text-align: center;">{% generate_otp_type_string request  as otp_receivers%}
+                                    We have sent an OTP to {{otp_receivers|safe}}
+                                                        </p>
+                                                        <form id="otpForm" method="post" action="{% url 'international-wire-transfer-wireOtp' request.session.token %}" >
+                                                            {% csrf_token %}
+                                                        <div class="row input-form-group">
+                                                            <div class="col-md-6 col-12 succs-otp-block">
+                                                                <input type="password" name="otp" id="otp" minlength="6"
+                                                                    maxlength="6" value=""
+                                                                    onkeypress="return restrictAmount(event)"
+                                                                    class="input-box validationClass"
+                                                                    placeholder="Enter Your OTP Here" autofocus style="height: 41px;" required>
+                                                            </div>
+                                                            <div class="col-md-3 col-sm-6 col-12 succs-otp-block">
+                                                                <button class="btn btn-primary sub w-100"
+                                                                    type="submit">
+                                                                    Submit
+                                                                </button>
+                                                            </div>
+                                                            <div class="col-md-3 col-sm-6 col-12 succs-otp-block">
+                                                                <a href="/cancel-wire-transfer"
+                                                                    class="btn btn-light w-100" style="border: solid 1px #e1e1e1;border-radius: 5px;background-color: #fff;color: #646464">CANCEL</a>
+                                                            </div>
+                                                            <!-- <p id="errorField"></p> -->
+                                                        </div>
+                                                    </form>
+                                                        <div class="row input-form-group">
+                                                            <div class="col-12 succs-otp-block">
+                                                                        <a href="" id="RequestOtp"
+                                                                            onclick="return resendOtp()">Resend
+                                                                            OTP</a>
+                                                            </div>
+                                                        </div>
+                                                        {% if messages %}
+                                                        {% for message in messages %}
+                                                        <p id="otpMsg" {% if message.tags == "success" %} style="color: green;font-weight: bold;text-align: center;font-size: 12px;"
+                                                        {% elif message.tags == 'error' %}style="color: red;font-weight: bold;text-align: center;font-size: 12px;" {% endif %}>{{message}}</p>
+                                                       
+                                                        {% endfor %}
+                                                        {% endif %}
+                                                        <p id="otpMsg" style="color: green;font-weight: bold;text-align: center;font-size: 12px;display: none;" ></p>
+                                                    </div>
+                                                </div>
+                                            
+                                            <!-- otp -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- </div> -->
+    <!--  -->
+</main>
+<script>
+    document.getElementById('otpMsg') && document.getElementById('otpMsg').scrollIntoView();
+    setTimeout(() => {
+        document.getElementById('otpMsg').innerHTML = '';
+    }, 5000);
+    function resendOtp () {
+        let token = '{{ request.session.token }}'
+        $.post("/wire-transfer-confirm/"+token,
+            {
+                'csrfmiddlewaretoken': '{{ csrf_token }}',
+                'action_type' : 'resent otp'
+            },
+            function (data, status) {
+                $("#otpMsg").show().text(data.message);
+                setTimeout(() => {
+                 document.getElementById('otpMsg').innerHTML = '';
+                }, 5000);
+            });
+        return false
+
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,343 @@
+{% extends 'common/base.html' %}
+{% load static %}
+{% load util_tags %}
+{% block content %}
+<div class=" balance-cover  mx-4 ">
+    <div class="row">
+        <div class=" balance-main">
+            {% if message %}
+            <div class="alert-box-outer">
+                <div class="{% if status %}success-alert{% else %}section-alert{% endif %}" style="display: block;"
+                    id="alertDiv">
+                    <button class="{% if status %}success-alert-close{% else %}section-alert-close{% endif %}" onclick="closeAlertModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <p style="text-align: center" id="errorField">{{message}}</p>
+                </div>
+            </div>
+            {% endif %}
+            <div class="row">
+                <div class="form-group col-sm-7 col-12 plr-0">
+                    <label class="tab-title settings-inr-title" style="font-size: 15px;"> Company Verification<label>
+                </div>
+            </div>
+            <hr style="margin-top: -12px;">
+            <form action="{% url 'CompanyEdit' %}" method="post" enctype="multipart/form-data" id="companydocForm" onsubmit="return validateFormcomp('companydocForm', 'form')">
+                {% csrf_token %}
+            <div class="row">
+                <div class="col-lg-4 col-md-12 col-12 input-form-group" id="fileUpload" style="display: block">
+                    <div class="custom-input-file err-shw-inpfile">
+                        {% if customer_docs %}
+                        <img src="/" id="frontPage" class="imagLoad" alt="">
+                        <label for="idImageFile0" style="display: none;">upload your doc </label>
+                        <input type="file" class="" accept=".jpg,.png,.jpeg,.pdf,.JPG,.tiff,.tif,.TIFF,.PNG,.PDF,.JPEG"
+                            name="frontPage" id="idImageFile0" onfocus="clearErrorMessage(this)"
+                            onchange="readImageURL(this)" value="{{customer_doc|docFile}}">
+                        <!-- <input type="hidden" name="img" value=""> -->
+                        <label>your doc uploaded.<br>Click here to upload again.</label>
+                        {% else %}
+                        <img src="{% static 'dash/assets/img/upload1.png' %}" id="frontPage" class="imagLoad" alt="">
+                        <label for="idImageFile0" style="display: none;">upload your doc </label>
+                        <input type="file" class="" accept=".jpg,.png,.jpeg,.pdf,.JPG,.tiff,.tif,.TIFF,.PNG,.PDF,.JPEG"
+                            name="frontPage" id="idImageFile0" onfocus="clearErrorMessage(this)"
+                            onchange="readImageURL(this)" value="">
+                        <label>upload your doc</label>
+                        {% endif %}
+                    </div>
+                    <label id="frontPage-label" class="doc-upload-label"></label>
+                    <!-- 1 -->
+                    <div class="custom-input-file err-shw-inpfile">
+                        {% if add_doc1 %}
+                          <img src="/" id="additionalPage" class="imagLoad" alt="">
+                        <label for="idImageFile1" style="display: none;">upload your doc </label>
+                        <input type="file" class="" accept=".jpg,.png,.jpeg,.pdf,.JPG,.tiff,.tif,.TIFF,.PNG,.PDF,.JPEG"
+                            name="additionalPage" id="idImageFile1" onfocus="clearErrorMessage(this)"
+                            onchange="readImageURL(this)" value="{{customer_doc|docFile}}">
+                        <!-- <input type="hidden" name="img" value=""> -->
+                        <label>your doc uploaded.<br>Click here to upload again.</label>
+                        {% else %}
+                        <img src="{% static 'dash/assets/img/upload1.png' %}" id="additionalPage" class="imagLoad" alt="">
+                        <label for="idImageFile1" style="display: none;">upload your doc </label>
+                        <input type="file" class="" accept=".jpg,.png,.jpeg,.pdf,.JPG,.tiff,.tif,.TIFF,.PNG,.PDF,.JPEG"
+                            name="additionalPage" id="idImageFile1" onfocus="clearErrorMessage(this)"
+                            onchange="readImageURL(this)" value="">
+                        <label>upload your doc</label>
+                        {% endif %}
+                    </div>
+                      <label id="additionalPage-label" class="doc-upload-label"></label>
+                    <!--  -->
+
+                    <!--2-->
+                     <div class="custom-input-file err-shw-inpfile">
+                        {% if add_doc2 %}
+                         <img src="/" id="additionalPage1" class="imagLoad" alt="">
+                        <label for="idImageFile2" style="display: none;">upload your doc </label>
+                        <input type="file" class="" accept=".jpg,.png,.jpeg,.pdf,.JPG,.tiff,.tif,.TIFF,.PNG,.PDF,.JPEG"
+                            name="additionalPage1" id="idImageFile2" onfocus="clearErrorMessage(this)"
+                            onchange="readImageURL(this)" value="{{customer_doc|docFile}}">
+                        <!-- <input type="hidden" name="img" value=""> -->
+                        <label>your doc uploaded.<br>Click here to upload again.</label>
+                        {% else %}
+                         <img src="{% static 'dash/assets/img/upload1.png' %}" id="additionalPage1" class="imagLoad" alt="">
+                        <label for="idImageFile2" style="display: none;">upload your doc </label>
+                        <input type="file" class="" accept=".jpg,.png,.jpeg,.pdf,.JPG,.tiff,.tif,.TIFF,.PNG,.PDF,.JPEG"
+                            name="additionalPage1" id="idImageFile2" onfocus="clearErrorMessage(this)"
+                            onchange="readImageURL(this)" value="">
+                        <label>upload your doc</label>
+                         {% endif %}
+                    </div>
+                       <label id="additionalPage1-label" class="doc-upload-label"></label>
+
+
+                    <!--3-->
+                        <div class="custom-input-file err-shw-inpfile">
+                        {% if add_doc3 %}
+                          <img src="/" id="additionalPage2" class="imagLoad" alt="">
+                        <label for="idImageFile3" style="display: none;">upload your doc </label>
+                        <input type="file" class="" accept=".jpg,.png,.jpeg,.pdf,.JPG,.tiff,.tif,.TIFF,.PNG,.PDF,.JPEG"
+                            name="additionalPage2" id="idImageFile3" onfocus="clearErrorMessage(this)"
+                            onchange="readImageURL(this)" value="{{customer_doc|docFile}}">
+                        <!-- <input type="hidden" name="img" value=""> -->
+                        <label>your doc uploaded.<br>Click here to upload again.</label>
+                        {% else %}
+                         <img src="{% static 'dash/assets/img/upload1.png' %}" id="additionalPage2" class="imagLoad" alt="">
+                        <label for="idImageFile3" style="display: none;">upload your doc </label>
+                        <input type="file" class="" accept=".jpg,.png,.jpeg,.pdf,.JPG,.tiff,.tif,.TIFF,.PNG,.PDF,.JPEG"
+                            name="additionalPage2" id="idImageFile3" onfocus="clearErrorMessage(this)"
+                            onchange="readImageURL(this)" value="">
+                        <label>upload your doc</label>
+                            {% endif %}
+                    </div>
+                       <label id="additionalPage2-label" class="doc-upload-label"></label>
+
+
+
+
+                </div>
+                <div class="col-lg-8 col-md-12 col-12 file-upload-form-rgt">
+                    <div class="form-group">
+                        <label for="idProof">Select ID Type</label>
+                        <input type="hidden" value="3" id="selectDocType">
+                       
+                        <select name="idProof" id="idProof" class="select-list validationClass"
+                            onchange="showDocumentFields()" required="">
+                            <option selected="" disabled="" value="">-select doc type -</option>
+                            {% for doc in company_docs %}
+                            <option value="{{doc.documenttype.id}}" {% if doc.documenttype.id == idProof|to_int %}selected{% endif %}>{{doc.documenttype.name}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div id="viewDetails">
+                        <div id="0"></div>
+                    </div>
+                    <div id="viewDetails">
+                        <div id="field-name">
+                            {% if docId %}
+                            <div class="persn-det-card rec-mny-card consum-num">
+                                <div class="form-group ">
+                                    <label for="docId">{{label_name}}</label>
+<!--                                         
+                                    <input type="hidden" id="docFieldId" name="doc_field_id"
+                                        value="{{doc_field_id}}"> -->
+                                    <input type="text" maxlength="25" onkeypress="return restrictAlphabets(event)"
+                                        id="docId" name="docId" class="validationClass input-box"
+                                        onfocus="clearErrorMessage(this)" placeholder="" value="{{docId}}">
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div id="field-name1">
+
+                            {% if companyMonth and companyYear %}
+                                <div class="form-group ">
+                                    <label> Date of Incorporation</label>
+                                    <div class="date-field-row validity err-shw-abslt">
+                                        <select class="validationClass select-list" id="day" name="companyDay" onfocus="clearErrorMessage(this)" onchange="loadDateAndYear()" style="width: 30%;display: inline-block;">
+                                            <option value="" disabled="" selected="">Day</option>
+                                            {% for days in days_choices %}
+                                            <option value="{{days}}" {% if days == companyDay|to_int %}selected{% endif %}>{{days}}
+                                            </option>
+                                            {% endfor %}
+                                        </select>
+                                        <select class="validationClass select-list"
+                                            name="companyMonth" id="month" onfocus="clearErrorMessage(this)"
+                                            onchange="loadDateAndYear()" style="margin-left: 10px;margin-right: 10px;width: 30%;display: inline-block;">
+                                            <option value="" disabled="" selected="">Month</option>
+                                            {% for months in months_choices %}
+                                            <option value="{{months}}" {% if months == companyMonth %}selected{% endif %}>{{months}}</option>
+                                            {% endfor %}
+                                        </select>
+                                        <select class="validationClass select-list"
+                                            id="year" name="companyYear" onfocus="clearErrorMessage(this)"
+                                            onchange="loadDateAndYear()" style="width: 30%;display: inline-block;">
+                                            <option value="" disabled="" selected="">Year</option>
+                                            {% for years in year_choices %}
+                                            <option value="{{years}}" {% if years == companyYear|to_int %}selected{% endif %}>{{years}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                {% endif %}
+                                <input type="hidden" name="13" id="doberr" class="input-box 13 validationClass" value="1">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <button id="saveDetails" type="submit" style="margin-top: 17px;margin-left: 0px;"
+                            class="btn btn-primary button-w btn-edit-beneficiary w-40">
+                            <!-- <img src="{% static 'dash/assets/img/tick.png' %}" alt="">  -->
+                            Save Details
+                        </button>
+                    </div>
+                </form>
+                </div>
+                <div class="col-md-6 col-12" id="formatType" style="display: block">
+                    <label>Note:&nbsp;<br />
+                        <small>- Allowed Files :
+                            jpeg, JPG, pdf, tiff, png
+                        </small>
+                        <br />
+                        <small>- Maximum file size :
+                            10 MB
+                        </small>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+{% block extra_script %}
+<script>
+   
+
+    function showDocumentFields() {
+        let id_proof = $('#idProof option:selected').val()
+        let id_proof_name = $('#idProof option:selected').text()
+        $('#check').val(id_proof_name)
+        $.get('/document-fields/',
+            {
+                'id_proof': id_proof,
+                'for_field': true
+            },
+            function (data, status) {
+                var fieldtype_arr = [];
+                $("#field-name").replaceWith('<div id="field-name" class="persn-det-card rec-mny-card consum-num"></div>')
+                $("#field-name1").replaceWith('<div id="field-name1" class="persn-det-card rec-mny-card consum-num"></div>')
+
+                $.each(data.doc_fileds, function (key, value) {
+                 
+                    if (value.fieldtype == 2) {
+                        $("#field-name").replaceWith('<div id="field-name" class="persn-det-card rec-mny-card consum-num"><div class="form-group "><label for="docId">' + value.fieldname + '</label><input type="hidden"  name="label_name" value="' + value.fieldname + '"><input type="text" maxlength="25" onkeypress="return restrictAlphabets(event)" id="docId" name="docId" class="validationClass form-control" onfocus="clearErrorMessage(this)" placeholder="Enter ' + value.fieldname + '" value=""> </div> </div>');
+                    }
+                    else if (value.fieldtype == 5) {
+                        // $( "#field-name1" ).replaceWith( '<div id="field-name1" class="persn-det-card rec-mny-card consum-num"><div class="form-group "><label> Validity</label><div class="date-field-row validity err-shw-abslt"><select class="validationClass input-box col-5 custom-select month" name="companyMonth" id="month" onfocus="clearErrorMessage(this)" onchange="loadDateAndYear()"><option value="0" disabled="" selected="">Month</option><option value="January">January</option><option value="February">February</option><option value="March">March</option><option value="April">April</option><option value="May">May</option><option value="June">June</option><option value="July">July</option><option value="August">August</option><option value="September">September</option><option value="October">October</option><option value="November">November</option><option value="December">December</option></select><select class="validationClass input-box col-5 custom-select year " id="year" name="companyYear" onfocus="clearErrorMessage(this)" onchange="loadDateAndYear()"><option value="0" selected="">Year</option><option value="2022">2022</option><option value="2023">2023</option><option value="2024">2024</option><option value="2025">2025</option><option value="2026">2026</option><option value="2027">2027</option><option value="2028">2028</option><option value="2029">2029</option><option value="2030">2030</option><option value="2031">2031</option><option value="2032">2032</option><option value="2033">2033</option><option value="2034">2034</option><option value="2035">2035</option><option value="2036">2036</option><option value="2037">2037</option><option value="2038">2038</option><option value="2039">2039</option><option value="2040">2040</option><option value="2041">2041</option><option value="2042">2042</option><option value="2043">2043</option></select></div><input type="hidden" name="19" id="19" class="hiddenDate input-box"></div></div>' )
+                        $("#field-name1").replaceWith(`<div id="field-name1" class="persn-det-card rec-mny-card consum-num">
+                            <div class="form-group ">
+                                <label> ${value.fieldname} </label>
+                                <div class="date-field-row validity err-shw-abslt">
+                                    <select class="validationClass select-list" id="day" name="companyDay" onfocus="clearErrorMessage(this)" onchange="loadDateAndYear()" style="width: 30%;display: inline-block;">
+                                        <option value="" selected="" disabled="">Day</option>
+                                        {% for days in days_choices %}
+                                        <option value="{{days}}" {% if days == companyDay|to_int %}selected{% endif %}>{{days}}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <select class="validationClass select-list" name="companyMonth" id="month" onfocus="clearErrorMessage(this)" onchange="loadDateAndYear()" style="margin-left: 10px;margin-right: 10px;width: 30%;display: inline-block;">
+                                        <option value="" disabled="" selected="">Month</option>
+                                        {% for months in months_choices %}
+                                        <option value="{{months}}" {% if months == month %}selected{% endif %}>{{months}}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <select class="validationClass select-list" id="year" name="companyYear" onfocus="clearErrorMessage(this)" onchange="loadDateAndYear()" style="width: 30%;display: inline-block;">
+                                        <option value="" selected="" disabled="">Year</option>
+                                        {% for years in year_choices %}
+                                        <option value="{{years}}" {% if years == year|to_int %}selected{% endif %}>{{years}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <input type="hidden" name="13" id="doberr" class="input-box 13 validationClass" value="1">
+                            </div>
+                        </div>`)
+                    }
+                });
+            });
+    }
+
+    function validateFormcomp(id, type, excludeFields = ['middleName','note','additionalPage','additionalPage1','additionalPage2']) {
+        {% if not customer_docs %}
+	let validationType = false;
+	let allInputs = [];
+	if (type === 'form') allInputs = document.forms[id].elements;
+	if (type === 'class') allInputs = document.getElementsByClassName(id);
+	const labels = document.querySelectorAll('label');
+	for (let j = 0; j < allInputs.length; j += 1) {
+		if (!['button', 'submit'].includes(allInputs[j].type) && !excludeFields.includes(allInputs[j].getAttribute('data-name') || allInputs[j].name)) {
+			if (allInputs[j].value && allInputs[j].type !== 'file') { // can only set an empty string to a file input value, due to security reasons
+				allInputs[j].value = (typeof allInputs[j].value === 'string')
+					? allInputs[j].value.trim() : allInputs[j].value;
+			}
+			if (['', null, undefined].includes(allInputs[j].value)) {
+				// showErrorField([allInputs[j]]);
+				for (const l in labels) {
+					if (labels[l].htmlFor === allInputs[j].id) {
+						showErrorField([allInputs[j]], `${labels[l].innerText} is required.`);
+					}
+				}
+				validationType = true;
+				// return false;
+			}
+			
+			if (allInputs[j].name && ((allInputs[j].name === 'companyMonth') || (allInputs[j].name === 'companyYear') || (allInputs[j].name === 'companyDay'))) {
+				const validityMonth = document.getElementById('month');
+				const validityYear = document.getElementById('year');
+				const validityDay = document.getElementById('day');
+				const elem = document.getElementById('doberr');
+				if (elem) {
+					if (validityMonth.value === '' && validityYear.value == '' && validityDay.value == '') {
+						showErrorField([validityDay], '');
+						showErrorField([validityMonth], '');
+						showErrorField([validityYear], '');
+						showErrorField([validityDay], 'Date of Incorporation is required.');
+						validationType = true;
+					} else if (validityDay.value == '') {
+						showErrorField([validityDay], '');
+						showErrorField([validityDay], 'valid day is required.');
+						validationType = true;
+					} else if (validityMonth.value === '') {
+						showErrorField([validityMonth], '');
+						showErrorField([validityMonth], 'valid month is required.');
+						validationType = true;
+					} else if (validityYear.value == '') {
+						showErrorField([validityYear], '');
+						showErrorField([validityYear], 'valid year is required.');
+						validationType = true;
+					}
+				}
+			}
+
+			if (allInputs[j].type === 'file') {
+				const fileExtension = allInputs[j].value.split('.').pop();
+				if (!['jpg', 'jpeg', 'png', 'pdf', 'JPG', 'tiff', 'tif', 'JPEG', 'JPG', 'PDF', 'TIFF'].includes(fileExtension)) {
+					showErrorField([allInputs[j]], `.${fileExtension.italics()} files are not allowed.`);
+					validationType = true;
+					// return false;
+				}
+			}
+
+			
+		}
+	}
+	
+	if (allInputs.idProof) {
+		if (parseFloat(allInputs.idProof.value) === '') {
+			showErrorField([allInputs.idProof], 'Select a document!');
+			validationType = true;
+			// return false;
+		}
+	}
+    if (validationType) return false;
+    {% endif %}
+	return true;
+}
+</script>
+{% endblock %}

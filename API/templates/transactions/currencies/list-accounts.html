@@ -1,0 +1,214 @@
+{% extends 'common/base.html' %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" type="text/css" href="{% static 'currency/css/style.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'accounts/css/style.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'accounts/css/wSelect.css' %}">
+
+{% endblock %}
+{% block content %}
+
+
+    <div class=" balance-cover  mx-4 " style="min-height: 450px;">
+        <div class="row">
+            <div class=" balance-main">
+                <div class="alert-box-outer" style="display:none">
+                    <div class="alert-content" style="display: block;"
+                         id="alertDiv">
+                        <button class=""
+                                onclick="closeAlertModal()">
+                            <i class="fas fa-times"></i>
+                        </button>
+                        <p class="alert-message" style="text-align: center" id="errorField"></p>
+                    </div>
+                </div>
+                    <div class="row">
+                        <div class="form-group col-lg-12">
+                            <a href="#" class="btn btn-primary button-w btn-show-currency-add-content"
+                               style="float:right;padding: 0.75rem 1.5rem;"><i class="fa fa-solid fa-plus"></i>&nbsp Add
+                                Currency</button></a>
+                        </div>
+                    </div>
+                <div class="row add-currency-content" style="justify-content:center;display:none">
+                    <div class="col-sm-5">
+                        <select class="custom-select select-list selectpicker select-currency" style="display:none">
+                            <option data-icon="" >-Select currency-</option>
+                            {% for crncy in currencies %}
+                                <option data-icon="{% if crncy.flag %}{{crncy.flag.url}}{% else %}other/no-image.jpg{% endif %}" value="{{crncy.id}}">{{crncy.code}} {{crncy.name}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-sm-5">
+                        <button class="btn btn-primary button-w btn-custom-w btn-add-currency">SUBMIT</button>
+                        <button class="btn button-o btn-custom-w btn-cancel-currency">CANCEL</button>
+                    </div>
+                </div>
+                {% include 'accounts/dashboard/includes/account_list.html' %}
+        </div>
+    </div>
+    <div id="modal-confirm-delete" class="modal fade">
+        <div class="modal-dialog modal-confirm">
+            <div class="modal-content">
+                <div class="modal-header flex-column">
+                    <div class="icon-box">
+                        <i class="fas fa-times"></i>
+                    </div>
+                    <h4 class="modal-title w-100">Are you sure?</h4>
+                    <!--                <a class="modal-close" data-dismiss="modal" aria-hidden="true">&times;</a>-->
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" class="slug">
+                    <input type="hidden" class="bentype">
+                    <p>Do you really want to delete ? This process cannot be undone.</p>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-secondary btn-modal-close" data-dismiss="modal">Cancel
+                    </button>
+                    <button type="button" class="btn btn-danger btn-del-ben">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- temporary modal -->
+    <div id="modal-show-delay" class="modal fade">
+        <div class="modal-dialog modal-confirm" style="width: 500px !important;">
+            <div class="modal-content">
+                <div class="modal-header flex-column">
+                    <h5 class="modal-title w-100">Notice of Change of USD & EURO Nostro Agent</h5>
+                </div>
+                <div class="modal-body">
+                    <p style="color: black;">Please expect a delay in USD & EURO Remittances and Deposits as the Nostro Agent used for USD & EURO are being changed. The transaction services will resume normalcy latest by 16th June 2022 onwards. We deeply regret the inconvenience caused. Should you require any further assistance of the above matter, please contact your Relationship Manager.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--  -->
+    </div>
+{% endblock %}
+{% block extra_script %}
+<script src="{%static '/accounts/js/wSelect.min.js' %}"></script>
+
+<script>
+$('.custom-select').wSelect();
+    function loadData() {
+        const form = $(".ben-list-form");
+        form.submit();
+    }
+
+    function closeAlertModal() {
+        $(".alert-box-outer").hide()
+    }
+
+$(document).on("click",".btn-modal-close",function(){
+
+    $(this).closest(".modal").modal("hide")
+
+})
+
+
+$(document).on("click",".btn-edit-ben",function(){
+
+    form = $(".ben-edit-form");
+    form.submit();
+
+})
+
+$(document).on("click",".btn-open-del-ben",function(){
+
+    $("#modal-confirm-delete").find(".btn-del-ben").attr("data-attr",$(this).attr("data-attr"))
+    $("#modal-confirm-delete").find(".btn-del-ben").attr("data-type",$(this).attr("data-type"))
+    $("#modal-confirm-delete").modal("show")
+
+})
+$(document).on("click",".btn-del-ben",function(){
+    var slug = $(this).attr("data-attr")
+    var bentype = $(this).attr("data-type")
+    $.ajax({
+        url: "/beneficiary/edit/",
+        type:'POST',
+        data:{
+        'slug':slug,
+        'bentype':bentype,
+        'csrfmiddlewaretoken':'{{csrf_token}}',
+        'action_type':'delete'
+        },
+        success: function(result) {
+        location.reload();
+    }});
+})
+
+
+$(document).on("click",".btn-show-currency-add-content",function(){
+
+    $(".add-currency-content").show()
+    $(this).hide()
+
+})
+$(document).on("click",".btn-cancel-currency",function(){
+
+    $(".add-currency-content").hide()
+    $(".btn-show-currency-add-content").show()
+
+})
+
+
+$(document).on("click",".btn-add-currency",function(){
+
+    currency_id = $(".select-currency option:selected").val()
+    $.ajax({
+        url: "/dashboard",
+        type:'POST',
+        data:{
+        'currency_id':currency_id,
+        'csrfmiddlewaretoken':'{{csrf_token}}',
+        'action_type':'add-currency'
+        },
+        success: function(result) {
+
+            if (result.status){
+            $(".btn-show-currency-add-content").show()
+            $(".account-list-content").replaceWith(result.account_list_html)
+            $(".alert-content").addClass("success-alert")
+            $(".alert-content").removeClass("section-alert")
+            $(".alert-content").find("button").addClass("success-alert-close")
+            $(".alert-content").find("button").removeClass("section-alert-close")
+            $(".add-currency-content").hide()
+            }else{
+                $(".alert-content").removeClass("success-alert")
+                $(".alert-content").addClass("section-alert")
+                $(".alert-content").find("button").removeClass("success-alert-close")
+                $(".alert-content").find("button").addClass("section-alert-close")
+
+            }
+            $(".alert-message").html(result.message)
+            $(".alert-box-outer").show()
+    }});
+})
+
+
+$(document).on("click",".updatecurrency",function(){
+    var acc_id = $(this).attr("data-attr")
+    var acc_status = $(this).attr("data-status")
+    $.ajax({
+        url: "/dashboard",
+        type:'POST',
+        data:{
+        'acc_id':acc_id,
+        'acc_status':acc_status,
+        'csrfmiddlewaretoken':'{{csrf_token}}',
+        'action_type':'update_currency'
+        },
+        success: function(result) {
+        location.reload();
+    }});
+})
+// 
+$( document ).ready(function() {
+    if("{{show_modal}}" == "True"){
+        $("#modal-show-delay").modal("show")
+    }
+});
+// 
+</script>
+{% endblock %}

@@ -1,0 +1,201 @@
+{% extends 'common/admin-base.html' %}
+{% load static %}
+{% load util_tags %}
+{% block css %}
+<style>
+    .statment-filter-tab {
+        display: block;
+        border-bottom: solid 1px #efefef;
+        width: 100%;
+        overflow: hidden;
+    }
+
+    .statment-filter-tab a {
+        display: inline-block;
+        padding: 10px;
+        border-right: solid 1px #efefef;
+        color: #84878a;
+        border-bottom: solid 2px transparent;
+        float: left;
+    }
+
+    .statment-filter-tab a.active {
+        border-bottom-color: #22bc51;
+    }
+
+    .tab-title-block {
+        margin-bottom: 0;
+        height: 70px;
+        flex-wrap: wrap;
+        min-height: 45px;
+        padding: 10px 15px;
+        background-color: #fbfbfb !important;
+    }
+
+    .btn-white {
+        background-color: #fff !important;
+        color: #fa661d !important;
+        border: solid 1px #fa661d !important;
+        border-radius: 5px !important;
+        height: 40px !important;
+        padding: 5px 20px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+
+    .btn-rgt {
+        float: right !important;
+    }
+
+    .isactive {
+        border-bottom-color: #22bc51 !important;
+    }
+
+    .m-0 {
+        margin: 0;
+    }
+
+    .btn-white img {
+        margin-right: 10px;
+    }
+</style>
+{% endblock %}
+{% block content %}
+<div class=" balance-cover  mx-4 " style="min-height: 421px;">
+    <div class="row">
+        <div class=" balance-main">
+            {% if message %}
+            <div class="alert-box-outer">
+                <div class="{% if status %}success-alert{% else %}section-alert{% endif %}" style="display: block;"
+                    id="alertDiv">
+                    <button class="{% if status %}success-alert-close{% else %}section-alert-close{% endif %}"
+                        onclick="closeAlertModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <p style="text-align: center" id="errorField">{{message}}</p>
+                </div>
+            </div>
+            <br>
+            {% endif %}
+            <div class="statment-filter-tab">
+                <a href="/getCustomerDetails?slug={{user_details.slug}}" id="page1" class="" style="display: block">
+                    Personal
+                    details</a>
+                <a href="/getCustomerDetails?userDocument=statement&slug={{user_details.slug}}" class="" id="page2"
+                    class="" style="display: block">
+                    Statements</a>
+                <a href="/getCustomerDetails?userDocument=referrals&slug={{user_details.slug}}" id="page3"
+                    class="isactive" style="display: block">
+                    Referrals</a>
+            </div>
+        </div>
+        <!--  -->
+        <div id="detailsDiv" class="customer-management-sec">
+            <div class="customer-mng-details-sec">
+                <div class="tab-title-block" style="justify-content: flex-end;">
+                    <button id="addReferralBtn" type="button" onclick="handleAddReferralOnclick();"
+                        class="btn-white form-group-right">
+                        <img src="{% static 'dash/assets/img/add-usr.png' %}" alt=""> Add Referral
+                    </button>
+                </div>
+            </div>
+
+            <form id="referralForm" method="POST" action="/api/v1/reference/getReferrals">
+                <input type="hidden" name="userId" value="1040">
+            </form>
+
+            <div class="">
+                <table class="table " style="font-size:14px">
+                    <tbody>
+                        <tr>
+                            <th style="border-right: 1px solid #efefef;">Sl No</th>
+                            <th style="border-right: 1px solid #efefef;">Name</th>
+                            <th style="border-right: 1px solid #efefef;">Email</th>
+                            <th style="border-right: 1px solid #efefef;">Type</th>
+                            <th>Action</th>
+                        </tr>
+
+                        {% for referee in referees %}
+                        <tr>
+                            <td>{{forloop.counter}}</td>
+                            <td>{{referee.firstname}}
+                                {{referee.middlename|default_if_none:''}}
+                                {{referee.lastname}}</td>
+                            <td>{{referee.customer.user.email}}</td>
+                            {% if referee.customer.customertype == 1 %}
+                            <td>Personal</td>
+                            {% elif referee.customer.customertype == 2 %}
+                            <td>Business</td>
+                            {% endif %}
+                            <td><a href="/editReferral?slug={{user_details.slug}}&refereeslug={{referee.slug}}" class="btn-edit-ben" style="margin-right: 10px;"><i class="far fa-pencil-alt"></i></a>
+                                <a onclick="return delRefereeConfirmation('{{user_details.slug}}','{{referee.slug}}', '{{referee.customer.user.email}}');"
+                                    href="" class="btn-open-del-ben">
+                                    <i class="far fa-trash-alt"></i></a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="8" style="text-align:center;font-size:20px;font-weight: 300;">No Records</td>
+                        </tr>
+
+                        {% endfor %}
+
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!--  -->
+    </div>
+</div>
+
+<div id="delRefereeConfirmModal" class="modal fade">
+    <div class="modal-dialog modal-confirm">
+        <div class="modal-content">
+            <div class="modal-header flex-column">
+                <h6 style="font-weight: 100;" class="modal-title w-100">Do you really want to
+                    <span id="delstatusSpan"><b></b></span>?
+                </h6>
+            </div>
+            <form method="post" action="/deleteReferral">
+                {% csrf_token %}
+                <div class="modal-footer justify-content-center">
+                    <button type="button" style="background-color: #a8a8a8;padding: 0px 0px;"
+                        class="btn btn-primary ripple-efct btn-open-dlt-cnfrm-modal"
+                        data-bs-dismiss="modal">CANCEL</button>
+                    <input type="hidden" name="refereeSlug" id="refereeSlug" value="">
+                    <input type="hidden" name="referrerSlug" id="referrerSlug" value="">
+                    <input type="hidden" name="refereeEmail" id="refereeEmail" value="">
+                    <input type="hidden" name="action_type" value="delete_referee">
+                    <button type="submit" style="background-color: #fa661d;padding: 0px 0px;"
+                        class="btn btn-primary ripple-efct btn-open-dlt-cnfrm-modal">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block extra_script %}
+<script>
+    function handleAddReferralOnclick() {
+        const addLink = document.createElement('a');
+        addLink.href = "/addReferral?slug={{user_details.slug}}";
+        document.body.appendChild(addLink);
+        addLink.click();
+    }
+    function delRefereeConfirmation(id1, id2, email) {
+        const elem = document.getElementById('delRefereeConfirmModal');
+        if (elem) {
+            const HtmlContent = document.getElementById('delstatusSpan');
+            HtmlContent.innerHTML = '';
+            HtmlContent.innerHTML = `Delete <b>${email}</b>`;
+            document.getElementById('refereeSlug').value = id2;
+            document.getElementById('referrerSlug').value = id1;
+            document.getElementById('refereeEmail').value = email;
+            $("#delRefereeConfirmModal").modal("show")
+            return false
+        }
+    }
+</script>
+{% endblock %}

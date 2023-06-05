@@ -1,0 +1,175 @@
+{% extends 'common/base.html' %}
+{% load static %}
+
+
+{% block content %}
+<style>
+    .p-details-header{
+        font-weight:600;
+    }
+    
+    .cust-col{
+            padding-top: 10px;
+    padding-bottom: 20px;
+    border: 1px solid #efefef;
+    }
+    .input-edit{
+    display: block;
+    border: none;
+    box-shadow: none;
+    width: 100%;
+    color: #84878a;
+    }
+    .input-edit:focus{
+            outline: 0;
+    }
+    .btn-edit{
+    float: right;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    box-shadow: none;
+    font-size: 15px;
+    margin-bottom: 0;
+}
+
+.btn-edit:hover, .btn-edit:focus{
+    transform:none !important;
+    box-shadow: none !important;
+    color:#99a0af;
+}
+.form-group{
+    margin-bottom:0px;
+}
+
+    table td{
+        border-bottom:1px solid #efefef;
+        padding: 10px 10px 10px 10px;
+    }
+.body-column-center{
+    text-align: center;
+}
+.body-column-left{
+text-align: left;
+padding: 0px 0px 0px 0px;
+}
+.btn-transactions{
+    height: 20px;
+    border-radius: 0px;
+    background-color: #fa661d;
+    color: #fff;
+    font-weight: normal;
+    font-size: 12px;
+    margin-bottom: 0px;
+    text-align: center;
+    vertical-align: middle;
+}
+</style>
+
+<div class=" balance-cover  mx-4 ">
+    <div class="row">
+        <div class=" balance-main">
+
+
+            <form method="POST" class="ben-list-form">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="form-group col-lg-6">
+                        <h6>User Details</h6>
+
+                    </div>
+                    <div class="form-group col-lg-6" style="text-align: right;">
+                        <a href="/settings/users" style="float:right;padding: 0.75rem 1.5rem;"><i
+                            class="fa fa-solid fa-angle-left"></i>&nbsp;Back</a>
+                    </div>
+                </div>
+                <hr style="margin-top:0px;">
+            </form>
+            {% if message %}
+            <div class="alert-box-outer">
+                <div class="{% if status %}success-alert{% else %}section-alert{% endif %}" style="display: block;"
+                     id="alertDiv">
+                    <button class="{% if status %}success-alert-close{% else %}section-alert-close{% endif %}"
+                            onclick="closeAlertModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <p style="text-align: center" id="errorField">{{message}}</p>
+                </div>
+            </div>
+            {% endif %}
+            
+
+            <div class="row cust-row">
+                <div class="col-sm-6 cust-col">
+                    <div class="form-grp-edit">
+                        <label>First Name</label>
+                        <input type="text" name="firstName" value="{{user_account.firstname}}"
+                               class="input-edit" required="" readonly=""
+                               style="cursor: default;">
+                    </div>
+                </div>
+
+                <div class="col-sm-6 cust-col">
+                    <div class="form-grp-edit">
+                        <label>Middle Name</label>
+                        <input type="text" name="MiddleName" value="{{user_account.middlename|default_if_none:''}}"
+                               class="input-edit" required="" readonly=""
+                               style="cursor: default;">
+                    </div>
+                </div>
+
+            </div>
+            <div class="row cust-row">
+                <div class="col-sm-6 cust-col">
+                    <div class="form-grp-edit">
+                        <label>Last Name</label>
+                        <input type="text" name="lastName" value="{{user_account.lastname}}"
+                               class="input-edit" required="" readonly=""
+                               style="cursor: default;">
+                    </div>
+                </div>
+
+                <div class="col-sm-6 cust-col">
+                    <div class="form-grp-edit">
+                        <label>Email</label>
+                        <input type="text" name="email" value="{{user_account.customer.user.email}}"
+                               class="input-edit" required="" readonly=""
+                               style="cursor: default;">
+                    </div>
+                </div>
+
+            </div>
+            <div class="row cust-row">
+                <div class="col-sm-6 cust-col">
+                    <div class="form-grp-edit">
+                        <label>User Type</label>
+                        <input type="text" name="userType" value="{{transactionauthoritytype.transactionauthoritytype.name}}"
+                               class="input-edit" required="" readonly=""
+                               style="cursor: default;">
+                    </div>
+                </div>
+                <div class="col-sm-6 cust-col">
+                    <label class="check-bx-cmpny-cnfrm custom-checbox-hldr">
+                        {% if user_account.ultimate_ben_user %}
+                        <input type="checkbox" name="mainBusinessownernew" class="check-box" checked="checked" disabled>
+                         <span style="border-radius: 0px" class="checkmark-cmpny-cnfrm"></span>
+                         Ultimate Beneficial Owner
+                         {% else %}
+                         <input type="checkbox" name="mainBusinessownernew" class="check-box" disabled>
+                         <span style="border-radius: 0px" class="checkmark-cmpny-cnfrm"></span>
+                         Ultimate Beneficial Owner
+                         {% endif %}
+                     </label>
+                </div>
+
+            </div>
+            
+            
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block extra_script %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+{% endblock %}

@@ -1,0 +1,59 @@
+
+{% load static %}
+<!doctype html>
+<html class="no-js" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <link rel="apple-touch-icon" sizes="76x76" href="{% static 'dash/assets/img/apple-icon.png' %}">
+      <link rel="icon" type="image/png" href="{% static 'dash/assets/img/favicon.png' %}">
+      <title id="title">
+          Entrebiz
+      </title>
+      {% block css %}
+
+      {% endblock %}
+      <!--     Fonts and icons     -->
+      <link href="{% static 'fonts/assets/css/Open+Sans:300,400,500,600,700.css' %}" rel="stylesheet" />
+       <link href="{% static 'fonts/assets/css/Poppins.css' %}" rel='stylesheet'>
+      <!-- Nucleo Icons -->
+      <link href="{% static 'dash/assets/css/nucleo-icons.css' %}" rel="stylesheet" />
+      <link href="{% static 'dash/assets/css/nucleo-svg.css' %}" rel="stylesheet" />
+      <!-- Font Awesome Icons -->
+      <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+      <link href="{% static 'dash/assets/css/nucleo-svg.css' %}" rel="stylesheet" />
+      <!-- CSS Files -->
+      <!-- <link rel="stylesheet" href="{% static 'dash/assets/css/bootstrap.min.css' %}"> -->
+      <link id="pagestyle" href="{% static 'dash/assets/css/soft-ui-dashboard.css' %}" rel="stylesheet" />
+      <link rel="stylesheet" type="text/css" href="{% static 'dash/assets/css/style.css' %}">
+      <link rel="stylesheet" type="text/css" href="{% static 'dash/assets/css/beneficiary.css' %}">
+      <!-- custome css file -->
+   <link rel="stylesheet" type="text/css" href="{% static 'dash/assets/css/custome.css' %}">
+   <link rel="stylesheet" type="text/css" href="{% static 'calendar/css/calendar.css' %}">
+<style>
+    
+</style>
+</head>
+
+<body class="not-found-bg" style="background-color: #ebeff1;">
+    <div class="container">
+        <div class="not-found-cover">
+            <div class="not-found-img">
+                <img src="#" alt="" style="width:100%">
+            </div>
+            <div class="not-found-text-cover" style="text-align: center; margin-top: 200px;">
+                <h1 style="font-size:4rem;color:#7c7c7c">503</h1>
+                <h2 class="error-title" style="font-size:2rem">
+                    Service Unavailable!
+                  </h2>
+                  <p class="error-subtitle" style="font-weight: 400;">
+                   The server is temporarily busy. Please try again later.
+                  </p>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+

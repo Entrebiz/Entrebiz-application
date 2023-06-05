@@ -1,0 +1,76 @@
+
+{% load static %}
+<!doctype html>
+<html class="no-js" lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <title>Entrebiz</title>
+    <link rel="icon" type="image/png" href="{% static 'dash/assets/img/favicon.png' %}">
+    <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
+    <link rel="stylesheet" href="{% static 'accregister/assets/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'accregister/assets/css/custom.css' %}">
+
+
+</head>
+
+<body class="dashboard-bg dashboard-body-top">
+    <div class="row-fluid acc-det-body">
+        <div class="container acc-det-container acc-det-sm">
+            <div class="acc-det">
+                <div class="acc-det-logo">
+                    <a class="navbar-brand" href="/">
+                        <img src="{% static 'dash/assets/img/logo-ct.png' %}" alt="">
+                    </a>
+                </div>
+                <div class="acc-det-body-content acc-det-login">
+                    <h2 class="acc-det-title">Choose your account type</h2>
+                    <!--<p class="acc-det-caption">Lorem Ipsum is simply dummy text of the printing</p>-->
+                    <div class="row icon-btn-block">
+                        <div class="col-sm-6 col-6 icon-btn-block-inr">
+                            <a href="/register/personal">
+                                <div class="acc-type-btn">
+                                    <img src="{% static 'dash/assets/img/personal-acc.png' %}" alt="">
+                                    <p>Personal account</p>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-sm-6 col-6 icon-btn-block-inr">
+                            <a href="/register/business/">
+                                <div class="acc-type-btn">
+                                    <img src="{% static 'dash/assets/img/business-acc.png' %}" alt="">
+                                    <p>Business account</p>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="back-link-btn-sec">
+                        <p>Back to <a href="/login" class="link-bold secondary-clr efct-link-dark">Login</a></p>
+                    </div>
+                </div>
+
+                <div class="acc-det-footer">
+                    <div class="acc-bnt-sec">
+                        <a href="/" class="acc-back-btn efct-link-dark"><img src="{% static 'dash/assets/img/arrow.png' %}" alt=""> Back to &nbsp; <span class="secondary-clr">Home</span></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer>
+    <div class="footer-sec">
+        <p>&copy; {% now "Y" %} Entrebiz. All Rights Reserved. &nbsp;&nbsp;</p>
+        <p style="padding: 5px">
+            <a target="_blank" title="Terms and conditions" href="/termsAndCondition" class="terms-accpt">
+                Terms & conditions &nbsp;&nbsp;
+            </a>
+            <a target="_blank" title="Privacy policy" href="/privacyPolicy" class="terms-accpt">
+                Privacy policy
+            </a>
+        </p>
+    </div>
+</footer>

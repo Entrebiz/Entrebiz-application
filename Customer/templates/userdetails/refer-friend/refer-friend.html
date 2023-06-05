@@ -1,0 +1,200 @@
+{% extends 'common/base.html' %}
+{% load static %}
+{% load util_tags %}
+{% block css %}
+<style>
+    .curr-conversion-row {
+        padding: 10px 50px;
+        align-items: center;
+        justify-content: center;
+
+    }
+
+    .curr-conversion-card {
+        padding: 20px 40px 10px;
+    }
+
+    .refer-friend-title h4 {
+        border-bottom: solid 1px #e0e1e2;
+        font-weight: 500 !important;
+        font-size: 16px !important;
+        padding-bottom: 20px;
+        margin-bottom: 20px;
+    }
+
+    .link-copy-cover {
+        background-color: #f6f8f9;
+        padding: 15px 30px;
+        position: relative;
+        margin-bottom: 20px;
+    }
+
+    .link-copy-cover .link-copy-btn {
+        background-color: #dee2e4;
+        width: 28px;
+        height: 28px;
+        border: none;
+        position: absolute;
+        right: 0;
+        top: 0;
+    }
+
+    .link-copy-cover .link-label {
+        margin-bottom: 0;
+        font-size: 15px;
+        color: #84878a;
+    }
+
+    .link-copy-cover .link-copy-btn img {
+        width: 14px;
+    }
+
+    .link-copy-cover .copy-link {
+        font-size: 15px;
+        color: #4078c0;
+        margin-bottom: 0;
+        padding: 5px 0;
+    }
+</style>
+{% endblock %}
+{% block content %}
+<main class="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg ">
+    <div class=" balance-cover  mx-4 " style="padding-left: 9%;padding-right: 9%;">
+        <div class="row">
+            <div class=" balance-main">
+                <div id="balance-main"></div>
+                {% if message %}
+                <div class="alert-box-outer">
+                    <div class="{% if status %}success-alert{% else %}section-alert{% endif %}" style="display: block;"
+                        id="alertDiv">
+                        <button class="{% if status %}success-alert-close{% else %}section-alert-close{% endif %}"
+                            onclick="closeAlertModal()">
+                            <i class="fas fa-times"></i>
+                        </button>
+                        <p style="text-align: center" id="errorField">{{message}}</p>
+                    </div>
+                </div>
+                {% endif %}
+                <form id="sendReferForm" method="post"
+                    onsubmit="return validateForm('sendReferForm', 'form');">
+                    {% csrf_token %}
+                    <div class="row curr-conversion-row m-0">
+                        <div class="col-lg-8 col-md-10 col-12 curr-conversion-card">
+                            <div class="row">
+                                <div class="col-12 refer-friend-title">
+                                    <h4>Please enter the Name and Email of your friend to refer.</h4>
+                                </div>
+                                <div class="col-lg-6 col-md-12 col-xs-6 col-12">
+                                    <div class="form-group">
+                                        <label for="referFirstName">First Name</label>
+                                        <input type="text" name="firstName" value="{{firstName}}" class="form-control"
+                                            onkeypress="return signUpFieldValidate(event)"
+                                            onblur="return signUpFieldValidateOnchange(this)" autocomplete="off"
+                                            maxlength="150" minlength="3" placeholder="Enter First Name"
+                                            id="referFirstName">
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-md-12 col-xs-6 col-12">
+                                    <div class="form-group">
+                                        <label for="referLastName">Last Name</label>
+                                        <input type="text" name="lastName" value="{{lastName}}" class="form-control"
+                                            onkeypress="return signUpFieldValidate(event)"
+                                            onblur="return signUpFieldValidateOnchange(this)" autocomplete="off"
+                                            maxlength="150" placeholder="Enter Last Name" id="referLastName">
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label for="referEmail">Email</label>
+                                        <input type="email" name="email" value="{{email}}" class="form-control"
+                                            onkeypress="return signUpFieldValidate(event)"
+                                            onblur="return signUpFieldValidateOnchange(this)" autocomplete="off"
+                                            maxlength="75" placeholder="Enter Email" id="referEmail">
+                                    </div>
+                                </div>
+                                <input type="hidden" name="link"
+                                    value="{{link}}">
+                                <div class="col-12 or-division or-division-brk"></div>
+                                <div class="col-12">
+                                    <div class="link-copy-cover">
+                                        <button type="button" class="link-copy-btn" title="Copy Link"
+                                            onclick="copyReferCode();"><img
+                                                src="{% static 'dash/assets/img/copy-icon-link.png' %}" alt="">
+                                        </button>
+                                        <p class="link-label">Use this referral link</p>
+                                        <p class="copy-link" id="referLink">
+                                            {{link}}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12 col-md-12 col-xs-6 col-12">
+                                    <div class="form-group">
+                                        <button class="btn btn-primary button-w w-100" type="submit">Send
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}
+{% block extra_script %}
+<script>
+    function copyReferCode() {
+        const referLinkField = document.getElementById('referLink');
+        const el = document.createElement('textarea');
+        el.value = referLinkField.innerText;
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand('copy');
+        document.body.removeChild(el);
+        showSuccessMsg('Copied to clipboard!');
+        return true;
+    }
+    function showSuccessMsg(message) {
+        if (message) {
+            var parentEle = document.getElementById('balance-main')
+            if(!document.getElementById('errorField')){
+            var msgDiv1 = document.createElement('div');
+            msgDiv1.className = "alert-box-outer";
+            msgDiv1.id = "errorField";
+            }
+            else{
+                var msgDiv1 = document.getElementById('errorField');
+            }
+            if(!document.getElementById('errorField1')){
+                var msgDiv2 = document.createElement('div');
+                msgDiv2.className = "success-alert";
+                msgDiv2.id = "errorField1";
+                msgDiv2.style.display = 'block';
+            }
+            else{
+                var msgDiv2 = document.getElementById('errorField1');
+            }
+            if(!document.getElementById('msgElem')){
+                var msgElem = document.createElement('p');
+                msgElem.setAttribute(
+                    'style',
+                    'text-align: center;',
+                );
+                msgElem.id = "msgElem";
+            }
+            else {
+                var msgElem = document.getElementById('msgElem');
+            }
+            msgElem.innerText = message;
+            msgDiv2.appendChild(msgElem)
+            msgDiv1.appendChild(msgDiv2)
+            parentEle.appendChild(msgDiv1);
+            console.log("parentEle", parentEle)
+            setTimeout(() => {
+                document.getElementById('errorField').remove();
+            }, 5000);
+        }
+    }
+</script>
+{% endblock %}

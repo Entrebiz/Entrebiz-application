@@ -1,0 +1,528 @@
+{% extends 'common/base.html' %}
+{% load static %}
+
+
+{% block content %}
+
+
+<style>
+    .api-key-outer {
+        padding: 15px 20px;
+        background-color: #fff;
+
+    }
+
+
+    .api-key-outer h4 {
+        font-weight: 400;
+        font-size: 15px;
+        color: #84878a;
+        margin-bottom: 5px;
+    }
+
+    .api-key-wrapper {
+
+        display: flex;
+        align-items: center;
+    }
+
+    .api-inp-cover {
+        flex-grow: 1;
+        flex-shrink: 1;
+        flex-basis: auto;
+    }
+
+    .api-code {
+        border: 1px solid #efefef;
+        height: 45px;
+        padding: 10px 10px;
+        width: 100%;
+        border-radius: 10px;
+        font-size: 12px;
+        color: #57595a;
+    }
+
+    .api-btn-cover {
+        padding-left: 15px;
+        display: flex;
+        flex-grow: 0;
+        flex-shrink: 0;
+        flex-basis: auto;
+        justify-content: flex-end;
+    }
+
+    .btn-primary {
+        height: 44px;
+        width: 120px;
+        font-size: 14px;
+    }
+
+    .btn-primary {
+        background-color: #fa661d;
+        color: #fff;
+        text-transform: uppercase;
+        display: -webkit-box;
+        display: -moz-box;
+        display: -ms-flexbox;
+        display: -webkit-flex;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .btn-primary,
+    .btn-default {
+        box-shadow: none;
+        border-radius: 5px;
+        height: 50px;
+        border: none;
+    }
+
+    .copy-btn {
+        margin-left: 5px;
+        background-color: transparent;
+        border: none;
+        outline: none;
+        padding-right: 0;
+        transition: 0.3s;
+    }
+
+    .copy-btn img {
+        width: 20px;
+    }
+
+    .ripple-efct {
+        background-position: center;
+        transition: background 1000s;
+    }
+
+    a {
+        text-decoration: none;
+    }
+
+    img {
+        max-width: 100%;
+        height: auto;
+        vertical-align: middle;
+    }
+
+.api-handling-sec {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+.row {
+
+    display: flex;
+    flex-wrap: wrap;
+    margin-right: -15px;
+    margin-left: -15px;
+}
+.api-link-sec {
+    background-color: #fff;
+}
+.api-link-cover {
+    padding-top: 20px;
+}
+
+.api-link-btn.active {
+    background-color: #fa661d;
+    color: #fff;
+}
+.api-link-btn {
+    display: block;
+    padding: 20px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-decoration: none;
+    margin-bottom: 10px;
+    font-size: 15px;
+    transition: 0.3s;
+    border-radius: 4px;
+    background-color: #F6F6F6;
+}
+.api-handling-sec .code-view-sec-col {
+    background-color: #f6f8f9;
+    padding: 20px 25px;
+    border-radius: 15px;
+}
+.description-sec {
+    margin-bottom: 20px;
+    padding-bottom: 5px;
+    border-bottom: solid 1px #d8d8d8;
+}
+.api-handling-sec .description-sec h4 {
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.api-handling-sec .code-view-sec .code-view-layout {
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 15px;
+}
+.code-view-layout.code-layout-dark .code-title {
+    background-color: #38424f;
+}
+
+.code-title {
+    display: flex;
+    padding: 6px 20px;
+}
+
+.flex-auto {
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-basis: auto;
+}
+.code-view-layout.code-layout-dark .code-title h4 {
+    color: #cdcdcd;
+}
+
+.api-handling-sec .code-view-sec .code-view-layout .code-title h4 {
+    font-weight: 400;
+    margin-bottom: 0;
+    padding: 6px 0;
+}
+.h4 {
+    font-size: 14px;
+}
+.code-view-layout.code-layout-dark .code-title .code-title-btn {
+
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+.input-form-group {
+    margin-bottom: 0;
+}
+.custom-select {
+    background-color: #677079;
+    font-size: 14px;
+    padding: 5px;
+    color: #b6b7b8;
+    min-width: 100px;
+    border: none;
+}
+.copy-btn {
+    margin-left: 5px;
+    border: none;
+    background-color: transparent;
+}
+.copy-btn img {
+    width: 18px;
+}
+.code-line-outer {
+    background-color: #4d5764;
+    padding-bottom: 20px;
+    font-family:san-serif;
+}
+
+.code-line-container {
+    overflow: auto;
+    word-wrap: break-word;
+    padding: 20px;
+    font-size: 13px;
+    color: #fff;
+}
+
+pre {
+    margin-top: 0;
+    margin-bottom: 0;
+    overflow: auto;
+
+
+}
+<!--#comment response width-->
+<!--response starting-->
+
+.code-view-layout {
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 15px;
+}
+
+
+.code-layout-light .code-title {
+    background-color: #dfe4e7;
+}
+ .code-title {
+    display: flex;
+    padding: 6px 20px;
+}
+.flex-auto {
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-basis: auto;
+}
+
+.code-title h4 {
+    color: #626467;
+     font-weight: 400;
+    margin-bottom: 0;
+    padding: 6px 0;
+}
+.api-handling-sec .code-view-sec .code-view-layout.code-layout-light .code-line-outer {
+    background-color: #eaeced;
+}
+
+.api-handling-sec .code-view-sec .code-view-layout.code-layout-light .code-line-outer .code-line-container {
+    color: #848c9c;
+}
+.code-line-outer-parameter{
+        background-color: #989898;
+
+}
+.btn-primary:hover {
+    padding: 0px;
+}
+.code-for-parameter{
+      color:#4D4D4D;
+      height: 200px;
+        overflow: auto;
+         margin-bottom: 20px;
+
+}
+.code-in-parameter{
+            font-size: 14px;
+
+
+
+}
+
+
+
+</style>
+
+<div class=" balance-cover  mx-4 ">
+    <div class="row">
+        <div class=" balance-main">
+            <div id="balance-main"></div>
+            {% if message %}
+            <div class="alert-box-outer">
+                <div class="{% if status %}success-alert{% else %}section-alert{% endif %}" id="alertDiv"
+                     style="display: block;">
+                    <button class="{% if status %}success-alert-close{% else %}section-alert-close{% endif %}"
+                            onclick="closeAlertModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <p id="errorField" style="text-align: center">{{message}}</p>
+                    <p>{{error}}</p>
+                </div>
+            </div>
+            {% endif %}
+
+            <h6>API</h6>
+            <hr>
+            {% if error %}
+            <div class="alert-box-outer">
+                <div class="section-alert" style="display: block;" id="alertDiv">
+                    <button class="section-alert-close" onclick="closeAlertModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <p style="text-align: center" id="errorField">{{error}}!</p>
+                </div>
+            </div>
+            {% endif %}
+            <!--            -->
+            <div class="api-key-outer">
+                <h4>API Key</h4>
+
+                <div class="api-key-wrapper">
+                    <div class="api-inp-cover">
+
+
+                        <input class="api-code" disabled="" id="apiCode" name=""
+                               type="text"
+                               value="{{apiuser}}">
+
+                    </div>
+                    <div class="api-btn-cover">
+                        <form action="/settings/api" method="post">
+                            {% csrf_token %}
+                            <button class="btn-primary ripple-efct" style="color: azure;"
+                                    type="submit">GENERATE
+                                KEY
+                            </button>
+                        </form>
+                        <button class="copy-btn" onclick="return copyApiKey();" title="Copy">
+                            <img alt="" src="/static/userdetails/img/copy.png">
+                        </button>
+                    </div>
+
+
+
+                </div>
+                <div class="container-fluid"
+                                 style="background-color: #ffffff;border-radius: 9px;margin: 2px;">
+                                <div class="code-title">
+                                    <div class="flex-auto">
+                                        <h4 style="font-size: 12px;letter-spacing: 0.2px;"><span style="color:red;">*</span>If new API key is generated, the previous key and Access token cannot be used again.</h4>
+                                    </div>
+                                </div>
+                            </div>
+            </div>
+            <!--            -->
+
+
+            <!---->
+
+            <div class="api-handling-sec">
+                <div class="row">
+                    <div class="col-md-4 api-link-sec">
+                        <div class="api-link-cover">
+
+                            <a class="api-link-btn api-link active" href="#" id="apiLink-0" onclick="showResponse(0)">
+                                Authentication</a>
+
+                            <a class="api-link-btn api-link" href="#" id="apiLink-1" onclick="showResponse(1)">
+                                Get account list</a>
+
+                            <a class="api-link-btn api-link" href="#" id="apiLink-2" onclick="showResponse(2)">
+                                Retrieve single account</a>
+
+                            <a class="api-link-btn api-link" href="#" id="apiLink-3" onclick="showResponse(3)">
+                                International Wire Transfer</a>
+
+                            <a class="api-link-btn api-link" href="#" id="apiLink-4" onclick="showResponse(4)">
+                                Account to Account Transfer</a>
+
+                            <a class="api-link-btn api-link" href="#" id="apiLink-5" onclick="showResponse(5)">
+                                Currency Conversion</a>
+
+                            <a class="api-link-btn api-link" href="#" id="apiLink-6" onclick="showResponse(6)">
+                                Get personal details</a>
+
+                            <a class="api-link-btn api-link" href="#" id="apiLink-7" onclick="showResponse(7)">
+                                Transactions</a>
+                                
+                            <a class="api-link-btn api-link" href="#" id="apiLink-8" onclick="showResponse(8)">
+                                Get Beneficiary</a>
+
+                            <a class="api-link-btn api-link" href="#" id="apiLink-9" onclick="showResponse(9)">
+                                Create Beneficiary</a>
+
+                            <a class="api-link-btn api-link" href="#" id="apiLink-10" onclick="showResponse(10)">
+                                Update Beneficiary</a>
+
+                            <a class="api-link-btn api-link" href="#" id="apiLink-11" onclick="showResponse(11)">
+                                Delete Beneficiary</a>
+                            <a class="api-link-btn api-link" href="#" id="apiLink-12" onclick="showResponse(12)">
+                                Checkout</a>
+
+
+                        </div>
+                    </div>
+                    <div class="col-md-8 code-view-sec-col">
+                        <div class="code-view-sec">
+
+                            <div class="description-sec api-desc" id="apiDesc-0" style="display: block;">
+                                <h4 class="api-title"></h4>
+                                <!--<p>Find out your internet download and upload speed in mps per second with our internet
+                            speed test! Get lightning fast internet speeds starting at 100 mps with</p>
+                        <p>Find out your internet download and upload speed in mps per second with our internet
+                            speed test! Get lightning fast internet speeds starting at 100 mps with</p>
+                        <p>Find out your internet download and upload speed in mps per second with our internet
+                            speed test! Get lightning fast internet speeds starting at 100 mps with.</p>-->
+                            </div>
+
+
+                            <!--parameters-->
+                            <div class="code-view-layout code-layout-light parameter" id="parameter-content"
+                                 style="display: block;">
+                                <div class="code-title">
+                                    <div class="flex-auto">
+                                        <h4>Parameters</h4>
+                                    </div>
+                                </div>
+                                <div class="code-line-outer-parameter">
+                                    <div class="code-line-container code-line-md" style="background-color: #FFFFFF;">
+                                        <div id="code-for-parameter" class="code-for-parameter">
+                                            <!--parameter content -->
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <!-- -->
+
+
+                            <div class="code-view-layout code-layout-dark fields" id="inputsFields-0"
+                                 style="display: block;">
+                                <div class="code-title">
+                                    <div class="flex-auto">
+                                        <h4 class="code-title-change">POST
+                                            /authentication</h4>
+                                    </div>
+                                    <div class="flex-fixed code-title-btn">
+                                        <div class="input-form-group">
+                                            <select class="input-box custom-select select-lang" id="select-lang-0" name=""
+                                                    onclick="showCodeOfLang(this.value, this.getAttribute('data-index'))" data-index="">
+                                                <option value="PHP">Php</option>
+                                                <option value="NodeJs">NodeJs</option>
+                                                <option value="Python">Python</option>
+                                            </select>
+                                        </div>
+                                        <button class="copy-btn" onclick="return copySourceCode('content-disp');"
+                                                title="Copy">
+                                            <img alt="" src="/static/userdetails/img/copy.png">
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="code-line-outer">
+                                    <div class="code-line-container code-line-sm">
+                                        <pre
+                                                id="content-disp">&lt;?php<br>$request = new HttpRequest();<br>$request-&gt;setUrl('http://localhost:3002/authentication');<br>$request-&gt;setMethod(HTTP_METH_POST);<br>$request-&gt;setHeaders(array(<br>  'Postman-Token' =&gt; 'a1ae0204-81ee-47e0-84e8-94e97578f22c',<br>  'Cache-Control' =&gt; 'no-cache',<br>  'Content-Type' =&gt; 'application/x-www-form-urlencoded'<br>));<br>        <br>$request-&gt;setContentType('application/x-www-form-urlencoded');<br>$request-&gt;setPostFields(array(<br>  'email' =&gt; 'test@scotran.com',<br>  'apiKey' =&gt; '7cd38fc22e389d69dd323d8122c525a30117658aa5d50064d041fa42<br>  2097aa25e197e84120b6a18f143b276f9309c0d7'<br>));<br>$response = $request-&gt;send();</pre>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="code-view-layout code-layout-light response" id="response-0"
+                                 style="display: block;">
+                                <div class="code-title">
+                                    <div class="flex-auto">
+                                        <h4>Response</h4>
+                                    </div>
+                                </div>
+                                <div class="code-line-outer">
+                                    <div class="code-line-container code-line-md">
+                                        <pre id="response-disp">
+{
+token: 'eyJhbGciOi123JSUzI1NiIsInR5cCI6I4kpXVC5J9.eyJ1c2
+VySWQiOjI3NTUsImVtYWlsIjoia3V0dHVAbWFpbGluYXRvci5jb20iLC
+JpYXQiOjE1NzE2NDkyNDMsImV4cCI6MTU3MTczNTY0M30.AwhxTYwHio
+xwnzXQzRrCkM97ulRuPGLdV86nZP3h6ZmBoxhngak4uBQeuxQ8ymhan0
+2bSU1nGBYUCZPz8VpAAQ'
+}
+
+                    </pre>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!--  -->
+
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
+{% block extra_script %}
+<script src="{%static '/settings/js/api.js' %}"></script>
+<script>
+
+
+</script>
+
+
+{% endblock %}

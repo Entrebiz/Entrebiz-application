@@ -1,0 +1,305 @@
+{
+  "name": "Checkout",
+  "endpoint": "POST/transaction/checkout/",
+  "parameters": [
+    {
+      "name": "card_holder_name",
+      "description": "",
+      "required": true
+    },
+    {
+      "name": "email",
+      "description": "",
+      "required": true
+    },
+    {
+      "name": "card_number",
+      "description": "",
+      "required": true
+    },
+    {
+      "name": "exp_month",
+      "description": "",
+      "required": true
+    },
+    {
+      "name": "exp_year",
+      "description": "",
+      "required": true
+    },
+    {
+      "name": "cvc",
+      "description": "",
+      "required": true
+    },
+    {
+      "name": "amount",
+      "description": "",
+      "required": true
+    },
+    {
+      "name": "currency",
+      "description": "",
+      "required": true
+    },
+    {
+      "name": "description",
+      "description": "",
+      "required": true
+    },
+    {
+      "name": "city",
+      "description": "",
+      "required": true
+    },
+    {
+      "name": "postal_code",
+      "description": "",
+      "required": true
+    },
+    {
+      "name": "line1",
+      "description": "",
+      "required": true
+    },
+    {
+      "name": "line2",
+      "description": "",
+      "required": true
+    },
+    {
+      "name": "country",
+      "description": "",
+      "required": true
+    },
+    {
+      "name": "state",
+      "description": "",
+      "required": true
+    }
+  ],
+  "languages": [
+    {
+      "name": "PHP",
+      "code": [
+        " <?php",
+
+        "$request = new HttpRequest();",
+        "$request->setUrl('https://api.entrebiz-pte.com/api/v1/transaction/checkout/');",
+        "$request->setMethod(HTTP_METH_POST);",
+        "$request->setHeaders(array(",
+        "'Cache-Control' => 'no-cache',",
+        "'Authorization' => 'Token eyJhbGciOiJSUzI1NiIsInR5c",
+        "CI6IkpXVCJ9.eyJ1c2VySWQiOjI3NzIsImVtYWlsIjoic2l2YXByYX",
+        "hZEBzcGVyaWNvcm4uY29tIiwiaWF0IjoxNTcyMDA1NDcwLCJleHAiO",
+        "jE1NzIwOTE4NzB9.AgBAlIJ4UqEDsKr3HkC4cvtnlv4RiesJige",
+        "L-Cz5EiPSJxplN-eLw26CQp41cVi-anAP55emaD4lK_-v9NGgrg',",
+        "'Content-Type' => 'application/json'",
+        "));",
+
+        "$request->setBody('{",
+        "\"card_holder_name\":\"Test\",",
+        "\"email\":\"test@entrebiz.com\",",
+        "\"card_number\":\"42424242424242\",",
+        "\"exp_month\":\"06\",",
+        "\"exp_year\":\"21\",",
+        "\"cvc\":\"234\",",
+        "\"amount\":\"50\",",
+        "\"currency\":\"USD\",",
+        "\"description\":\"description\",",
+        "\"city\":\"city\",",
+        "\"postal_code\":\"code\",",
+        "\"line1\":\"Newyork City\",",
+        "\"line2\":\"47 W 13th St, New York, NY #####\",",
+        "\"country\":\"USA\",",
+        "\"state\":\"state\",",
+        " }');",
+
+        " $response = $request->send();"
+      ],
+      "Response": [
+          "{",
+          "'status': true,",
+          "'data': {",
+            "'customer': {",
+              "\t'card_holder_name': 'test4',",
+              "\t'email': 'abcde@mailinator.com',",
+              "\t'customer_id': 'cus_MiKD4rC9wDiFdG'",
+            "},",
+            "'card': {",
+              "\t'id': 'tok_1LzFm7SAp5UEjcjMpQRxPNLs',",
+              "\t'card_number': 42424242424###,",
+              "\t'exp_month': 9,",
+              "\t'exp_year': 25,",
+              "\t'cvc': 454",
+            "},",
+            "'Payment_details': {",
+              "\t'transaction_id': 'pi_3LzFm8SAp5UEjcjM0Hs39RD8',",
+              "\t'payment_method_types': [",
+                "card",
+              "],",
+              "\t'amount': 50.00,",
+              "\t'currency': 'INR'",
+              "\t'description': 'test11'",
+            "'shipping': {",
+                "\t'address': {",
+                    "\t'line1': 'Newyork City'",
+                    "\t'line2': '47 W 13th St, New York, NY #####'",
+                    "\t'city': 'city'",
+                    "\t'country': 'US'",
+                    "\t'postal_code': '7865####'",
+                    "\t'state': 'US",
+            "\t}",
+          "}",
+        "}"
+      ]
+    },
+    {
+      "name": "NodeJs",
+      "code": [
+        "var request = require('request');",
+
+        "var options = { method: 'POST',",
+        "url: 'https://api.entrebiz-pte.com/api/v1/transaction/checkout/',",
+        " headers:",
+        "{ 'Cache-Control': 'no-cache',",
+        "'Authorization': 'Token eyJhbGciOiJSUzI1NiIsInR5cCI6Ikp",
+        "XVCJ9.eyJ1c2VySWQiOjI3NzIsImVtYWlsIjoic2l2YXByYXNhZE",
+        "BzcGVyaWNvcm4uY29tIiwiaWF0IjoxNTcyMDA1NDcwLCJleHAiOj",
+        "E1NzIwOTE4NzB9.AgBAlIJ4UqEDsKr3HkC4cvtnlv4RiesJigeL",
+        "-Cz5EiPSJxplN-eLw26CQp41cVi-anAP55emaD4lK_-v9NGgrg',",
+        "'Content-Type': 'application/json' },",
+        "body: ",
+        "{card_holder_name :'Test'",
+        "email:test@entrebiz.com",
+        "card_number:'42424242424242',",
+        "exp_month:'06',",
+        "exp_year:'21',",
+        "cvc:'234',",
+        "amount:'50',",
+        "currency:'USD'",
+        "description:'description',",
+        "city:'city',",
+        "postal_code:'code',",
+        "line1:Newyork 'city',",
+        "line2:'47 W 13th St, New York, NY #####',",
+        "country:'USA',",
+        "state:'state' },",
+        "json: true };",
+
+        "request(options, function (error, response, body) {",
+        "if (error) throw new Error(error);",
+        "console.log(body);",
+        "});"
+      ],
+      "Response": [
+          "{",
+          "'status': true,",
+          "'data': {",
+            "'customer': {",
+              "\t'card_holder_name': 'test4',",
+              "\t'email': 'abcde@mailinator.com',",
+              "\t'customer_id': 'cus_MiKD4rC9wDiFdG'",
+            "},",
+            "'card': {",
+              "\t'id': 'tok_1LzFm7SAp5UEjcjMpQRxPNLs',",
+              "\t'card_number': 42424242424###,",
+              "\t'exp_month': 9,",
+              "\t'exp_year': 25,",
+              "\t'cvc': 454",
+            "},",
+            "'Payment_details': {",
+              "\t'transaction_id': 'pi_3LzFm8SAp5UEjcjM0Hs39RD8',",
+              "\t'payment_method_types': [",
+                "card",
+              "],",
+              "\t'amount': 50.00,",
+              "\t'currency': 'INR'",
+              "\t'description': 'test11'",
+            "'shipping': {",
+                "\t'address': {",
+                    "\t'line1': 'Newyork City'",
+                    "\t'line2': '47 W 13th St, New York, NY #####'",
+                    "\t'city': 'city'",
+                    "\t'country': 'US'",
+                    "\t'postal_code': '7865####'",
+                    "\t'state': 'US",
+            "\t}",
+          "}",
+        "}"
+      ]
+    },
+    {
+      "name": "Python",
+      "code": [
+        "import requests",
+
+        "url = 'https://api.entrebiz-pte.com/api/v1/transaction/checkout/'",
+
+        "payload = {",
+        "\t\"card_holder_name\":\"Test\",",
+        "\t\"email\":\"test@entrebiz.com\",",
+        "\t\"card_number\":\"42424242424###\",",
+        "\t\"exp_month\":\"06\",",
+        "\t\"exp_year\":\"21\",",
+        "\t\"cvc\":\"234\",\n\t\"amount\":\"50\",",
+        "\t\"currency\": \"USD\",",
+        "\t\"description\":\"description\",",
+        "\t\"city\":\"city\",",
+        "\t\"postal_code\":\"code\",",
+        "\t\"line1\":\"Newyork City\",",
+        "\t\"line2\":\"47 W 13th St, New York, NY #####\",",
+        "\t\"country\":\"USA\",",
+        "\t\"state\":\"state\"\n\t}",
+        "headers = {",
+        "'Content-Type': 'application/json',",
+        "'Authorization': 'Token eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ",
+        "9.eyJ1c2VySWQiOjI3NzIsImVtYWlsIjoic2l2YXByYXNhZEBzcGVyaWNvcm4",
+        "uY29tIiwiaWF0IjoxNTcyMDA1NDcwLCJleHAiOjE1NzIwOTE4NzB9.AgBAlIJ",
+        "4UqEDsKr3HkC4cvtnlv4RiesJigeL-Cz5EiPSJxplN-eLw26CQp41cVi-anAP55emaD4lK_-v9NGgrg',",
+        "'Cache-Control': 'no-cache'",
+        "}",
+
+        "response = requests.request('POST', url, json=payload, headers=headers)",
+
+        "print(response.text)"
+      ],
+      "Response": [
+              "{",
+          "'status': true,",
+          "'data': {",
+            "'customer': {",
+              "\t'card_holder_name': 'test4',",
+              "\t'email': 'abcde@mailinator.com',",
+              "\t'customer_id': 'cus_MiKD4rC9wDiFdG'",
+            "},",
+            "'card': {",
+              "\t'id': 'tok_1LzFm7SAp5UEjcjMpQRxPNLs',",
+              "\t'card_number': 42424242424###,",
+              "\t'exp_month': 9,",
+              "\t'exp_year': 25,",
+              "\t'cvc': 454",
+            "},",
+            "'Payment_details': {",
+              "\t'transaction_id': 'pi_3LzFm8SAp5UEjcjM0Hs39RD8',",
+              "\t'payment_method_types': [",
+                "card",
+              "],",
+              "\t'amount': 50.00,",
+              "\t'currency': 'INR'",
+              "\t'description': 'test11'",
+            "'shipping': {",
+                "\t'address': {",
+                    "\t'line1': 'Newyork City'",
+                    "\t'line2': '47 W 13th St, New York, NY #####'",
+                    "\t'city': 'city'",
+                    "\t'country': 'US'",
+                    "\t'postal_code': '7865####'",
+                    "\t'state': 'US",
+            "\t}",
+          "}",
+        "}"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+{% extends 'common/admin-base.html' %}
+{% load static %}
+
+{% block css %}
+<style>
+.dashbrd-card-inner {
+    min-height: 120px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #fff;
+    box-shadow: 1px 1px 2px 1px rgb(0 0 0 / 4%);
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class=" balance-cover mx-4" style="min-height: 450px;">
+    <div class="row">
+        <div class=" balance-main">
+            <div class="row admn-dashboard-row m-0">
+                <div class="admn-dashbrd-card col-xl-3 col-sm-6">
+                    <div class="dashbrd-card-inner">
+                        <div class="content-cover">
+                            <p>Total Customers</p>
+                            <h2>{{total_customers}}</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="admn-dashbrd-card col-xl-3 col-sm-6">
+                    <div class="dashbrd-card-inner">
+                        <div class="content-cover">
+                            <p>Total Private Account</p>
+                            <h2>{{total_pvt_accounts}}</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="admn-dashbrd-card col-xl-3 col-sm-6">
+                    <div class="dashbrd-card-inner">
+                        <div class="content-cover">
+                            <p>Total Business Account</p>
+                            <h2>{{total_bsnss_accounts}}</h2>
+                        </div>
+                    </div>
+                </div>
+                {% if total_admins %}
+                <div class="admn-dashbrd-card col-xl-3 col-sm-6">
+                    <div class="dashbrd-card-inner">
+                        <div class="content-cover">
+                            <p>Total Admin Users</p>
+                            <h2>{{total_admins}}</h2>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

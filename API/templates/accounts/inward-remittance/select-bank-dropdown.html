@@ -1,0 +1,8 @@
+{% load static %}
+<select id="bank" name="bank" class="custom-select select-list validatFields" onchange="fillBankInfo();" required>
+    <option value="" disabled="" selected>Select your Bank</option>
+    {% for bank_detail in bank_details %}
+    <option value="{{bank_detail.id}}" {% if bank == bank_detail.id %}selected{% endif %}>{{bank_detail.bankname}}
+    </option>
+    {% endfor %}
+</select>

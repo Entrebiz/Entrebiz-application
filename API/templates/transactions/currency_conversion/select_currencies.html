@@ -1,0 +1,152 @@
+{% extends 'common/base.html' %}
+{% load static %}
+{% load util_tags %}
+{% block css %}
+<link rel="stylesheet" type="text/css" href="{% static 'accounts/css/wSelect.css' %}">
+
+{% endblock %}
+{% block content %}
+<style>
+    .balance-cover {
+        height: 40rem;
+    }
+
+    .btn-open-dlt-cnfrm-modal:hover {
+        padding: 0.75rem 1.5rem;
+    }
+
+    .list-account-content {
+        padding: 100px 0px 0px 200px;
+    }
+    #err-oldpassword{
+        margin-bottom: 0rem;
+    }
+    #err-password{
+        margin-bottom: 0rem;
+    }
+    #err-confirmPassword{
+        margin-bottom: 0rem;
+    }
+    .currency-d-content .row{
+        justify-content:center;
+    }
+    .label-balance{
+        font-weight:500;
+    }
+    .span-balance{
+        font-weight: 800;
+    color: #22bc51;
+    font-size: 13px;
+    }
+</style>
+
+<div class=" balance-cover  mx-4 ">
+    <div class="row">
+        <div class=" balance-main">
+
+            <h6>Currency Conversion</h6>
+            <hr>
+            {% if message %}
+            <div class="alert-box-outer">
+                <div class="{% if status %}success-alert{% else %}section-alert{% endif %}" style="display: block;"
+                    id="alertDiv">
+                    <button class="{% if status %}success-alert-close{% else %}section-alert-close{% endif %}"
+                        onclick="closeAlertModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <p style="text-align: center" id="errorField">{{message}}</p>
+                </div>
+            </div>
+            {% endif %}
+            <div class="currency-d-content">
+
+                <form method="POST" onsubmit="return validateForm('validationClass', 'class')">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-sm-6 debit-account-container">
+                            <label for="debit-account">Debit Account</label>
+                                <select id="debit-account" name="debit_account" class="custom-select select-list select-account validationClass select-currency" required style="display:none" >
+                                    <option value="" selected disabled>Select Currency</option>
+                                    {% for account in accounts|acc_list:user_details %}
+                                    <option data-icon="{% if account.currency.flag %}{{account.currency.flag.url}}{% else %}/other/no-image.jpg{% endif %}" value="{{account.accountno}}" data-bal="{{account.balance|floatformat:2}}" data-c-code="{{account.currency.code}}" {% if request.session.currency_conversion.debit_acc_no == account.accountno or debit_account == account.accountno %}selected{% endif %}> {{account.accountno}}&nbsp;({{account.currency.code}}) </option>
+                                    {% endfor %}
+
+                                </select>
+                            <label class="label-balance" {% if not request.session.currency_conversion.balance and not balance %}style="display:none"{% endif %}>Available Balance : <span id="bal_amnt" class="span-balance">{% if request.session.currency_conversion %}{{request.session.currency_conversion.balance}} {{request.session.currency_conversion.debit_acc_curr_code}}{% else %} {{balance}} {{debit_acc_curr_code}}{% endif %}</span></label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <label for="amount">Amount</label>
+                            <input id="amount" name="net_amount" placeholder="Enter your Amount"
+                                type="text" class="form-control validationClass" maxlength="12" value="{% if request.session.currency_conversion.net_amount %}{{request.session.currency_conversion.net_amount}}{% else %}{{net_amount}}{% endif %}" onblur="return validateMaxAmount1(event,this)" onchange='return formatAmount(event)'>
+                            <p id="err-amount"></p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6 credit-account-container">
+                            <label for="credit-account">Credit Account</label>
+                                <select id="credit-account" name="credit_account" class="custom-select select-list validationClass select-currency" required style="display:none" >
+                                    <option value="">Select Currency</option>
+                                    {% for account in accounts|acc_list:user_details %}
+                                    <option data-icon="{% if account.currency.flag %}{{account.currency.flag.url}}{% else %}/other/no-image.jpg{% endif %}" value="{{account.accountno}}"  {% if request.session.currency_conversion.credit_acc_no == account.accountno or credit_account == account.accountno %}selected{% endif %}> {{account.accountno}}&nbsp;({{account.currency.code}}) </option>
+                                    {% endfor %}
+                                </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <label for="note">Note (Optional)</label>
+                            <input id="note" name="note" placeholder="Enter Note"
+                                type="text" class="form-control validationClass" onblur="checkNonAsciiCharacters(this)" maxlength="50" value="{% if request.session.currency_conversion.note %}{{request.session.currency_conversion.note}}{% else %}{{note}}{% endif %}">
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <button type="submit" class="form-control btn btn-primary">transfer</button>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+{% block extra_script %}
+<script src="{%static '/accounts/js/wSelect.min.js' %}"></script>
+<script>
+$(document).ready(function(){
+    $('.custom-select').each(function(){
+        $(this).wSelect();
+    })
+    $(".select-currency").trigger("change")
+})
+$(document).on("change",".select-account",function(){
+    if ($('.select-account option:selected').attr('data-bal')){
+        $('.span-balance').html($('.select-account option:selected').attr('data-bal')+' '+$('.select-account option:selected').attr('data-c-code'))
+        $('.label-balance').show()
+    }
+})
+
+$(document).on("change",".select-currency",function(){
+    selected_currency = $(this).children("option:selected").text()
+    if($(this).attr('id') == "debit-account"){
+        container_name = '.credit-account-container'
+
+    }else{
+        container_name = '.debit-account-container'
+    }
+    $(container_name).find(".wSelect-option-value").each(function(){
+            if ($(this).text() == selected_currency){
+                $(this).closest(".wSelect-option").hide()
+            }else{
+                $(this).closest(".wSelect-option").show()
+            }
+        })
+})
+</script>
+{% endblock %}

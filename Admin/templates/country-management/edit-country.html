@@ -1,0 +1,75 @@
+{% extends 'common/admin-base.html' %}
+{% load static %}
+{% load util_tags %}
+{% block css %}
+<style>
+    #curr-conversion-row {
+    padding: 10px 195px 10px;
+    }
+</style>
+{% endblock %}
+{% block content %}
+<div class=" balance-cover  mx-4 ">
+    <div class="row">
+        <div class=" balance-main">
+            {% if message %}
+            <div class="alert-box-outer">
+                <div class="{% if status %}success-alert{% else %}section-alert{% endif %}" style="display: block;"
+                    id="alertDiv">
+                    <button class="{% if status %}success-alert-close{% else %}section-alert-close{% endif %}"
+                        onclick="closeAlertModal()">
+                    <i class="fas fa-times"></i>
+                    </button>
+                    <p style="text-align: center" id="errorField">{{message}}</p>
+                </div>
+            </div>
+            {% endif %}
+            <div class="row">
+                <div class="form-group col-lg-6">
+                </div>
+                <div class="form-group col-lg-6">
+                    <a href="/country-management" style="float:right;padding: 0.75rem 1.5rem;"><i
+                        class="fa fa-solid fa-angle-left"></i>&nbsp;Back</a>
+                </div>
+            </div>
+            <form role="form" method="post" action="" id="addOrEditCountryForm"
+                onsubmit="return validateForm('validationClass', 'class')" autocomplete="off">
+                {% csrf_token %}
+                <input type="hidden" name="id" value="{{request.GET.id}}">
+                <div id="curr-conversion-row">
+                    <div class="row">
+                        <div class="col-lg-8 col-md-12 col-xs-6 col-12">
+                            <div class="form-group">
+                                <label for="country_name">Country Name</label>
+                                <input type="text" name="country_name" value="{{country_name}}" id="country_name"
+                                    class="form-control validationClass" maxlength="120"
+                                    placeholder="Enter Country Name">
+                            </div>
+                        </div>
+                        <div class="col-lg-8 col-md-12 col-xs-6 col-12">
+                            <div class="form-group">
+                                <label for="shortform">Shortform</label>
+                                <input type="text" name="shortform" value="{{shortform}}" id="shortform"
+                                    maxlength="500" class="form-control validationClass" placeholder="Enter Shortform">
+                            </div>
+                        </div>
+                        <div class="col-lg-8 col-md-12 col-xs-6 col-12">
+                            <div class="form-group">
+                                <label for="countrycode">Country Code</label>
+                                <input type="text" name="countrycode" value="{{countrycode}}" id="countrycode"
+                                    class="form-control validationClass" maxlength="50" placeholder="Enter Country Code">
+                            </div>
+                        </div>
+                        <div class="col-8">
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary button-w w-100">Save
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

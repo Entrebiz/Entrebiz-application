@@ -1,0 +1,350 @@
+{% extends 'common/base.html' %}
+{% load static %}
+{% load util_tags %}
+
+
+{% block content %}
+<style>
+    .btn-bordered:hover{
+        padding:5px 15px;
+    }
+    .btn-back{
+        background: transparent;
+    box-shadow: none;
+    font-weight: normal;
+    font-size: 15px;
+    margin-bottom: 0;
+    }
+    .btn-back a{
+        color:#67748f;
+    }
+    .btn-back a:hover, .btn-back:hover{
+        color: #9ba3b5;
+        box-shadow: none !important;
+        transform:none !important;
+    }
+</style>
+<main class="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg ">
+
+      <!--  -->
+
+
+
+      <!--  -->
+    <!--  -->
+    <div class="balance-cover  mx-4">
+         <p id="resMsg" class="mx-4" style="display:none;background-color: #cff4da;color: #0f5132;padding: 10px;text-align: center;margin-top: 10px;">{{message}}</p>
+        <div style="width:100%;text-align:right">
+        <button class="btn btn-back"><a href="/statements"><img class="anm-slide-lft" src="{% static 'dash/assets/img/arrow-lft.png' %}" alt="" /> Back</a></button>
+        </div>
+        <div class="container-fluid py-5 ">
+            <div class="row" style="align-items: center;justify-content: center;">
+                <div class="col-lg-11 col-md-10 col-12">
+                    <div class="conversion-confirm-sec">
+                        <div class="">
+                            <div class="curr-conversion-sec">
+                                <div class="row curr-conversion-row m-0" style="justify-content: center;">
+                                    <div class="col-lg-8 col-md-10 col-12 curr-conversion-card">
+                                        <div class="confirm-title">
+                                            <h4>Details</h4>
+                                        </div>
+                                        {% get_transaction_amounts transaction as transaction_amounts %}
+                                        {% get_transaction_receipt transaction as transaction_receipt %}
+                                        {% get_debit_amount transaction as debit_amount %}
+                                        {% get_debit_amount transaction 'True' as wire_tr_debit_amount %}
+                                        {% get_tr_details_debit_amount transaction as tr_det_debit_amount %}
+                                        {% get_transaction_type transaction as transaction_type %}
+                                        <div class="confirm-tab-holder">
+                                            <table class="confirm-table confirm-transactions" style="width: 100%;">
+                                                <tbody>
+                                                    <tr>
+                                                        <td>Transaction Type</td>
+                                                        <td><span>:</span>&nbsp;<strong>{{transaction_type}}</strong>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Transaction No</td>
+                                                        <td><span>:</span>&nbsp;<strong>{{transaction.transactionno}}</strong>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Date and Time</td>
+                                                        <td><span>:</span>&nbsp;<strong>{{transaction.createdon}} UTC</strong>
+                                                        </td>
+                                                    </tr>
+                                                {% if transaction.transactiontype.name == 'Third Party Transfer' %}
+                                                    <tr>
+                                                        <td>Sender Name</td>
+                                                        <td><span>:</span>&nbsp;<strong>{{transaction.fromaccount.user_account.firstname|default_if_none:''}} {{transaction.fromaccount.user_account.middlename|default_if_none:''}} {{transaction.fromaccount.user_account.lastname|default_if_none:''}}</strong>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Debit Account</td>
+                                                        <td><span>:</span>&nbsp;<strong>{{transaction.fromaccount.accountno|default_if_none:''}}&nbsp;({{transaction.fromaccount.currency.code}})</strong>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Credit Account</td>
+                                                        <td><span>:</span>&nbsp;<strong>{{transaction.inltransaction_tr.all.0.accountnumber}}</strong>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Beneficiary Name</td>
+                                                        <td><span>:</span>&nbsp;<strong>{{transaction.inltransaction_tr.all.0.accountholdername}}</strong>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Currency</td>
+                                                        <td><span>:</span>&nbsp;<strong>{{transaction.inltransaction_tr.all.0.currency.code}}</strong>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Bank Name</td>
+                                                        <td><span>:</span>&nbsp;<strong>{{transaction.inltransaction_tr.all.0.bankname}}</strong>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Bank SWIFT Code</td>
+                                                        <td><span>:</span>&nbsp;<strong>{{transaction.inltransaction_tr.all.0.swiftcode}}</strong>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Bank City</td>
+                                                        <td><span>:</span>&nbsp;<strong>{{transaction.inltransaction_tr.all.0.city}}</strong>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Bank Country</td>
+                                                        <td><span>:</span>&nbsp;<strong>{{transaction.inltransaction_tr.all.0.country.shortform}}</strong>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Purpose of remittance</td>
+                                                        <td><span>:</span>&nbsp;<strong>{{transaction.inltransaction_tr.all.0.purpose.transactionpurpose}}&nbsp; {% if transaction.inltransaction_tr.all.0.purpose.transactionpurpose == 'Other Remittance' %}({{transaction.inltransaction_tr.all.0.other_purpose_note}}){% endif %}</strong>
+                                                        </td>
+                                                    </tr>
+                                                    {% if transaction.inltransaction_tr.all.0.email %}
+                                                    <tr>
+                                                        <td>Beneficiary Email</td>
+                                                        <td><span>:</span>&nbsp;<strong>{{transaction.inltransaction_tr.all.0.email}}</strong>
+                                                        </td>
+                                                    </tr>
+                                                    {% endif %}
+                                                    <!--  -->
+                                                    <tr class="">
+                                                        <td>Box No.</td>
+                                                        <td><span>:</span>&nbsp;<strong>{{transaction.inltransaction_tr.all.0.user_box_no}}</strong>
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="">
+                                                        <td>Street</td>
+                                                        <td><span>:</span>&nbsp;<strong>{{transaction.inltransaction_tr.all.0.user_street}}</strong>
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="">
+                                                        <td>City</td>
+                                                        <td><span>:</span>&nbsp;<strong>{{transaction.inltransaction_tr.all.0.user_city}}</strong>
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="">
+                                                        <td>State</td>
+                                                        <td><span>:</span>&nbsp;<strong>{{transaction.inltransaction_tr.all.0.user_state}}</strong>
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="">
+                                                        <td>User Country</td>
+                                                        <td><span>:</span>&nbsp;<strong>{{transaction.inltransaction_tr.all.0.user_country.shortform}}</strong>
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="">
+                                                        <td>Tel/Mob No.</td>
+                                                        <td><span>:</span>&nbsp;<strong>{{transaction.inltransaction_tr.all.0.user_phone}}</strong>
+                                                        </td>
+                                                    </tr>
+                                                    {% if transaction_receipt %}
+                                                    <tr class="">
+                                                        <td>Invoice</td>
+                                                        <td><span>:</span>&nbsp;<strong>{{transaction_receipt}}</strong>
+                                                        </td>
+                                                    </tr>
+                                                    {% endif %}
+                                                    <!--  -->
+                                                    {% if transaction_amounts.net_amount %}
+                                                    <tr class="">
+                                                        <td>Net Amount</td>
+                                                        <td><span>:</span>&nbsp;<strong>{{transaction_amounts.net_amount}} {{transaction.fromaccount.currency.code}}</strong>
+                                                        </td>
+                                                    </tr>
+                                                    {% endif %}
+                                                    {% if transaction_amounts.conversion_fee %}
+                                                    <tr>
+                                                        <td>Conversion Fee</td>
+                                                        <td><span>:</span>&nbsp;<strong>{{transaction_amounts.conversion_fee}} {{transaction.fromaccount.currency.code}}</strong>
+                                                        </td>
+                                                    </tr>
+                                                    {% endif %}
+                                                    {% if transaction_amounts.wire_fee %}
+                                                    <tr>
+                                                        <td>Wire Transfer Fee</td>
+                                                        <td><span>:</span>&nbsp;<strong>{{transaction_amounts.wire_fee}} {{transaction.fromaccount.currency.code}}</strong>
+                                                        </td>
+                                                    </tr>
+                                                    {% endif %}
+                                                    {% if transaction_amounts.cable_charge %}
+                                                    <tr>
+                                                        <td>Cable Charges</td>
+                                                        <td><span>:</span>&nbsp;<strong>{{transaction_amounts.cable_charge}} {{transaction.fromaccount.currency.code}}</strong>
+                                                        </td>
+                                                    </tr>
+                                                    {% endif %}
+
+                                                    <tr>
+                                                        <td>Debit Amount</td>
+                                                        <td><span>:</span><strong>&nbsp;{{wire_tr_debit_amount}}&nbsp;{{transaction.fromaccount.currency.code}}</strong>
+                                                        </td>
+                                                    </tr>
+                                                    <tr style="">
+                                                        <td><strong>Credit Amount</strong></td>
+                                                        <td><span>:</span>&nbsp;<strong>{{transaction.toamount}}&nbsp;{{transaction.inltransaction_tr.all.0.currency.code}}</strong>
+                                                        </td>
+                                                    </tr>
+                                                    {% if transaction.note %}
+                                                    <tr>
+                                                        <td>Note</td>
+                                                        <td><span>:</span>&nbsp;<span
+                                                                class="confirm-note pl-0"><strong>{{transaction.note}}</strong></span>
+                                                        </td>
+                                                    </tr>
+                                                    {% endif %}
+                                                {% elif transaction.transactiontype.name == 'Acccount To Account Transfer' or transaction.transactiontype.name == 'Currency Conversion' %}
+                                                    <tr>
+                                                        <td>Debit Account</td>
+                                                        <td><span>:</span>&nbsp;<strong>{{transaction.fromaccount.accountno}}&nbsp;({{transaction.fromaccount.currency.code}})</strong>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Credit Account</td>
+                                                        <td><span>:</span>&nbsp;<strong>{{transaction.toaccount.accountno}}&nbsp;</strong>
+                                                        </td>
+                                                    </tr>
+                                                    {% if transaction.transactiontype.name == 'Acccount To Account Transfer'  %}
+                                                    <tr>
+                                                        <td>Beneficiary Name</td>
+                                                        <td><span>:</span>&nbsp;<strong>{{transaction.recipientname|value_change}}</strong>
+                                                        </td>
+                                                    </tr>
+                                                    {% endif %}
+                                                    <tr>
+                                                        <td>Currency</td>
+                                                        <td><span>:</span>&nbsp;<strong>{{transaction.fromaccount.currency.code}}</strong>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Net Amount</td>
+                                                        <td><span>:</span>&nbsp;<strong>{{transaction_amounts.net_amount}}&nbsp;{{transaction.fromaccount.currency.code}}</strong>
+                                                        </td>
+                                                    </tr>
+                                                    {% if transaction_amounts.conversion_fee %}
+                                                    <tr>
+                                                        <td>Conversion Fee</td>
+                                                        <td><span>:</span>&nbsp;<strong>{{transaction_amounts.conversion_fee|default_if_none:''}}&nbsp;{{transaction.fromaccount.currency.code}}</strong>
+                                                        </td>
+                                                    </tr>
+                                                    {% endif %}
+                                                    <tr>
+                                                        <td>Debit Amount</td>
+                                                        <td><span>:</span><strong>&nbsp;{{tr_det_debit_amount}}&nbsp;{{transaction.fromaccount.currency.code}}</strong>
+                                                        </td>
+                                                    </tr>
+                                                    <tr style="">
+                                                        <td><strong>Credit Amount</strong></td>
+                                                        <td><span>:</span>&nbsp;<strong>{{transaction.toamount}}&nbsp;{{transaction.toaccount.currency.code}}</strong>
+                                                        </td>
+                                                    </tr>
+                                                    {% if transaction.note %}
+                                                    <tr>
+                                                        <td>Note</td>
+                                                        <td><span>:</span><span
+                                                                class="confirm-note pl-0"><strong>{{transaction.note}}</strong></span>
+                                                        </td>
+                                                    </tr>
+                                                    {% endif %}
+                                                {% endif %}
+
+                                                </tbody>
+                                            </table>
+
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <button class="btn btn-primary btn-bordered w-100 btn-export-statement" data-attr="{{transaction.id}}">Download Receipt</button>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <button class="btn btn-primary btn-bordered w-100 btn-send-receipt" data-attr="{{transaction.id}}">EMail Receipt</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--  -->
+</main>
+{% endblock %}
+{% block extra_script %}
+<script>
+    $(document).on("click",".btn-export-statement",function(e){
+        e.preventDefault()
+        $.ajax({
+            type:'POST',
+            data:{
+            'action_type':'export_pdf',
+            'transaction_id':$(this).attr("data-attr"),
+            'csrfmiddlewaretoken':'{{csrf_token}}',
+            },
+            success: function(result) {
+                if (result.status){
+                    $(".inp-action_type").val("gettransactionbyaccount")
+                    filepath = result.filepath
+                    // create a tag
+                    var download_file = $("<a>");
+                    download_file.addClass("dwnld_file")
+                    download_file.attr("download", filepath);
+                    download_file.attr("href", filepath);
+                    $('body').append(download_file);
+                    download_file[0].click();
+                    // $('.dwnld_file').remove(); // remove tag once file downloaded
+                }
+            }
+        });
+})
+
+$(document).on("click",".btn-send-receipt",function(e){
+    e.preventDefault()
+    $.ajax({
+        type:'POST',
+        data:{
+        'action_type':'export_pdf',
+        'send_mail':'true',
+        'transaction_id':$(this).attr("data-attr"),
+        'csrfmiddlewaretoken':'{{csrf_token}}',
+        },
+        success: function(result) {
+            if (result.status){
+                $('#resMsg').html(result.message);
+                $("html, body").animate({ scrollTop: 0 }, "fast");
+                $('#resMsg').show();
+
+                setTimeout(() => {
+                    $('#resMsg').hide();
+                },5000)
+            }
+        }
+    })
+})
+</script>
+{% endblock %}

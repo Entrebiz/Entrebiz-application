@@ -1,0 +1,177 @@
+{
+  "name": "Currency conversion",
+  "endpoint": "POST/transaction/currency-conversion/",
+  "parameters": [
+    {
+      "name": "debit_account",
+      "description": "The account number to be debited",
+      "required": true
+    },
+    {
+      "name": "credit_account",
+      "description": "The account number to be credited",
+      "required": true
+    },
+    {
+      "name": "net_amount",
+      "description": "",
+      "required": true
+    },
+    {
+      "name": "note",
+      "description": "Add additional note for transaction"
+    }
+  ],
+  "languages": [
+    {
+      "name": "PHP",
+      "code": [
+        "<?php",
+
+        "$request = new HttpRequest();",
+        "$request->setUrl('https://api.entrebiz-pte.com/api/v1/transaction/currency-conversion/');",
+        "$request->setMethod(HTTP_METH_POST);",
+
+        "$request->setHeaders(array(",
+        "'Cache-Control' => 'no-cache',",
+        "'Authorization' => 'Token eyJhbGciOiJSUzI1NiIsInR5cCI6Ik",
+        "pXVCJ9.eyJ1c2VySWQiOjI3NzIsmVtYWlsIjoic2l2YXByYXNhZEBzcG",
+        "VyaWNvcm4uY29tIiwiaWF0IjoxNTcyMDA2MjUzLCJleHAiOjE1NzIwOTI2",
+        "NTN9.DpjvqEwv-DWvSgvZJRV2tOluKlFbhYLyLXjpI5IAOhV6QWXQW71wLT",
+        "1WNJV1WRA2LU6KARXHCBzLBxojWLJjfA',",
+        "'Content-Type' => 'application/json'",
+        "));",
+
+        "$request->setBody('{",
+        "\"debit_account\": \"10000###\",",
+        "\"credit_account\":\"1000####\",",
+        "\"net_amount\":\"100\",",
+        "\"note\":\" \",",
+        "}');",
+
+        "$response = $request->send();"
+      ],
+      "Response": [
+        " {",
+        "'status': true,",
+        "'data':{",
+        "'transaction_number': 10000###,",
+        "'debit_account_details':{",
+        "\t'debit_account':'10000###',",
+        "\t'balance':525###,",
+        "\t'debit_account_currency_code':'USD'",
+        "},",
+        "'credit_account_details':{",
+        "\t'credit_account': '10000###',",
+        "\t'credit_account_currency_code':'INR'",
+        "},",
+        "'note':'',",
+        "'conversion_rate':'77.2518',",
+        "'net_amount':'100.00',",
+        "'conversion_fee':'0.50',",
+        "'debit_amount':'100.50',",
+        "'credit_amount:'7725.18',",
+        " }",
+        "}"
+      ]
+    },
+    {
+      "name": "NodeJs",
+      "code": [
+        "var request = require('request');",
+
+        "var options = { method: 'POST',",
+        "url: 'https://api.entrebiz-pte.com/api/v1/transaction/currency-conversion/',",
+        "headers: ",
+        "{ 'Cache-Control': 'no-cache',",
+        "'Authorization': 'Token eyJhbGciOiJSUzI1NiIsInR5c",
+        "CI6IkpXVCJ9.eyJ1c2VySWQiOjI3zIsImVtYWlsIjoic2l2",
+        "YXByYXNhZEBzcGVyaWNvcm4uY29tIiwiaWF0IjoxNTcyMDA",
+        "2MjUzLCJleHAiOjE1NzIwOTI2NTN9.DpjvqEwv-DWvSgvZJ",
+        "RV2tOluKlFbhYLyLXjpI5IAOhV6QWXQW71wLT1WNJV1WRA2L",
+        "U6KARXHCBzLBxojWLJjfA',",
+        "'Content-Type': 'application/json' },",
+        "body:",
+        "{debit_account: '1000####' ",
+        "credit_account: '10000###',",
+        "net_amount: '100'",
+        "note:''},",
+        "json: true };",
+
+        "request(options, function (error, response, body) {",
+        "if (error) throw new Error(error);",
+
+        "console.log(body);",
+        "});"
+      ],
+      "Response": [
+        " {",
+        "'status': true,",
+        "'data':{",
+        "'transaction_number': 10000###,",
+        "'debit_account_details':{",
+        "\t'debit_account':'10000###',",
+        "\t'balance':525###,",
+        "\t'debit_account_currency_code':'USD'",
+        "},",
+        "'credit_account_details':{",
+        "\t'credit_account': '10000###',",
+        "\t'credit_account_currency_code':'INR'",
+        "},",
+        "'note':'',",
+        "'conversion_rate':'77.2518',",
+        "'net_amount':'100.00',",
+        "'conversion_fee':'0.50',",
+        "'debit_amount':'100.50',",
+        "'credit_amount:'7725.18',",
+        " }",
+        "}"
+      ]
+    },
+    {
+      "name": "Python",
+      "code": [
+        "import requests",
+
+        "url = 'https://api.entrebiz-pte.com/api/v1/transaction/currency-conversion/'",
+
+        "payload = '{",
+        "\"debit_account\":\"1000####\",",
+        "\"credit_account\": \"10000####\",\t",
+         "\"net_amount\": \"100\",\t",
+        "\"note\":\"\"\n}",
+        " headers = {",
+        "'Authorization':'Token eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjI3NzIsImVtYWlsIjoic2l2YXByYXNhZEBzcGVyaWNvcm4uY29tIiwiaWF0IjoxNTcyMDA2MjUzLCJleHAiOjE1NzIwOTI2NTN9.DpjvqEwv-DWSgvZJRV2tOluKlFbhYLyLXjpI5IAOhV6QWXQW71wLT1WNJV1WRA2LU6KARXHCBzLBxojWLJjfA',",
+        "'Cache-Control': 'no-cache'",
+        " }",
+
+        "response = requests.request('POST', url, data=payload, headers=headers)",
+
+        "print(response.text)"
+      ],
+      "Response": [
+        " {",
+        "'status': true,",
+        "'data':{",
+        "'transaction_number': 10000###,",
+        "'debit_account_details':{",
+        "\t'debit_account':'10000###',",
+        "\t'balance':525###,",
+        "\t'debit_account_currency_code':'USD'",
+        "},",
+        "'credit_account_details':{",
+        "\t'credit_account': '10000###',",
+        "\t'credit_account_currency_code':'INR'",
+        "},",
+        "'note':'',",
+        "'conversion_rate':'77.2518',",
+        "'net_amount':'100.00',",
+        "'conversion_fee':'0.50',",
+        "'debit_amount':'100.50',",
+        "'credit_amount:'7725.18',",
+        " }",
+        "}"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+{% load static %}
+<!--  -->
+
+<div class="details-body-sec">
+    <input type="hidden" name="acc_type" value="for_exist_acc">
+    <div class="details-body-sub-block details-body-inner">
+        <div class="title-content-skip">
+            <div class="row title-skip-row title-brdr m-0">
+                <div class="col-12 title-block">
+                    <h2 class="header">Currency</h2>
+                    <p>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="row bus-det-curncy-form">
+            <label for="" style="color: black;">Primary Account</label>
+            <div class="form-group col-lg-4" data-id="{{count}}">
+                <label for="accnumber">Account No.</label>
+                <input type="text" name="accnumber" id="accnumber" maxlength="50" value="{{accnumber}}"
+                    class="form-control accInfo inp-acc" onkeypress="return restrictAmount(event)" autocomplete="off"
+                    onblur="return signUpFieldValidateOnchange(this)" placeholder="Enter Your Account No."
+                    minlength="3">
+            </div>
+
+            <div class="form-group col-lg-4" data-id="{{count}}">
+                <label for="balance">Balance</label>
+                <input type="text" name="balance" id="balance" maxlength="50" value="{{balance}}"
+                    class="form-control accInfo" onkeypress="return restrictAmount(event)" autocomplete="off"
+                    onblur="return signUpFieldValidateOnchange(this)" placeholder="Enter Account Balance">
+            </div>
+            <div class="form-group col-lg-4" data-id="{{count}}">
+                <label for="currency">Currency</label>
+                <select id="currency" name="currency" class="custom-select select-list accInfo inp-curr" required>
+                    <option value="">Select Currency</option>
+                    {% for currency in currencies %}
+                    <option
+                        data-icon="{% if currency.flag %}{{currency.flag.url}}{% else %}/other/no-image.jpg{% endif %}"
+                        value="{{currency.code}}" {% if secondaryCurrency == currency.code %}selected{% endif %}>
+                        {{currency.code}} {{currency.name}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <div style="text-align: right;">
+            <button class="btn btn-primary button-w btn-ap-accnt-list" type="button" id="CloneBtn"><i
+                    class="fa fa-solid fa-plus"></i>&nbsp;Add More Accounts </button>
+        </div>
+
+    </div>
+</div>

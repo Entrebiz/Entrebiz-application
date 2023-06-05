@@ -1,0 +1,98 @@
+{% extends 'common/base.html' %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" type="text/css" href="{% static 'accounts/css/wSelect.css' %}">
+<style>
+    .curr-conversion-row {
+        padding: 10px 50px;
+    }
+
+    .curr-conversion-row {
+        align-items: center;
+        justify-content: center;
+    }
+
+    .notVerifiedData h2 {
+        font-size: 21px;
+        font-weight: 100;
+        padding-top: 100px;
+        text-align: center;
+    }
+</style>
+{% endblock %}
+{% block content %}
+
+
+<main class="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg ">
+
+
+
+    <div class="balance-cover  mx-4 " style="min-height: 470px;">
+        <div class=" balance-main">
+            <div class=" balance-main">
+                {% if request.user.customer_details.all.0.customertype == 1 %}
+                <div class="row curr-conversion-row m-0">
+                    <div class="col-lg-10 col-md-10 col-12 curr-conversion-card notVerifiedData">
+                        <h2 id="condition-label">You are not allowed to do any transaction without completing your
+                            registration process.</h2>
+                    </div>
+                </div>
+                {% elif request.user.customer_details.all.0.customertype == 2 and not request.user.customer_details.all.0.useracc_customer.all.0.account_tran_status and not request.user.customer_details.all.0.useracc_customer.all.0.ultimate_ben_user %}
+
+                <div class="alert-box-outer" style="display: none;">
+                    <div class="success-alert" style="display: block;" id="alertDiv">
+                        <button class="success-alert-close" onclick="closeAlertModal()">
+                            <i class="fas fa-times"></i>
+                        </button>
+                        <p style="text-align: center" id="errorField">Mail successfully sent to Ultimate Beneficial
+                            Owner.</p>
+                    </div>
+                </div>
+
+                <div class="list-account-content" style="padding-top: 8%; padding-bottom: 8%;">
+                    <p>You are not authorized to view the page. Please ask the Ultimate Beneficial Owner (UBO) to
+                        authorize.</p>
+                    <div class="row">
+                        <input type="hidden" id="title" name="title" value="{{title}}">
+                        <div class="form-group col-lg-12" style="text-align: center;">
+                            <button class="btn btn-primary button-w request-permission" type="button">
+                                Request for permission
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                {% elif request.user.customer_details.all.0.customertype == 2 and request.user.customer_details.all.0.useracc_customer.all.0.activestatus != 'Verified'  %}
+                <div class="row curr-conversion-row m-0">
+                    <div class="col-lg-10 col-md-10 col-12 curr-conversion-card notVerifiedData">
+                        <h2 id="condition-label">You are not allowed to do any transaction without completing your
+                            registration process.</h2>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+</main>
+{% endblock %}
+<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js"></script> -->
+{% block extra_script %}
+<script>
+    $(document).on("click", ".request-permission", function () {
+        $.ajax({
+            type: 'POST',
+            url: '/send-permission-request',
+            data: {
+                'csrfmiddlewaretoken': '{{ csrf_token }}',
+                'title': $('#title').val(),
+                'type': 'send-permission-req-mail'
+            },
+            success: function (response) {
+                $('#title').text(response.title)
+                $('.alert-box-outer').css('display', 'block');
+            }
+        })
+    });
+</script>
+{% endblock %}

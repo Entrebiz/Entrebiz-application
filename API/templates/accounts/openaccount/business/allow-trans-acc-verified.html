@@ -1,0 +1,23 @@
+<style>
+    .modal-text{
+        font-weight: 200;
+    }
+</style>
+
+<div id="modal-acc-verified" class="modal fade">
+	<div class="modal-dialog modal-confirm">
+		<div class="modal-content">
+			<div class="modal-header flex-column">
+				
+				<h6 class="modal-text">Do you want to <b style="color: green;">Allow</b> transactions to <span class="account_email_allow modal-text"></span>?</h6>
+			</div>
+                <div class="modal-footer justify-content-center">
+                    <button type="button" style="background-color: #a8a8a8;padding: 0px 0px;" class="btn btn-primary ripple-efct btn-open-dlt-cnfrm-modal" data-bs-dismiss="modal">CANCEL</button>
+                    <input type="hidden" class="accnt-id-allow" name="account-id-allow" value="">
+                    <input type="hidden" class="ubo-accnt-id-allow" name="ubo-account-id-allow" value="">
+                    <button type="button" style="background-color: #fa661d;padding: 0px 0px;" class="btn btn-primary ripple-efct btn-open-dlt-cnfrm-modal allow-trans">CONFIRM</button>
+			
+			    </div>
+		</div>
+	</div>
+</div>

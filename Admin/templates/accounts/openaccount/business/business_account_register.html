@@ -1,0 +1,801 @@
+{% extends 'accounts/openaccount/personal-signup/reg-base.html' %}
+{% load static %}
+{% load util_tags %}
+{% block content %}
+<style>
+    #signUpSubmit {
+        padding: 10px 20px;
+        width: 380px;
+        margin-top: 10px;
+        max-width: 90%;
+        color: #fff;
+        background-color: #fa661d;
+        background: #ff671e;
+        border-radius: 3px;
+    }
+
+
+    #countryCode {
+        width: 100px;
+    }
+
+    .checkmark-bs {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        height: 18px;
+        width: 18px;
+        z-index: 10;
+        border-radius: 4px;
+        background-color: #C8C8C8;
+    }
+
+    .custom-checbox-hldr input:checked~.checkmark-bs {
+        background-color: rgb(255, 102, 0);
+    }
+
+    input[type="checkbox"] {
+        display: inline;
+        margin-right: 0.35em;
+    }
+    #signUpSubmit:hover {
+    background-color: #fff;
+    color: #fa661d;
+    }
+
+    input[type="checkbox"] {
+        box-sizing: border-box;
+        padding: 0px;
+    }
+
+    .checkmark::after {
+        content: "";
+        position: absolute;
+
+    }
+
+    .custom-checbox-hldr .checkmark-bs::after {
+        left: 7px;
+        top: 3px;
+        width: 5px;
+        height: 10px;
+        transform: rotate(45deg);
+        border-style: solid;
+        border-color: rgb(255, 255, 255);
+        border-image: initial;
+        border-width: 0px 2px 2px 0px;
+    }
+</style>
+
+<div class="row-fluid acc-det-body acc-det-body-lg">
+    <div class="container acc-det-container acc-det-lg">
+        <div class="acc-det">
+            <div class="acc-det-logo signup-title-logo">
+                <a class="navbar-brand" href="/">
+                    <img src="{% static 'dash/assets/img/logo.svg' %}" alt="">
+                </a>
+            </div>
+            {% if message %}
+            <div class="alert-box-outer">
+                <div class="{% if status %}success-alert{% else %}section-alert{% endif %}" style="display: block;"
+                    id="alertDiv">
+                    <button class="{% if status %}success-alert-close{% else %}section-alert-close{% endif %}"
+                        onclick="closeAlertModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <p style="text-align: center" id="errorField">{{message}}</p>
+                </div>
+            </div>
+            {% endif %}
+            <!-- <div class="alert-box" id="alertDiv" style="display: none;">
+                <span id="errorField"></span>
+            </div> -->
+            <div class="row signup-title-row">
+                <div class="col-sm-7 col-12 signup-title-block">
+                    <h2 class="signup-title">Sign up now</h2>
+                </div>
+                <div class="col-sm-5 col-12 signup-title-block">
+                    <a href="/login" class="link-with-icn efct-txt-grn"><img class="anm-slide-lft"
+                            src="{% static 'dash/assets/img/arrow-lft.png' %}" alt="">
+                        Back to Login</a>
+                </div>
+            </div>
+
+            <div class="acc-det">
+                <div class="acc-det-body-content bus-details-body">
+                    <div class="details-body-sec">
+                        <!-- Tab Personal Details -->
+                        <div class="details-body-inner tabcontent">
+                            <form id="businessForm" name="businessForm" action="" class="businessForm" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="accountType" value="business">
+                                <input type="hidden" name="actionType" value="viewPage">
+                                <!-- Business details -->
+                                <div class="details-body-sub-block">
+                                    <div class="title-content-skip">
+                                        <div class="row title-skip-row title-brdr m-0">
+                                            <div class="col-12 title-block">
+                                                <h2 class="header">Business Details</h2>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="acc-det-body-content">
+                                        <div class="row form-row-signup">
+                                            <div class="col-md-6 col-12 form-group">
+                                                <label for="companyName">Company Name</label>
+                                                {% if prevdata %}
+                                                <input type="text" name="companyName" id="companyName"
+                                                    value="{{prevdata.companyName}}" class="form-control"
+                                                    pattern="[^':]*$" title="Quotes are not allowed" autocomplete="off"
+                                                    onkeypress="return signUpFieldValidate(event)"
+                                                    onblur="return signUpFieldValidateOnchange(this)"
+                                                    placeholder="Enter Your Company Name" maxlength="60">
+                                                {% else %}
+                                                <input type="text" name="companyName" id="companyName" value=""
+                                                    class="form-control" pattern="[^':]*$"
+                                                    title="Quotes are not allowed" autocomplete="off"
+                                                    onkeypress="return signUpFieldValidate(event)"
+                                                    onblur="return signUpFieldValidateOnchange(this)"
+                                                    placeholder="Enter Your Company Name" maxlength="60">
+                                                {% endif %}
+                                            </div>
+
+                                            <div class="col-md-6 col-12 form-group">
+                                                <label for="industryType">Industry Type</label>
+                                                <div>
+                                                    <select id="industryType" name="industryType"
+                                                        class="custom-select select-list" required>
+                                                        <option value="" disabled selected>Select Industry Type</option>
+                                                        {% if prevdata %}
+                                                        {% for industrytype in industrytypes%}
+
+                                                        <option value="{{industrytype.id}}" {% if prevdata.industryType == industrytype.name %}selected{% endif %}>{{industrytype.name}}</option>
+                                                        {% endfor %}
+                                                        {% else %}
+                                                        {% for industrytype in industrytypes%}
+                                                        <option value="{{industrytype.id}}">{{industrytype.name}}
+                                                        </option>
+                                                        {% endfor %}
+                                                        {% endif %}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row form-row-signup">
+                                            <div class="col-md-6 col-12 form-group">
+                                                <label for="companyUrl">Company URL</label>
+                                                {% if prevdata %}
+                                                <input type="text" name="companyUrl" id="companyUrl"
+                                                    value="{{prevdata.companyUrl}}" class="form-control"
+                                                    pattern="[^']*$" title="Quotes are not allowed" autocomplete="off"
+                                                    onkeypress="return signUpFieldValidate(event)"
+                                                    onblur="return signUpFieldValidateOnchange(this)"
+                                                    placeholder="Enter Your Company URL" maxlength="100">
+                                                {% else %}
+                                                <input type="text" name="companyUrl" id="companyUrl" value=""
+                                                    class="form-control" pattern="[^']*$" title="Quotes are not allowed"
+                                                    autocomplete="off" onkeypress="return signUpFieldValidate(event)"
+                                                    onblur="return signUpFieldValidateOnchange(this)"
+                                                    placeholder="Enter Your Company URL" maxlength="100">
+                                                {% endif %}
+                                            </div>
+                                            <div class="col-md-6 col-12 form-group">
+                                                <label for="country">Country of Incorporation</label>
+                                                <div>
+                                                    <select id="country" name="country"
+                                                        class="custom-select select-list" required>
+                                                        <option value="" disabled selected>Select Country of
+                                                            Incorporation</option>
+                                                        {% if prevdata %}
+                                                        {% for country in countries %}
+                                                        <option value="{{country.shortform}}" {% if prevdata.country == country.shortform %}selected{% endif %}>
+                                                            {{country.name}}</option>
+                                                        {% endfor %}
+                                                        {% else %}
+                                                        {% for country in countries %}
+                                                        <option value="{{country.shortform}}">{{country.name}}</option>
+                                                        {% endfor %}
+                                                        {% endif %}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row form-row-signup">
+                                            <div class="col-md-6 col-12 form-group">
+                                                <label for="address">Street Address</label>
+                                                {% if prevdata %}
+                                                <input name="address" id="address" maxlength="60" class="form-control"
+                                                    pattern="[^':]*$" title="Quotes are not allowed" autocomplete="off"
+                                                    onkeypress="return signUpFieldValidate(event)"
+                                                    onblur="return signUpFieldValidateOnchange(this)"
+                                                    placeholder="Enter Street Address" value="{{ prevdata.address }}">
+                                                {% else %}
+                                                <input name="address" id="address" maxlength="60" class="form-control"
+                                                    pattern="[^':]*$" title="Quotes are not allowed" autocomplete="off"
+                                                    onkeypress="return signUpFieldValidate(event)"
+                                                    onblur="return signUpFieldValidateOnchange(this)"
+                                                    placeholder="Enter Street Address">
+                                                {% endif %}
+                                            </div>
+                                            <div class="col-md-6 col-12 form-group">
+                                                <label for="city">City</label>
+                                                {% if prevdata %}
+                                                <input name="city" data-name="address2" id="city" maxlength="40"
+                                                    class="form-control" pattern="[^':]*$"
+                                                    onkeypress="return signUpFieldValidate(event)"
+                                                    onblur="return signUpFieldValidateOnchange(this)" autocomplete="off"
+                                                    title="Quotes are not allowed" placeholder="Enter City"
+                                                    value="{{ prevdata.city }}">
+                                                {% else %}
+                                                <input name="city" data-name="address2" id="city" maxlength="40"
+                                                    class="form-control" pattern="[^':]*$"
+                                                    onkeypress="return signUpFieldValidate(event)"
+                                                    onblur="return signUpFieldValidateOnchange(this)" autocomplete="off"
+                                                    title="Quotes are not allowed" placeholder="Enter City">
+                                                {% endif %}
+                                            </div>
+                                            <div class="col-md-6 col-12 form-group">
+                                                <label for="state">State / Region</label>
+                                                {% if prevdata %}
+                                                <input name="state" data-name="address3" id="state" maxlength="40"
+                                                    class="form-control" pattern="[^':]*$"
+                                                    title="Quotes are not allowed"
+                                                    onkeypress="return signUpFieldValidate(event)"
+                                                    onblur="return signUpFieldValidateOnchange(this)" autocomplete="off"
+                                                    placeholder="Enter State / Region" value="{{prevdata.city}}">
+                                                {% else %}
+                                                <input name="state" data-name="address3" id="state" maxlength="40"
+                                                    class="form-control" pattern="[^':]*$"
+                                                    title="Quotes are not allowed"
+                                                    onkeypress="return signUpFieldValidate(event)"
+                                                    onblur="return signUpFieldValidateOnchange(this)" autocomplete="off"
+                                                    placeholder="Enter State / Region">
+                                                {% endif %}
+                                            </div>
+                                            <div class="col-md-6 col-12 form-group">
+                                                <label for="">Phone Number</label>
+                                                <div class="date-field-row err-shw-abslt flex-nowrap"
+                                                    style="display: flex;">
+                                                    <label for="countryCode" style="display: none;">Country Code</label>
+                                                    <div>
+                                                        <select class="custom-select select-list" name="countryCode"
+                                                            id="countryCode">
+                                                            <option value="0" disabled selected>---</option>
+                                                            {% if prevdata %}
+                                                            {% for country in countries|filter_by:'phonecode-dist' %}
+                                                            {% if country.phonecode %}
+                                                            <option value="{{country.phonecode}}" {% if prevdata.countryCode == country.phonecode %}selected{% endif %}>{{country.phonecode}}</option>
+                                                            {% endif %}
+                                                            {% endfor %}
+                                                            {% else %}
+                                                            {% for country in countries|filter_by:'phonecode-dist' %}
+                                                            {% if country.phonecode %}
+                                                            <option value="{{country.phonecode}}">{{country.phonecode}}
+                                                            </option>
+                                                            {% endif %}
+                                                            {% endfor %}
+                                                            {% endif %}
+                                                        </select>
+                                                    </div>
+                                                    {% if prevdata %}
+                                                    &nbsp;&nbsp;<input type="text" name="phoneNo" maxlength="20"
+                                                        id="phoneNo" onkeypress='return restrictNumbers(event)'
+                                                        class="form-control" placeholder="Enter Phone Number"
+                                                        value="{{ prevdata.phoneNo }}">
+                                                    {% else %}
+                                                    &nbsp;&nbsp;<input type="text" name="phoneNo" maxlength="20"
+                                                        id="phoneNo" value="" onkeypress='return restrictNumbers(event)'
+                                                        class="form-control" placeholder="Enter Phone Number">
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- User Details -->
+
+                                <div class="details-body-sub-block">
+                                    <div class="title-content-skip">
+                                        <div class="row title-skip-row title-brdr m-0">
+                                            <div class="col-12 title-block">
+                                                <h2 class="header">User Details</h2>
+                                            </div>
+                                        </div>
+                                        <div class="added-user-sec" id="userLocalList">
+
+                                        </div>
+                                    </div>
+                                    <input type="hidden" name="checkboxvalues" id="checkboxvalues" value="[]" />
+                                    <!-- <input type="hidden" id="user" value="{}"/> -->
+                                    {% if prevdata.users_lists %}
+                                    {% for user in prevdata.users_lists %}
+                                    <div>
+                                        <div class="acc-det-body-content personal-det-content" id="duplicater{{forloop.counter}}">
+                                            <div class="row form-row-signup">
+                                                <div class="col-12">
+                                                    {% if not forloop.first %}
+                                                    <button class="btn-default del-btn" type="button"
+                                                        id="${'removeUserBtn' + divCounter}"
+                                                        onclick="return this.parentNode.parentNode.parentNode.remove();">
+                                                        <img src='{% static "dash/assets/img/delete.png" %}' alt="">
+                                                        Delete
+                                                    </button>
+                                                    {% endif %}
+                                                </div>
+                                                <div class="col-lg-4 col-md-12 form-group">
+                                                    <label for="firstName">First Name</label>
+                                                    <input type="text" name="firstName" id="firstName"
+                                                        onfocus="removeErrorfeild(this)" maxlength="50" data-default=""
+                                                        value="{{user.firstName}}" class="form-control userInfo"
+                                                        placeholder="Enter Your First Name" required>
+                                                </div>
+                                                <div class="col-lg-4 col-md-6 form-group">
+                                                    <label for="middleName">Middle Name&nbsp;<span
+                                                            class="input-optional">(optional)</span></label>
+                                                    <input type="text" name="middleName" id="middleName"
+                                                        onfocus="removeErrorfeild(this)" maxlength="50" data-default=""
+                                                        value="{{user.middleName}}" class="form-control userInfo"
+                                                        placeholder="Enter Your Middle Name">
+                                                </div>
+                                                <div class="col-lg-4 col-md-6 form-group">
+                                                    <label for="lastName">Last Name</label>
+                                                    <input type="text" name="lastName" id="lastName" maxlength="50"
+                                                        onfocus="removeErrorfeild(this)" data-default=""
+                                                        value="{{user.lastName}}" class="form-control userInfo"
+                                                        placeholder="Enter Your Last Name" required>
+                                                </div>
+                                                <div class="col-md-6 form-group">
+                                                    <label for="email">Email</label>
+                                                    <input type="email" name="email" id="email" maxlength="50"
+                                                        onfocus="removeErrorfeild(this)" data-default=""
+                                                        value="{{user.email}}" class="form-control userInfo"
+                                                        placeholder="Enter Your Email" required>
+                                                </div>
+                                                <div class="col-md-6 form-group">
+                                                    <label for="userType">User Type</label>
+                                                    <select name="userType" id="userType" data-default=""
+                                                        onfocus="removeErrorfeild(this)"
+                                                        class="form-control custom-select userInfo" required>
+                                                        <option value="" disabled selected>Select User Type</option>
+                                                        {% for authority_type in authority_types%}
+                                                        <option value="{{authority_type.id}}" {% if authority_type.id == user.userType|to_int %}selected{% endif %}>{{authority_type.name}}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="row det-add-user-btn-row">
+                                                <div class="col-md-6 col-sm-6 col-12 add-usr-chbox-outer">
+                                                    <label class="check-bx-cmpny-cnfrm custom-checbox-hldr">
+                                                        <input type="checkbox" name="mainBusinessownernew"
+                                                            value="{{user.main_owner_list_new}}" class="check-box" {% if user.main_owner_list_new == '1' %}checked{% endif %}>
+                                                        <span style="border-radius: 0px"
+                                                            class="checkmark-cmpny-cnfrm"></span>
+                                                        Ultimate Beneficial Owner
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+
+                                    {% else %}
+
+                                    <div>
+                                        <div class="acc-det-body-content personal-det-content" id="duplicater1">
+                                            <div class="row form-row-signup">
+                                                <div class="col-lg-4 col-md-12 form-group">
+                                                    <label for="firstName">First Name</label>
+                                                    <input type="text" name="firstName" id="firstName" maxlength="50"
+                                                        data-default="" value="" class="form-control userInfo"
+                                                        onfocus="removeErrorfeild(this)"
+                                                        placeholder="Enter Your First Name" required>
+                                                </div>
+                                                <div class="col-lg-4 col-md-6 form-group">
+                                                    <label for="middleName">Middle Name&nbsp;<span
+                                                            class="input-optional">(optional)</span></label>
+                                                    <input type="text" name="middleName" id="middleName" maxlength="50"
+                                                        data-default="" value="" class="form-control userInfo"
+                                                        placeholder="Enter Your Middle Name">
+                                                </div>
+                                                <div class="col-lg-4 col-md-6 form-group">
+                                                    <label for="lastName">Last Name</label>
+                                                    <input type="text" name="lastName" id="lastName" maxlength="50"
+                                                        data-default="" value="" class="form-control userInfo"
+                                                        onfocus="removeErrorfeild(this)"
+                                                        placeholder="Enter Your Last Name" required>
+                                                </div>
+                                                <div class="col-md-6 form-group">
+                                                    <label for="email">Email</label>
+                                                    <input type="email" name="email" id="email" maxlength="50"
+                                                        data-default="" value="" class="form-control userInfo"
+                                                        onfocus="removeErrorfeild(this)" placeholder="Enter Your Email"
+                                                        required>
+                                                </div>
+                                                <div class="col-md-6 form-group">
+                                                    <label for="userType">User Type</label>
+                                                    <select name="userType" id="userType" data-default=""
+                                                        onfocus="removeErrorfeild(this)"
+                                                        class="form-control custom-select userInfo" required>
+                                                        <option value="" disabled selected>Select User Type</option>
+
+                                                        {% for authority_type in authority_types%}
+                                                        <option value="{{authority_type.id}}">{{authority_type.name}}
+                                                        </option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="row det-add-user-btn-row">
+                                                <div class="col-md-6 col-sm-6 col-12 add-usr-chbox-outer">
+
+                                                    <label class="check-bx-cmpny-cnfrm custom-checbox-hldr">
+
+                                                        <input type="checkbox" name="mainBusinessownernew"
+                                                            class="check-box" value="0">
+                                                        <span style="border-radius: 0px"
+                                                            class="checkmark-cmpny-cnfrm"></span>
+                                                        Ultimate Beneficial Owner
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                    <div style="text-align: right;">
+                                        <button class="btn btn-primary button-w" type="button" onclick="duplicate();"
+                                            id="CloneBtn"><i class="fa fa-solid fa-plus"></i>&nbsp;Add More
+                                            User</button>
+                                    </div>
+
+                                </div>
+                                <p>
+                                    <input type="checkbox" name="accountcheck" id="accountcheck" {% if prevdata.accountcheck %}checked{% endif %} style="transform: scale(1.3);">
+                                    <label for="accountcheck">Already have account?</label>
+                                </p>
+                                <!-- currency -->
+                                {% if prevdata.account_lists %}
+                                <div class="details-body-sub-block details-body-sec">
+                                    <input type="hidden" name="acc_type" value="for_exist_acc">
+                                    <div class="title-content-skip">
+                                        <div class="row title-skip-row title-brdr m-0">
+                                            <div class="col-12 title-block">
+                                                <h2 class="header">Currency</h2>
+                                                <p>
+                                                    <!--Lorem Ipsum is simply dummy text-->
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row bus-det-curncy-form">
+                                        {% for account_list in prevdata.account_lists %}
+                                        {% if forloop.counter == 1 %}
+                                        <label for="" style="color: black;">Primary Account</label>
+                                        {% elif forloop.counter == 2 %}
+                                        <label for="" style="color: black;">Secondary Account</label>
+                                        {% endif %}
+                                        <div class="form-group col-lg-4 inp-{{forloop.counter}}" data-id="{{forloop.counter}}">
+                                            <label for="accnumber">Account No.</label>
+                                            <input type="text" name="accnumber" id="accnumber" maxlength="50" value="{{account_list.accnumber}}"
+                                                class="form-control accInfo inp-acc" onkeypress="return restrictAmount(event)" autocomplete="off"
+                                                onblur="return signUpFieldValidateOnchange(this)" placeholder="Enter Your Account No."
+                                                minlength="3">
+                                        </div>
+                            
+                                        <div class="form-group col-lg-4 inp-{{forloop.counter}}" data-id="{{forloop.counter}}">
+                                            <label for="balance">Balance</label>
+                                            <input type="text" name="balance" id="balance" maxlength="50" value="{{account_list.balance}}"
+                                                class="form-control accInfo" onkeypress="return restrictAmount(event)" autocomplete="off"
+                                                onblur="return signUpFieldValidateOnchange(this)" placeholder="Enter Account Balance">
+                                        </div>
+                                        <div class="form-group col-lg-4 inp-{{forloop.counter}}" data-id="{{forloop.counter}}">
+                                            <label for="currency">Currency</label>
+                                            <select id="currency" name="currency" class="custom-select select-list accInfo inp-curr" required>
+                                                <option value="">Select Currency</option>
+                                                {% for currency in currencies %}
+                                                <option value="{{currency.code}}" {% if account_list.currency == currency.code %}selected{% endif %}>
+                                                    {{currency.code}} {{currency.name}}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                        {% if forloop.counter > 2 %}
+                                        <div class="col-12 inp-{{forloop.counter}}" data-id="{{forloop.counter}}"><button class="btn-default del-btn" type="button" id="removeUserBtn1"
+                                                onclick='return removeAccount("{{forloop.counter}}");'><img src="{% static 'dash/assets/img/delete.png' %}" alt="">
+                                                Delete</button></div>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div style="text-align: right;">
+                                    <button class="btn btn-primary button-w btn-ap-accnt-list" type="button" id="CloneBtn"><i
+                                            class="fa fa-solid fa-plus"></i>&nbsp;Add More Accounts </button>
+                                </div>
+                                {% else %}
+                                <div class="details-body-sub-block details-body-sec">
+                                    <input type="hidden" name="acc_type" value="for_new_acc">
+                                    <div class="title-content-skip">
+                                        <div class="row title-skip-row title-brdr m-0">
+                                            <div class="col-12 title-block">
+                                                <h2 class="header">Currency</h2>
+                                                <p>
+                                                    <!--Lorem Ipsum is simply dummy text-->
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row bus-det-curncy-form">
+                                        <!--<div class="row form-row-signup">-->
+                                        <div class="col-md-6 col-12 form-group">
+                                            <label for="primaryCurrency">1st Currency</label>
+
+                                            <div>
+                                                <select id="primaryCurrency" name="primaryCurrency"
+                                                    class="custom-select select-list" required>
+                                                    <option value="">Select Currency</option>
+                                                    {% for currency in currencies %}
+                                                    <option
+                                                        data-icon="{% if currency.flag %}{{currency.flag.url}}{% else %}/other/no-image.jpg{% endif %}"
+                                                        value="{{currency.code}}" {% if prevdata.primaryCurrency == currency.code %}selected{% endif %}>
+                                                        {{currency.code}} {{currency.name}}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6 col-12 form-group">
+                                            <label for="secondaryCurrency">2nd Currency</label>
+                                            <div>
+                                                <select id="secondaryCurrency" name="secondaryCurrency"
+                                                    class="custom-select select-list" required>
+                                                    <option value="">Select Currency</option>
+                                                    {% for currency in currencies %}
+                                                    <option
+                                                        data-icon="{% if currency.flag %}{{currency.flag.url}}{% else %}/other/no-image.jpg{% endif %}"
+                                                        value="{{currency.code}}" {% if prevdata.secondaryCurrency == currency.code %}selected{% endif %}>
+                                                        {{currency.code}} {{currency.name}}</option>
+                                                    {% endfor %}
+
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-12">
+                                            <label>Note:&nbsp;<small class="form-text text-muted">You can add more
+                                                    currencies after sign up.</small></label>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+
+                                <!-- Currency sec -->
+
+
+
+                                <p style="margin-left: 28%;margin-bottom: 5px;">
+                                    <input type="checkbox" name="termsConditions" id="terms-checkbox"
+                                        style="transform: scale(1.3);">
+                                    <label>I accept</label>
+                                    <a href="" target="_blank" title="Click to see the terms and conditions"
+                                        class="terms-accpt">
+                                        <label style="cursor: pointer;color: #4078c0;">terms & conditions</label>
+                                    </a>
+                                    <label>and</label>
+                                    <a target="_blank" href="" title="Click to see the privacy policy"
+                                        class="terms-accpt">
+                                        <label style="cursor: pointer;color: #4078c0;">privacy policy</label>
+                                    </a>
+                                </p>
+
+                                <div style="text-align: center;">
+                                    <button class="btn-primary signup-btn ripple-efct signUpButton btn"
+                                        id="signUpSubmit" onclick="CheckboxStat()" type="button">
+                                        Sign Up
+                                    </button>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="acc-det-footer">
+                <div class="acc-bnt-sec">
+                    <a href="/" class="acc-back-btn efct-link-dark"><img src="{% static 'dash/assets/img/arrow.png' %}"
+                            alt=""> Back to
+                        &nbsp;
+                        <span class="secondary-clr">Home</span></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}
+{% block script %}
+
+<script src="{% static 'dash/assets/js/bussinessaccount.js' %}"></script>
+
+<script>
+
+    $('#secondaryCurrency').wSelect();
+    $('#primaryCurrency').wSelect();
+////////////cloning/////////////
+
+    document.getElementById('CloneBtn').onclick = duplicate;
+    div_list = document.querySelectorAll(".personal-det-content:last-child")
+    last_div = div_list[div_list.length - 1]
+    var i = 0;
+    var original = last_div;
+    var emptyForm = original.cloneNode(true);
+    function duplicate() {
+        last_div.style.display = "block";
+        var clone = emptyForm.cloneNode(true);
+
+        cloned_div_id = "duplicator" + ++i;
+        clone.id = cloned_div_id;
+
+        original.parentNode.appendChild(clone);
+        clear_form(cloned_div_id);
+
+    }
+
+function clear_form(elm_id){
+    $("#"+elm_id).find(".userInfo").each(function(){
+        $(this).val("")
+    })
+    $("#"+elm_id).find('.check-box').prop('checked', false);
+}
+//////////////////////
+function CheckboxStat(){
+    checkbox_list = []
+    $(".check-box").each(function(){
+        if ($(this).is(':checked') ){
+        checkbox_list.push('1')
+        }else{
+        checkbox_list.push('0')
+        }
+        })
+        $('#checkboxvalues').val(checkbox_list);
+        if ($('#terms-checkbox').is(':checked')) {
+            // const form = $("#businessForm");
+            // form.submit();
+            createFormDataAndValidate('businessForm') && showLoader()
+        } else {
+            $('#signUpSubmit').attr('disabled', 'disabled');
+        }
+    }
+
+
+
+    function removeErrorfeild(elem) {
+        (document.getElementById(`err-${elem.id}`)) && document.getElementById(`err-${elem.id}`).remove();
+        if (elem.style.borderColor && elem.style.borderColor === 'red') {
+            elem.style.borderColor = null;
+        }
+    }
+
+    // $('#terms-checkbox').on('change', function () {
+    $(document).on("change", "#terms-checkbox", function () {
+        if ($(this).is(':checked')) {
+            $('#signUpSubmit').removeAttr('disabled');
+        }
+    });
+    // account migration
+    $('#accountcheck').on('change', function () {
+        var val = 0
+        if ($(this).is(':checked')) {
+            val = 1
+        } else {
+            val = 0
+        }
+        $.post('/curr-acc',
+            {
+                'val': val,
+                'csrfmiddlewaretoken': '{{ csrf_token }}',
+            },
+            function (data, status) {
+                $("#businessForm").find(".details-body-sec").replaceWith(data.curr_acc);
+            });
+    });
+
+    $(document).on("click", ".btn-ap-accnt-list", function () {
+            appendToAccountList()
+        })
+        function appendToAccountList() {
+            if (validateForm('accInfo', 'class')) {
+
+                var ids = [];
+                $(".bus-det-curncy-form").find(".form-group").each(function () {
+                    var id = $(this).attr("data-id")
+                    ids.push(parseInt(id))
+                })
+                let uniqueIds = [...new Set(ids)];
+                var total_acc = $('.inp-acc').length;
+                var acc_flag = false
+                $('.inp-acc').each(function (index) {
+                    if (index === total_acc - 1) {
+                        acc_flag = accountCheck(this)
+                    }
+                })
+                var total_curr = $('.inp-acc').length;
+                var curr_flag = false
+                $('.inp-curr').each(function (index) {
+                    if (index === total_curr - 1) {
+                        curr_flag = currencyCheck(this)
+                    }
+
+                })
+                if (acc_flag && curr_flag) {
+                    $.post('/curr-acc',
+                        {
+                            'uniqueIds': JSON.stringify(uniqueIds) || '',
+                            'val': 'duplicate',
+                            'csrfmiddlewaretoken': '{{ csrf_token }}',
+                        },
+                        function (data, status) {
+                            $(".bus-det-curncy-form").append(data.curr_acc);
+                        });
+                }
+            }
+        }
+
+        $(document).on("focus", ".accInfo", function () {
+        if (document.forms.length) {
+            for (let f = 0; f < document.forms.length; f += 1) {
+                for (let e = 0; e < document.forms[f].elements.length; e += 1) {
+                    document.forms[f].elements[e].addEventListener('focus', (event) => {
+                        if (event.target.style.borderColor && event.target.style.borderColor === 'red') {
+                            event.target.style.borderColor = null;
+                        }
+                        const errMsgSelector = document.getElementById(`err-${event.target.id}`);
+                        if (errMsgSelector) {
+                            errMsgSelector.remove();
+                        }
+                        if (['day', 'month', 'year'].includes(event.target.id)) {
+                            document.getElementById('err-dob') && document.getElementById('err-dob').remove();
+                        }
+                    });
+                }
+            }
+        }
+    })
+
+    function accountCheck(params) {
+        var status = true
+        var current_val = $(params).val()
+        var current_element = $(params)[0]
+        $('.inp-acc').not(params).each(function () {
+            var prev_val = $(this).val()
+            if (prev_val == current_val) {
+                showErrorField([current_element], 'User with same account number is not allowed.');
+                status = false 
+            }
+        })
+        return status
+    }
+    function currencyCheck(params) {
+        var status = true
+        var current_val = $(params).val()
+        var current_element = $(params)[0]
+        $('.inp-curr').not(params).each(function () {
+            var prev_val = $(this).val()
+            if (prev_val == current_val) {
+                showErrorField([current_element], 'User with same currency is not allowed.');
+                status = false 
+            }
+        })
+        return status
+    }
+
+    function removeAccount(divNo) {
+        $('.inp-' + divNo).each(function () {
+            this.remove()
+        })
+    }
+
+// 
+</script>
+
+</html>
+{% endblock %}

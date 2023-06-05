@@ -1,0 +1,202 @@
+{% extends 'common/base.html' %}
+{% load static %}
+{% load util_tags %}
+
+
+{% block content %}
+<style>
+    .p-details-header{
+        font-weight:600;
+    }
+    /* .cust-row {
+
+    } */
+    .cust-col{
+    padding-top: 10px;
+    padding-bottom: 20px;
+    //border: 1px solid #efefef;
+    }
+    .input-edit{
+        display: block;
+        //border: none;
+        box-shadow: none;
+        width: 100%;
+        color: #84878a;
+    }
+    .input-edit:focus{
+            outline: 0;
+    }
+    .date-field-row{
+        display:flex;
+    }
+    .custom-select.day{
+
+        width:30%;
+    }
+    .custom-select.month{
+        margin-left: 10px;
+    margin-right: 10px;
+        width:30%;
+    }
+    .custom-select.year{
+        width:40%;
+    }
+    .phnumber{
+        margin-right: 10px;
+        width:30%;
+    }
+
+</style>
+
+<div class=" balance-cover  mx-4 ">
+    <div class="row">
+        <div class=" balance-main">
+            {% if message %}
+            <div class="alert-box-outer">
+                <div class="{% if status %}success-alert{% else %}section-alert{% endif %}" style="display: block;"
+                     id="alertDiv">
+                    <button class="{% if status %}success-alert-close{% else %}section-alert-close{% endif %}"
+                            onclick="closeAlertModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <p style="text-align: center" id="errorField">{{message}}</p>
+                </div>
+            </div>
+            {% endif %}
+            <form method="POST" class="ed-details-form" action="{% url 'company-details-edit' %}">
+                {% csrf_token %}
+                <input type="hidden" name="id" value="{{businessdetails.id}}">
+                <!-- row1 -->
+                <div class="row cust-row">
+                    <div class="col-sm-6 cust-col">
+                        <div class="form-grp-edit">
+                            <label>Company Name</label>
+                            <input type="text" name="companyName" value="{{businessdetails.companyname}}"
+                                   class="input-edit form-control" required=""
+                                   style="cursor: default;">
+                        </div>
+                    </div>
+                    <div class="col-sm-6 cust-col">
+                        <div class="form-grp-edit">
+                            <label>Industry Type</label>
+                            <select class="custom-select select-list" name="industryType" style="">
+                                <option value="" disabled="" selected="">select your country</option>
+                                {% for industry in industries %}
+                                <option value="{{industry.id}}"  {% if businessdetails.industrytype.id == industry.id %}selected{% endif %}>{{industry.name}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
+                    </div>
+
+                </div> 
+                <!-- row2 -->
+                <div class="row cust-row">
+                    <div class="col-sm-6 cust-col">
+                        <div class="form-grp-edit">
+                            <label>Company URL</label>
+                            <input type="text" name="url" value="{{businessdetails.url}}"
+                                   class="input-edit form-control" required=""
+                                   style="cursor: default;">
+                        </div>
+                    </div>
+                    <div class="col-sm-6 cust-col">
+                        <div class="form-grp-edit">
+                            <label>Country of Incorporation</label>
+                            <select class="custom-select select-list" name="countryOfIncorportaion" style="">
+                                <option value="" disabled="" selected="">select your country</option>
+                                {% for country in countries %}
+                                <option value="{{country.shortform}}"  {% if businessdetails.country == country.shortform %}selected{% endif %}>{{country.name}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+                </div> <!--row5-->
+                <div class="row cust-row">
+                    <div class="col-sm-6 cust-col">
+                        <div class="form-grp-edit">
+                            <label>Street Address</label>
+                            <input type="text" name="address" value="{{businessdetails.address}}"
+                                   class="input-edit form-control" required=""
+                                   style="cursor: default;">
+                        </div>
+                    </div>
+                    <div class="col-sm-6 cust-col">
+                        <div class="form-grp-edit">
+                            <label>City</label>
+                            <input type="text" name="city" value="{{businessdetails.city}}"
+                                   class="input-edit form-control" required=""
+                                   style="cursor: default;">
+                        </div>
+                    </div>
+
+                    
+                </div>
+                <div class="row cust-row">
+                    <div class="col-sm-6 cust-col">
+                        <div class="form-grp-edit">
+                            <label>State / Region</label>
+                            <input type="text" name="region" value="{{businessdetails.state}}"
+                                   class="input-edit form-control" required=""
+                                   style="cursor: default;">
+                        </div>
+                    </div>
+                    <div class="col-sm-6 cust-col">
+                        <div class="form-grp-edit">
+                            <label>Phone Number</label>
+                            <div class="date-field-row">
+                                <select class="input-box custom-select select-list phnumber" name="countrycode" id="" style="">
+                                    <option value="" disabled="" selected="">---</option>
+                                    {% for country in countries %}
+                                    <option value="{{country.phonecode}}" {% if country_code == country.phonecode %}selected{% endif %}>{{country.phonecode}}</option>
+                                    {% endfor %}
+                                </select>
+                                <input type="text" name="phonenumber"
+                                       value="{{phonenumber}}"
+                                       class="input-edit form-control inp-phn-number" required=""
+                                       style="cursor: default;width:70%">
+                            </div>
+                            <!-- {% if form.phonenumber.errors %}
+                                {% for error in form.phonenumber.errors %}
+                                    <span style="list-style:none;color: orangered;padding-left: 10px;">{{ error|escape }}</span>
+                                {% endfor %}
+                            {% endif %} -->
+                        </div>
+                    </div>
+                    
+                </div> <!--row6-->
+                <div class="row">
+                    <div class="col-sm-12" style="text-align:center">
+                        <button type="submit" class="btn btn-primary button-w" style="">&nbspconfirm details</button>
+                    </div>
+                </div> <!--row7-->
+            </form>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+{% block extra_script %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script>
+    $(document).ready(function () {
+  //called when key is pressed in textbox
+  $(".inp-phn-number").keypress(function (e) {
+     //if the letter is not digit then display error and don't type anything
+     var phnnumber = $(".inp-phn-number").val();
+      var len = phnnumber.length;
+      if (len>=15){
+        return false;
+      }
+     if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+        //display error message
+
+               return false;
+    }
+   });
+
+});
+</script>
+{% endblock %}

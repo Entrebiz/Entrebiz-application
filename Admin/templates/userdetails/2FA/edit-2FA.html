@@ -1,0 +1,77 @@
+{% extends 'common/base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    .balance-cover{
+        height:70vh;
+    }
+
+    .btn-open-dlt-cnfrm-modal:hover{
+            padding: 0.75rem 1.5rem;
+    }
+    .list-account-content{
+            padding: 50px 0px 0px 100px;
+    }
+
+
+</style>
+
+<div class=" balance-cover  mx-4 ">
+    <div class="row">
+        <div class=" balance-main">
+
+            <h6>Two-Factor Authentication</h6>
+            <hr>
+            {% if message %}
+            <div class="alert-box-outer">
+                <div class="{% if status %}success-alert{% else %}section-alert{% endif %}" style="display: block;"
+                     id="alertDiv">
+                    <button class="{% if status %}success-alert-close{% else %}section-alert-close{% endif %}"
+                            onclick="closeAlertModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <p style="text-align: center" id="errorField">{{message}}</p>
+                </div>
+            </div>
+            {% endif %}
+            <div class="list-account-content">
+
+                <form method="POST">
+                    <div class="row">
+                        {% csrf_token %}
+                        <div class="col-sm-6">
+
+                            <select class="select-list sel-tf_status" name="tf_status" required>
+                                <option value="1" {% if request.user.customer_details.all.0.useracc_customer.all.0.twofactorauth %}selected{% endif %}>Enabled</option>
+                                <option value="0" {% if not request.user.customer_details.all.0.useracc_customer.all.0.twofactorauth %}selected{% endif %}>Disabled</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-6">
+                            <button class="btn btn-primary ripple-efct btn-open-dlt-cnfrm-modal">
+                                Save
+                            </button>
+                        </div>
+
+                    </div>
+                </form>
+
+            </div>
+
+
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+{% block extra_script %}
+<script>
+    $(document).on("click",".btn-open-dlt-cnfrm-modal",function(){
+    $("#modal-confirm-delete").find(".accnt-id").val($(".sel-account option:selected").val())
+    $("#modal-confirm-delete").modal("show")
+
+    })
+
+
+</script>
+{% endblock %}

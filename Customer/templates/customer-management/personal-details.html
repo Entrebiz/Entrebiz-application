@@ -1,0 +1,865 @@
+{% extends 'common/admin-base.html' %}
+{% load static %}
+{% load util_tags %}
+{% block css %}
+<style>
+    .statment-filter-tab {
+        display: block;
+        border-bottom: solid 1px #efefef;
+        width: 100%;
+        overflow: hidden;
+    }
+
+    .statment-filter-tab a {
+        display: inline-block;
+        padding: 10px;
+        border-right: solid 1px #efefef;
+        color: #84878a;
+        border-bottom: solid 2px transparent;
+        float: left;
+    }
+
+    .statment-filter-tab a.active {
+        border-bottom-color: #22bc51;
+    }
+
+    .tab-title-block {
+        margin-bottom: 0;
+        height: 70px;
+        flex-wrap: wrap;
+        display: flex;
+        min-height: 45px;
+        padding: 10px 15px;
+    }
+
+    .customer-mng-details-sec .tab-title-block {
+        background-color: #fbfbfb !important;
+    }
+
+    .customer-mng-details-sec .cust-mail-title {
+        position: relative;
+        padding-right: 50px !important;
+    }
+
+    .customer-mng-details-sec .curr-conversion-card {
+        background-color: #fff;
+        padding-top: 15px;
+    }
+
+    .customer-mng-details-sec .cust-mail-title .mail-btn {
+        position: absolute;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        border: none;
+        background: none;
+        margin: auto;
+        margin-right: 10px;
+    }
+
+    .m-0 {
+        margin: 0;
+    }
+
+    .details-content-holder {
+        display: flex;
+        align-items: flex-start;
+    }
+
+    .det-label {
+        color: #586168;
+        padding: 10px 10px;
+        min-width: 180px;
+        font-size: 15px;
+    }
+
+    .det-show {
+        padding: 8px 10px;
+        font-weight: 800;
+        color: #586168;
+    }
+
+    .modal-hide {
+        display: none;
+    }
+
+    .modal-outer {
+        left: 0;
+        right: 0;
+        bottom: 0;
+        top: 0;
+        background: rgba(0, 0, 0, 0.23);
+        position: fixed;
+        z-index: 100;
+        overflow-y: auto;
+        text-align: center;
+        /* display: block; */
+    }
+
+    table {
+        border-collapse: collapse;
+        margin: 0.7em 0;
+        table-layout: fixed;
+        width: 100%;
+    }
+
+    .admin-table-def th {
+        font-weight: normal;
+        padding: 5px 10px;
+        text-align: left;
+        border-bottom: 1px solid #efefef;
+        color: #586168;
+        border-right: 1px solid #efefef;
+        font-size: 14px;
+    }
+
+    .admin-table-def td {
+        font-size: 14px;
+        padding: 10px 10px;
+        color: #586168;
+        /* border-bottom: 1px solid #efefef; */
+        border-color: #efefef;
+        word-break: break-all;
+    }
+
+    td {
+        border-bottom: 1px solid #efefef !important;
+    }
+    .td-slno {
+    width: 70px;
+    }
+    .customer-mng-details-sec .document-empty.tab-title-block {
+        background-color: #fff !important;
+    }
+
+    .document-empty h6 {
+        text-align: center;
+        margin: 0 auto;
+        color: #fb8989 !important;
+    }
+
+    .management-docs-sec {
+        padding-top: 20px;
+    }
+
+    .decs-bottom-btn-sec {
+        padding-top: 15px;
+        margin-top: 15px;
+        border-top: solid 1px #efefef;
+    }
+
+    .decs-bottom-btn-sec .prev-comment-sec {
+        max-height: 150px;
+        border: solid 1px #efefef;
+        border-radius: 5px;
+        padding: 20px 15px;
+        overflow-y: auto;
+    }
+
+    .comment-btn-sec {
+        padding: 15px;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .btn-white {
+        background-color: #fff !important;
+        color: #fa661d !important;
+        border: solid 1px #fa661d !important;
+        border-radius: 5px !important;
+        height: 40px !important;
+        padding: 5px 20px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+
+    .btn-rgt {
+        float: right !important;
+    }
+
+    .doc-details-block {
+        padding-right: 5%;
+    }
+
+    .doc-sub-title {
+        font-size: 16px;
+    }
+
+    .docs-thumb-cover {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .management-docs-sec .doc-details-cover .docs-thumb-cover .custom-input-file {
+        border: solid 1px #ddd;
+        height: 80px;
+        width: 31%;
+        margin: 1%;
+        position: relative;
+    }
+
+    .custom-input-file.img-show {
+        cursor: initial;
+    }
+
+    .custom-input-file {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 117px;
+        background-color: #f8f9fa;
+        flex-direction: column;
+    }
+
+    .custom-input-file a {
+        background-color: rgba(229, 232, 234, 0.82);
+        display: inline-block;
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        text-align: center;
+        font-size: 13px;
+        padding: 3px 5px;
+        color: #84878a;
+        z-index: 10;
+    }
+
+    .isactive {
+        border-bottom-color: #22bc51 !important;
+    }
+
+    .chat-admin-date {
+        font-size: 12px;
+    }
+
+    .prev-comment-sec p {
+        color: #586168;
+        font-size: 15px;
+    }
+
+    .mail-modal-cover {
+        padding-top: 30px;
+    }
+
+    .mail-modal-cover .mail-inp-row {
+        display: flex;
+        margin-bottom: 25px;
+        align-items: center;
+    }
+
+    .mail-modal-cover .mail-inp-row .mail-inp-label {
+        text-align: left;
+        flex: 0 0 100px;
+    }
+
+    .mail-modal-cover .mail-inp-row .mail-inp-cover {
+        flex-grow: 1;
+    }
+
+    .mail-modal-cover .mail-inp-row .mail-inp-box {
+        width: 100%;
+        border: none;
+        border-bottom: solid 1px #efefef;
+        font-size: 15px;
+        padding: 5px 15px;
+    }
+
+    .mail-modal-cover .mail-inp-row.last-mail-inp {
+        margin-bottom: 5px;
+    }
+
+    .mail-modal-cover .mail-body {
+        margin-top: 15px;
+        border-radius: 5px;
+        border: solid 1px #efefef;
+        width: 100%;
+        padding: 5px 15px;
+        font-size: 15px;
+    }
+
+    .mail-modal-cover .otp-modal-content {
+        padding: 10px !important;
+    }
+    .btn-primary:hover{
+        padding: 10px 58px !important;
+    }
+</style>
+{% endblock %}
+{% block content %}
+
+<div class=" balance-cover  mx-4 ">
+    <div class="row">
+        <div class=" balance-main">
+            {% if message %}
+            <div class="alert-box-outer">
+                <div class="{% if status %}success-alert{% else %}section-alert{% endif %}" style="display: block;"
+                    id="alertDiv">
+                    <button class="{% if status %}success-alert-close{% else %}section-alert-close{% endif %}"
+                        onclick="closeAlertModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <p style="text-align: center" id="errorField">{{message}}</p>
+                </div>
+            </div>
+            {% endif %}
+            <div class="statment-filter-tab">
+                <a href="/getCustomerDetails?slug={{user_details.slug}}" id="page1"
+                    class="isactive" style="display: block"> Personal
+                    details</a>
+                <a href="/getCustomerDetails?userDocument=statement&slug={{user_details.slug}}" id="page2"
+                    class="" style="display: block">
+                    Statements</a>
+                <a href="/getCustomerDetails?userDocument=referrals&slug={{user_details.slug}}" id="page3"
+                    class="" style="display: block">
+                    Referrals</a>
+            </div>
+        </div>
+        <!--  -->
+        <div id="detailsDiv" class="customer-management-sec">
+
+            <div class="customer-mng-details-sec">
+
+                <div class="tab-title-block cust-mail-title">
+                    <h6 class="tab-title">Personal Details</h6>
+                    {% if user_details.activestatus == 'Not Verified' %}
+                    <h6 class="tab-title"> ( <span id="customerStatusText"
+                            style="color: orange;">{{user_details.activestatus}}</span>)</h6>
+                    {% elif user_details.activestatus == 'Deactivated by UBO' %}
+                    <h6 class="tab-title"> ( <span id="customerStatusText"
+                            style="color: red;">{{user_details.activestatus}}</span>)</h6>
+                    {% elif user_details.activestatus == 'Verified' %}
+                    <h6 class="tab-title"> ( <span id="customerStatusText"
+                            style="color: green;">{{user_details.activestatus}}</span>)</h6>
+                    {% elif user_details.activestatus == 'Rejected' %}
+                    <h6 class="tab-title"> ( <span id="customerStatusText"
+                            style="color: red;">{{user_details.activestatus}}</span>)</h6>
+                    {% elif user_details.activestatus == 'Suspended' %}
+                    <h6 class="tab-title"> ( <span id="customerStatusText"
+                            style="color: red;">{{user_details.activestatus}}</span>)</h6>
+                    {% endif %}
+                    <button class="mail-btn"
+                        onclick="sendMailToCustomer({email:'{{user_details.customer.user.email}}'})">
+                        <img src="{% static 'dash/assets/img/mail.png' %}" alt="">
+                    </button>
+                </div>
+
+                <div class="curr-conversion-card msg-card-size">
+                    <div class="row m-0">
+                        <div class="col-md-6 details-content-holder">
+                            <div class="det-label">
+                                First Name
+                            </div>
+                            <div class="det-show">
+                                :&nbsp;{{user_details.firstname}}
+                            </div>
+                        </div>
+                        <div class="col-md-6 details-content-holder">
+                            <div class="det-label">
+                                Middle Name
+                            </div>
+                            <div class="det-show">
+                                :&nbsp;{{user_details.middlename|default_if_none:''}}
+                            </div>
+                        </div>
+                        <div class="col-md-6 details-content-holder">
+                            <div class="det-label">
+                                Last Name
+                            </div>
+                            <div class="det-show">
+                                : &nbsp;{{user_details.lastname}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row m-0">
+                        <div class="col-md-6 details-content-holder">
+                            <div class="det-label">
+                                Email
+                            </div>
+                            <div class="det-show">
+                                :&nbsp;{{user_details.customer.user.email}}
+                            </div>
+                        </div>
+                        <div class="col-md-6 details-content-holder">
+                            <div class="det-label">
+                                Phone Number
+                            </div>
+                            <div class="det-show">
+                                : &nbsp;{{user_details.countrycode|default_if_none:''}} {{user_details.phonenumber|default_if_none:''}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row m-0">
+                        <div class="col-md-6 details-content-holder">
+                            <div class="det-label">
+                                Address
+                            </div>
+                            <div class="det-show">
+                                : {{user_details.street_address|default_if_none:''}}
+                            </div>
+                        </div>
+                        <div class="col-md-6 details-content-holder">
+                            <div class="det-label">
+                                DOB
+                            </div>
+                            <div class="det-show">
+                                : {{user_details.dateofbirth|default_if_none:''}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row m-0">
+                        <div class="col-md-6 details-content-holder">
+                            <div class="det-label">
+                                Country of residence
+                            </div>
+                            <div class="det-show">
+                                : {{user_details.country.shortform}}
+                            </div>
+                        </div>
+                        <div class="col-md-6 details-content-holder">
+                            <div class="det-label">
+                                Nationality
+                            </div>
+                            <div class="det-show">
+                                : {{user_details.nationality.shortform}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-outer modal-hide" id="confirmationModal">
+                    <div class="modal-content">
+                        <button class="modal-close-btn" onclick="closeConfirmModal()">
+                            <img src="/assets/img/curr-close.png" alt="">
+                        </button>
+                        <div class="modal-body">
+                            <!--<div class="mail-modal-cover">-->
+                            <div class="mail-inp-row">
+                                Do you really want to change the status of
+                                <p>
+                                    <b>&nbsp;Jacob&nbsp;Test&nbsp;Sam </b>&nbsp;
+                                </p>
+                                to &nbsp;<b id="statusType"></b>
+                            </div>
+                        </div>
+                        <!--</div>-->
+                        <div class="otp-modal-content">
+                            <div class="input-form-group modal-btn-multiple">
+                                <button class="btn-primary otp-btn ripple-efct"
+                                    onclick="submit_status()">Submit</button>
+                                <button class="btn-primary otp-btn cancel-btn"
+                                    onclick="closeConfirmModal()">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% if company_detials %}
+                <div class="tab-title-block cust-mail-title">
+                    <h6 class="tab-title">Company Details</h6>
+                </div>
+
+                <div class="curr-conversion-card msg-card-size">
+                    <div class="row m-0">
+                        <div class="col-md-6 details-content-holder">
+                            <div class="det-label">
+                                Company Name
+                            </div>
+                            <div class="det-show">
+                                :&nbsp;{{company_detials.companyname}}
+                            </div>
+                        </div>
+                        <div class="col-md-6 details-content-holder">
+                            <div class="det-label">
+                                Industry Type
+                            </div>
+                            <div class="det-show">
+                                :&nbsp;{{company_detials.industrytype.name}}
+                            </div>
+                        </div>
+                        <div class="col-md-6 details-content-holder">
+                            <div class="det-label">
+                                Company URL
+                            </div>
+                            <div class="det-show">
+                                : &nbsp;{{company_detials.url}}
+                            </div>
+                        </div>
+                        <div class="col-md-6 details-content-holder">
+                            <div class="det-label">
+                                Phone Number
+                            </div>
+                            <div class="det-show">
+                                : {{company_detials.phonenumber}}&nbsp;
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row m-0">
+                        <div class="col-md-6 details-content-holder">
+                            <div class="det-label">
+                                Address
+                            </div>
+                            <div class="det-show">
+                                :&nbsp;{{company_detials.address}}
+                            </div>
+                        </div>
+                        <div class="col-md-6 details-content-holder">
+                            <div class="det-label">
+                                Country
+                            </div>
+                            <div class="det-show">
+                                :&nbsp;{{company_detials.country}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row m-0">
+                        <div class="col-md-6 details-content-holder">
+                            <div class="det-label">
+                                ZIP
+                            </div>
+                            <div class="det-show">
+                                :&nbsp;{{company_detials.zipcode|default_if_none:''}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                {% if company_detials.companyname|company_users_list %}
+                <div class="tab-title-block cust-mail-title">
+                    <h6 class="tab-title">Company Users List</h6>
+                </div>
+                <div class="curr-conversion-card msg-card-size">
+                    <table class="admin-table-def">
+                        <tbody>
+                        </tbody>
+                        <thead>
+                            <tr>
+                                <th class="td-slno">Sl No</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Designation</th>
+                                <!--<th>View</th>-->
+                            </tr>
+                        </thead>
+
+                        <tbody id="companyUsersListTableBody">
+                            
+                            {% for customer in company_detials.companyname|company_users_list %}
+                            <tr>
+                                <td>{{forloop.counter}}</td>
+                                <td>
+                                    {{customer.firstname}}&nbsp;{{customer.middlename|default_if_none:''}}&nbsp;{{customer.lastname}}
+                                </td>
+                                <td>
+                                    {{customer.customer.user.email}}&nbsp;
+                                </td>
+                                <td>
+                                    {{customer.bsnsstrauth_usracc.all.0.transactionauthoritytype.name}}&nbsp;
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% endif %}
+                <div class="tab-title-block cust-mail-title">
+                    <h6 class="tab-title">Account Details</h6>
+                </div>
+                <div class="curr-conversion-card msg-card-size">
+                    <table class="admin-table-def">
+                        <tbody>
+                        </tbody>
+                        <thead>
+                            <tr>
+                                <th class="td-slno">Sl No</th>
+                                <th>Account Number</th>
+                                <th>Currency</th>
+                                <th>Balance</th>
+                            </tr>
+                        </thead>
+                        <tbody id="customerAccountTableBody">
+                            {% for account_detail in account_details|acc_list:user_details %}
+                            <tr>
+                                <td class="td-slno">{{forloop.counter}}</td>
+
+                                <td>{{account_detail.accountno}} &nbsp;
+                                    {% if account_detail.isprimary == 1 %}
+                                    (Primary)
+                                    {% elif account_detail.isprimary == 2 %}
+                                    (Secondary)
+                                    {% endif %}
+                                </td>
+
+                                <td>&nbsp;{{account_detail.currency.code}}</td>
+                                <td> {{account_detail.balance}}&nbsp;{{account_detail.currency.code}}</td>
+                            </tr>
+                            {% empty %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Company details -->
+                <div
+                    class="tab-title-block cust-det-title {% if customer_documents|doc_heading != 'Documents' %}document-empty{% endif %}">
+                    <h6 class="tab-title">{{customer_documents|doc_heading}}</h6>
+                </div>
+                <div class="tab-body-content-inner management-docs-sec">
+                    <div class="doc-details-cover container-fluid">
+                        <div class="row">
+
+                            {% for customer_document in customer_documents %}
+                            {% if customer_document.verificationtype.verificationtype == 1 %}
+                            <div class="col-md-6 doc-details-block">
+                                <h2 class="doc-sub-title">{{customer_document.documenttype.name}}</h2>
+                                <div class="persn-det-row">
+                                    <div class="input-form-group">
+                                        <div class="docs-thumb-cover">
+
+                                            {% for file in customer_document|customer_doc_files %}
+                                            <div class="custom-input-file img-show">
+                                                <img src="" alt="">
+                                                <a target="_blank" href="/viewImageDetails?slug={{file.slug}}">view
+                                                </a>
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    <div class="doc-details-list">
+                                        {% for cust_doc in customer_document|doc_details %}
+                                        <div class="input-form-group">
+                                            <label>{{cust_doc.field.fieldname}} : </label>
+                                            <label><b>{{cust_doc.value}}</b></label>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                            {% elif customer_document.verificationtype.verificationtype == 2 %}
+                            <div class="col-md-6 doc-details-block doc-details-block-rgt">
+                                <h2 class="doc-sub-title">{{customer_document.documenttype.name}}</h2>
+                                <div class="persn-det-row">
+                                    <div class="form-group">
+                                        <div class="docs-thumb-cover">
+                                            {% for file in customer_document|customer_doc_files %}
+                                            <div class="custom-input-file img-show">
+                                                <img src="" alt="">
+                                                <a target="_blank" href="/viewImageDetails?slug={{file.slug}}">view
+                                                </a>
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    <div class="doc-details-list">
+                                        {% for cust_doc in customer_document|doc_details %}
+                                        <div class="input-form-group">
+                                            <label>{{cust_doc.field.fieldname}} : </label>
+                                            <label><b>{{cust_doc.value}}</b></label>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                            {% elif customer_document.verificationtype.verificationtype == 3 %}
+                            <div class="col-md-6 doc-details-block doc-details-block-rgt">
+                                <h2 class="doc-sub-title">Registration certificate</h2>
+                                <div class="persn-det-row">
+                                    <div class="input-form-group">
+                                        <div class="docs-thumb-cover">
+                                            {% for file in customer_document|customer_doc_files %}
+                                            <div class="custom-input-file img-show">
+                                                <img src="" alt="">
+                                                <a target="_blank" href="/viewImageDetails?slug={{file.slug}}">view
+                                                </a>
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    <div class="doc-details-list">
+                                        {% for cust_doc in customer_document|doc_details %}
+                                        <div class="input-form-group">
+                                            <label>{{cust_doc.field.fieldname}} : </label>
+                                            <label><b>{{cust_doc.value}}</b></label>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% endfor %}
+                            <!--  -->
+                        </div>
+                    </div>
+                    <div class="decs-bottom-btn-sec">
+                        <form id="idAdminStatus" role="form" method="post" action="" onsubmit="return checkStatus()">
+                            {% csrf_token %}
+                            <input type="hidden" id="UserId" name="UserId" value="{{user_details.id}}">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        <div class="form-group">
+                                            <input type="hidden" name="slug" value="{{user_details.slug}}">
+                                            <input type="hidden" name="action_type" value="personal_details">
+                                            <label for="VerificationStatus">Status</label>
+                                            <select name="VerificationStatus" id="VerificationStatus"
+                                                class="select-list custom-select documentFields">
+                                                <option value="Not Verified">Not verified</option>
+                                                <option value="Deactivated by UBO">Deactivated By UBO</option>
+                                                <option value="Verified">Verified</option>
+                                                <option value="Rejected">Rejected</option>
+                                                <option value="Suspended">Suspended</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <div class="form-group">
+                                            <label for="Comments">Comment</label>
+                                            <textarea class="form-control documentFields" name="Comments" id="Comments"
+                                                cols="20" rows="5"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="prev-comment-sec">
+                                    {% for admin_comment in user_details.admincomments.all %}
+                                    <span class="chat-admin-date">{{admin_comment.createdon}}</span>
+                                    <p><b>{{admin_comment.createdby.firstname}}</b> : {{admin_comment.content}}</p>
+                                    {% endfor %}
+                                </div>
+                                <div class="comment-btn-sec">
+                                    <button style="margin-right: 18px;" type="submit"
+                                        class="btn btn-primary button-w">Submit</button>
+                                    <a href="#" class="btn-white btn-rgt"
+                                        onclick="sendMailToCustomer({email:'{{user_details.customer.user.email}}'})">Mail
+                                        Customer
+                                    </a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--  -->
+    </div>
+</div>
+<div id="modal-submit" class="modal fade">
+    <div class="modal-dialog modal-confirm">
+        <div class="modal-content">
+            <div class="modal-header flex-column">
+                <h6 style="font-weight: 100;" class="modal-title w-100">Do you really want to change the status of
+                    <b id="userName"></b>
+                </h6>
+                <h6 style="font-weight: 100;" class="modal-title w-100">to
+                    <b id="statusType"></b>
+                </h6>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" style="background-color: #a8a8a8;padding: 0px 0px;"
+                    class="btn btn-primary ripple-efct btn-open-dlt-cnfrm-modal" data-bs-dismiss="modal">CANCEL</button>
+                <button type="button" onclick="submit_status()" style="background-color: #fa661d;padding: 0px 0px;"
+                    class="btn btn-primary ripple-efct btn-open-dlt-cnfrm-modal">CONFIRM</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- custom mail -->
+<div id="modal-mail-send" class="modal fade">
+    <div class="modal-dialog modal-confirm" style="width:100%;">
+        <form id="customerMailSent" role="form" method="post" action="/sendMail"
+            onsubmit="return validateForm('customerMailSent', 'form')">
+            {% csrf_token %}
+            <input type="hidden" name="slug" value="{{user_details.slug}}">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="mail-modal-cover">
+                        <div class="mail-inp-row">
+                            <div class="mail-inp-label">
+                                To
+                            </div>
+                            <div class="mail-inp-cover">
+                                <label for="SenderMail" style="display: none">Sender mail</label>
+                                <input style="outline: 0;" type="email" name="SenderMail" id="SenderMail"
+                                    class="mail-inp-box">
+                            </div>
+                        </div>
+                        <div class="mail-inp-row">
+                            <label for="Subject" style="display: none">Subject</label>
+                            <div class="mail-inp-label">
+                                Subject
+                            </div>
+                            <div class="mail-inp-cover">
+                                <input style="outline: 0;" type="text" name="Subject" id="Subject" class="mail-inp-box">
+                            </div>
+                        </div>
+                        <div class="mail-inp-row last-mail-inp">
+                            <label for="Content" style="display: none">Mail Content</label>
+                            <div class="mail-inp-cover">
+                                <textarea style="outline: 0;" name="Content" id="Content" class="mail-body"
+                                    rows="5"></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer justify-content-center">
+                            <button type="button" style="background-color: #a8a8a8;padding: 0px 0px;"
+                                class="btn btn-primary ripple-efct btn-open-dlt-cnfrm-modal"
+                                data-bs-dismiss="modal">CANCEL</button>
+                            <button type="submit" style="background-color: #fa661d;padding: 0px 0px;"
+                                class="btn btn-primary ripple-efct btn-open-dlt-cnfrm-modal">Submit</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<!--  -->
+{% endblock %}
+{% block extra_script %}
+<script>
+    function sendMailToCustomer(emailObj) {
+        const elem = document.getElementById('SenderMail');
+        elem.value = '';
+        document.getElementById('Subject').value = '';
+        document.getElementById('Content').value = '';
+        if (emailObj.email) {
+            elem.value = emailObj.email;
+            $("#modal-mail-send").modal("show")
+            document.getElementById('Subject').focus();
+        }
+    }
+    function showConfirmModal() {
+        var firstName = "{{user_details.firstname}}"
+        var MiddleName = "{{user_details.middlename|default_if_none:''}}"
+        var lastName = "{{user_details.lastname}}"
+        var fullName = firstName + ' ' + MiddleName + ' ' + lastName
+        var status = $('#VerificationStatus option:selected').val()
+        $("#modal-submit").find("#userName").text(fullName)
+        $("#modal-submit").find("#statusType").text(status)
+        $("#modal-submit").modal("show")
+        return false
+    }
+    function checkStatus() {
+
+        if (validateForm('documentFields', 'class')) {
+            showConfirmModal();
+            return false;
+        } else {
+            return false;
+        }
+    }
+    function submit_status() {
+        const elem = document.getElementById('idAdminStatus');
+        elem.submit();
+    }
+    var options = $('#VerificationStatus option');
+    var values = $.map(options, e => $(e).val())
+    $.each(values, function (index, value) {
+        if (value == '{{user_details.activestatus}}') {
+            $('#VerificationStatus option[value="{{user_details.activestatus}}"]').attr('selected', 'selected')
+        }
+    });
+</script>
+{% endblock %}

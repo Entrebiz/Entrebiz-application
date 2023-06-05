@@ -1,0 +1,701 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>E-Mail</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700" rel="stylesheet" type="text/css">
+    <style type="text/css">
+        div {
+            box-sizing: border-box;
+        }
+
+        p {
+            margin-bottom: 30px;
+            color: #000;
+        }
+
+        .container {
+            font-family: \Source Sans Pro\, sans-serif;
+            padding: 100px 100px 60px;
+            border: solid 1px #f2f2f2;
+            max-width: 800px;
+            width: 100%;
+            color: #000;
+            margin: 0 auto;
+        }
+
+        .header-logo {
+            text-align: center;
+            padding: 10px;
+        }
+
+        .content-body {
+            font-family: \Source Sans Pro\, sans-serif;
+        }
+
+        .txt-grn {
+            color: #38761d;
+        }
+
+        .det-row {
+            min-height: 50px;
+            border-top: solid 1px #ccc;
+            display: block;
+            box-sizing: border-box;
+            padding: 10px 0;
+            overflow: hidden;
+        }
+
+        .det-lft {
+            width: 250px;
+            float: left;
+        }
+
+        .det-rgt {
+            float: left;
+            width: calc(100% - 250px);
+            padding-left: 15px;
+        }
+
+        .copyrights {
+            margin-top: 80px;
+        }
+
+        .copyrights p {
+            margin-bottom: 20px;
+            color: #222;
+        }
+
+        .acc-det-tab {
+            margin-top: 30px;
+        }
+
+        @media(max-width: 768px) {
+            .container {
+                padding: 20px !important;
+            }
+
+            .header-logo img {
+                width: 150px;
+            }
+
+            .det-lft {
+                width: 100% !important;
+            }
+
+            .det-rgt {
+                padding-top: 5px !important;
+                width: 100% !important;
+                padding-left: 0 !important;
+            }
+
+            .copyrights {
+                margin-top: 40px !important;
+            }
+        }
+
+        @media(max-width: 450px) {
+            .container {
+                padding: 15px !important;
+            }
+
+            .header-logo img {
+                width: 110px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    {% if wire_transfer or domestic_transfer %}
+    <div class="container"
+        style="color: #000; font-family: Source Sans Pro, sans-serif; padding: 3% 5% 3%; border: solid 1px #f2f2f2; max-width: 800px; width: 100%; margin: 0 auto;">
+        <div class="header-logo"><img src="{{domain}}/static/dash/assets/img/logo-acc.png" alt=""
+                style="max-width: 100%;"></div>
+        <div class="content-body" style="font-size: 18px; font-family: Source Sans Pro, sans-serif;">
+            <p style="text-align: center; padding-top: 10px; margin-bottom: 10px;"><img
+                    src="{{domain}}/static/dash/assets/img/success-alert.png" alt=""> </p>
+            <p style="text-align: center; margin-bottom: 5px;">Transaction No: {{transactionno}}</p>
+            <p style="text-align: center; margin-top: 5px;">Date and Time: {{transaction_datetime_utc}}</p>
+            <div class="acc-det-tab" style="margin-top: 30px;">
+                <div class="det-row"
+                    style="min-height: 40px; border-top: solid 1px #ccc; display: block; box-sizing: border-box; padding: 5px 0; overflow: hidden;">
+                    <div class="det-lft" style="width: 250px; color: #747474; box-sizing: border-box; float: left;">
+                        Sender Name</div>
+                    <div class="det-rgt"
+                        style="float: left; box-sizing: border-box; width: calc(100% - 250px); padding-left: 15px;">
+                        <b>{{sender_name}}</b></div>
+                </div>
+                <div class="det-row"
+                    style="min-height: 40px; border-top: solid 1px #ccc; display: block; box-sizing: border-box; padding: 5px 0; overflow: hidden;">
+                    <div class="det-lft" style="width: 250px; color: #747474; box-sizing: border-box; float: left;">
+                        Debit Account</div>
+                    <div class="det-rgt"
+                        style="float: left; box-sizing: border-box; width: calc(100% - 250px); padding-left: 15px;">
+                        <b>{{fromaccount}} ({{from_currency_code}})</b></div>
+                </div>
+                <div class="det-row"
+                    style="min-height: 40px; border-top: solid 1px #ccc; display: block; box-sizing: border-box; padding: 5px 0; overflow: hidden;">
+                    <div class="det-lft" style="width: 250px; color: #747474; box-sizing: border-box; float: left;">
+                        Credit Account</div>
+                    <div class="det-rgt"
+                        style="float: left; box-sizing: border-box; width: calc(100% - 250px); padding-left: 15px;">
+                        <b>{{beneficiary_accno}} ({{currency}})</b></div>
+                </div>
+                <div class="det-row"
+                    style="min-height: 40px; border-top: solid 1px #ccc; display: block; box-sizing: border-box; padding: 5px 0; overflow: hidden;">
+                    <div class="det-lft" style="width: 250px; color: #747474; box-sizing: border-box; float: left;">
+                        Beneficiary Name</div>
+                    <div class="det-rgt"
+                        style="float: left; box-sizing: border-box; width: calc(100% - 250px); padding-left: 15px;">
+                        <b>{{beneficiary_name}}</b></div>
+                </div>
+                <div class="det-row"
+                    style="min-height: 40px; border-top: solid 1px #ccc; display: block; box-sizing: border-box; padding: 5px 0; overflow: hidden;">
+                    <div class="det-lft" style="width: 250px; color: #747474; box-sizing: border-box; float: left;">Bank
+                        Name</div>
+                    <div class="det-rgt"
+                        style="float: left; box-sizing: border-box; width: calc(100% - 250px); padding-left: 15px;">
+                        <b>{{bank_name}}</b></div>
+                </div>
+                {% if wire_transfer %}
+                <div class="det-row"
+                    style="min-height: 40px; border-top: solid 1px #ccc; display: block; box-sizing: border-box; padding: 5px 0; overflow: hidden;">
+                    <div class="det-lft" style="width: 250px; color: #747474; box-sizing: border-box; float: left;">Bank
+                        Swift Code</div>
+                    <div class="det-rgt"
+                        style="float: left; box-sizing: border-box; width: calc(100% - 250px); padding-left: 15px;">
+                        <b>{{swift_code}}</b></div>
+                </div>
+                {% elif domestic_transfer %}
+                <div class="det-row"
+                style="min-height: 40px; border-top: solid 1px #ccc; display: block; box-sizing: border-box; padding: 5px 0; overflow: hidden;">
+                <div class="det-lft" style="width: 250px; color: #747474; box-sizing: border-box; float: left;">
+                    <td>{% if  currency == 'INR' %}IFSC CODE{% else %}ABA/ACH Routing Number{% endif %}</td>
+                </div>
+                <div class="det-rgt"
+                    style="float: left; box-sizing: border-box; width: calc(100% - 250px); padding-left: 15px;">
+                    <b>{{routing_number}}</b></div>
+                </div>
+                {% endif %}
+                <div class="det-row"
+                    style="min-height: 40px; border-top: solid 1px #ccc; display: block; box-sizing: border-box; padding: 5px 0; overflow: hidden;">
+                    <div class="det-lft" style="width: 250px; color: #747474; box-sizing: border-box; float: left;">Bank
+                        City</div>
+                    <div class="det-rgt"
+                        style="float: left; box-sizing: border-box; width: calc(100% - 250px); padding-left: 15px;">
+                        <b>{{city}}</b></div>
+                </div>
+                <div class="det-row"
+                    style="min-height: 40px; border-top: solid 1px #ccc; display: block; box-sizing: border-box; padding: 5px 0; overflow: hidden;">
+                    <div class="det-lft" style="width: 250px; color: #747474; box-sizing: border-box; float: left;">Bank
+                        Country</div>
+                    <div class="det-rgt"
+                        style="float: left; box-sizing: border-box; width: calc(100% - 250px); padding-left: 15px;">
+                        <b>{{country}}</b></div>
+                </div>
+                <div class="det-row"
+                    style="min-height: 40px; border-top: solid 1px #ccc; display: block; box-sizing: border-box; padding: 5px 0; overflow: hidden;">
+                    <div class="det-lft" style="width: 250px; color: #747474; box-sizing: border-box; float: left;">
+                        Currency</div>
+                    <div class="det-rgt"
+                        style="float: left; box-sizing: border-box; width: calc(100% - 250px); padding-left: 15px;">
+                        <b>{{currency}}</b></div>
+                </div>
+                {% if purpose_type == 'Other Remittance' %}
+                <div class="det-row"
+                    style="min-height: 40px; border-top: solid 1px #ccc; display: block; box-sizing: border-box; padding: 5px 0; overflow: hidden;">
+                    <div class="det-lft" style="width: 250px; color: #747474; box-sizing: border-box; float: left;">
+                        Purpose of remittance</div>
+                    <div class="det-rgt"
+                        style="float: left; box-sizing: border-box; width: calc(100% - 250px); padding-left: 15px;">
+                        <b>{{purpose_type}} ({{purpose_note}})</b></div>
+                </div>
+                {% else %}
+                <div class="det-row"
+                    style="min-height: 40px; border-top: solid 1px #ccc; display: block; box-sizing: border-box; padding: 5px 0; overflow: hidden;">
+                    <div class="det-lft" style="width: 250px; color: #747474; box-sizing: border-box; float: left;">
+                        Purpose of remittance</div>
+                    <div class="det-rgt"
+                        style="float: left; box-sizing: border-box; width: calc(100% - 250px); padding-left: 15px;">
+                        <b>{{purpose_type}}</b></div>
+                </div>
+                {% endif %}
+                
+                <div class="det-row"
+                 style="min-height: 40px; border-top: solid 1px #ccc; display: block; box-sizing: border-box; padding: 5px 0; overflow: hidden;">
+                    <div class="det-lft" style="width: 250px; color: #747474; box-sizing: border-box; float: left;">
+                        Beneficiary Email
+                    </div>
+                    {% if email %}
+                    <div class="det-rgt" style="float: left; box-sizing: border-box; width: calc(100% - 250px); padding-left: 15px;">
+                        <b>{{email}}</b>
+                    </div>
+                    {% else %}
+                    <div class="det-rgt" style="float: left; box-sizing: border-box; width: calc(100% - 250px); padding-left: 15px;">
+                        <b>Not Specified</b>
+                    </div>
+                    {% endif %}
+                </div>
+                {% if box_no %}
+                <div class="det-row"
+                    style="min-height: 40px; border-top: solid 1px #ccc; display: block; box-sizing: border-box; padding: 5px 0; overflow: hidden;">
+                    <div class="det-lft" style="width: 250px; color: #747474; box-sizing: border-box; float: left;">
+                        Box No.</div>
+                    <div class="det-rgt"
+                        style="float: left; box-sizing: border-box; width: calc(100% - 250px); padding-left: 15px;">
+                        <b>{{box_no}}</b></div>
+                </div>
+                {% endif %}
+                {% if street %}
+                <div class="det-row"
+                    style="min-height: 40px; border-top: solid 1px #ccc; display: block; box-sizing: border-box; padding: 5px 0; overflow: hidden;">
+                    <div class="det-lft" style="width: 250px; color: #747474; box-sizing: border-box; float: left;">
+                        Street</div>
+                    <div class="det-rgt"
+                        style="float: left; box-sizing: border-box; width: calc(100% - 250px); padding-left: 15px;">
+                        <b>{{street}}</b></div>
+                </div>
+                {% endif %}
+                {% if user_city %}
+                <div class="det-row"
+                    style="min-height: 40px; border-top: solid 1px #ccc; display: block; box-sizing: border-box; padding: 5px 0; overflow: hidden;">
+                    <div class="det-lft" style="width: 250px; color: #747474; box-sizing: border-box; float: left;">
+                        City</div>
+                    <div class="det-rgt"
+                        style="float: left; box-sizing: border-box; width: calc(100% - 250px); padding-left: 15px;">
+                        <b>{{user_city}}</b></div>
+                </div>
+                {% endif %}
+                {% if state %}
+                <div class="det-row"
+                    style="min-height: 40px; border-top: solid 1px #ccc; display: block; box-sizing: border-box; padding: 5px 0; overflow: hidden;">
+                    <div class="det-lft" style="width: 250px; color: #747474; box-sizing: border-box; float: left;">
+                        State</div>
+                    <div class="det-rgt"
+                        style="float: left; box-sizing: border-box; width: calc(100% - 250px); padding-left: 15px;">
+                        <b>{{state}}</b></div>
+                </div>
+                {% endif %}
+                {% if user_counrty %}
+                <div class="det-row"
+                    style="min-height: 40px; border-top: solid 1px #ccc; display: block; box-sizing: border-box; padding: 5px 0; overflow: hidden;">
+                    <div class="det-lft" style="width: 250px; color: #747474; box-sizing: border-box; float: left;">
+                        User Country</div>
+                    <div class="det-rgt"
+                        style="float: left; box-sizing: border-box; width: calc(100% - 250px); padding-left: 15px;">
+                        <b>{{user_counrty}}</b></div>
+                </div>
+                {% endif %}
+                {% if phone_no %}
+                <div class="det-row"
+                    style="min-height: 40px; border-top: solid 1px #ccc; display: block; box-sizing: border-box; padding: 5px 0; overflow: hidden;">
+                    <div class="det-lft" style="width: 250px; color: #747474; box-sizing: border-box; float: left;">
+                        Tel/Mob No.</div>
+                    <div class="det-rgt"
+                        style="float: left; box-sizing: border-box; width: calc(100% - 250px); padding-left: 15px;">
+                        <b>{{phone_no}}</b></div>
+                </div>
+                {% endif %}
+                {% if invoice %}
+                <div class="det-row"
+                    style="min-height: 40px; border-top: solid 1px #ccc; display: block; box-sizing: border-box; padding: 5px 0; overflow: hidden;">
+                    <div class="det-lft" style="width: 250px; color: #747474; box-sizing: border-box; float: left;">
+                        Has Invoice</div>
+                    <div class="det-rgt"
+                        style="float: left; box-sizing: border-box; width: calc(100% - 250px); padding-left: 15px;">
+                        <b>Yes</b></div>
+                </div>
+                {% endif %}
+                <div class="det-row"
+                    style="min-height: 40px; border-top: solid 1px #ccc; display: block; box-sizing: border-box; padding: 5px 0; overflow: hidden;">
+                    <div class="det-lft" style="width: 250px; color: #747474; box-sizing: border-box; float: left;">Net
+                        Amount</div>
+                    <div class="det-rgt"
+                        style="float: left; box-sizing: border-box; width: calc(100% - 250px); padding-left: 15px;">
+                        <b>{{amount}} {{from_currency_code}}</b></div>
+                </div>
+                <div class="det-row"
+                    style="min-height: 40px; border-top: solid 1px #ccc; display: block; box-sizing: border-box; padding: 5px 0; overflow: hidden;">
+                    <div class="det-lft" style="width: 250px; color: #747474; box-sizing: border-box; float: left;">
+                        Conversion Fee</div>
+                    <div class="det-rgt"
+                        style="float: left; box-sizing: border-box; width: calc(100% - 250px); padding-left: 15px;">
+                        <b>{{conversion_fee}} {{from_currency_code}}</b></div>
+                </div>
+                {% if wire_transfer %}
+                <div class="det-row"
+                    style="min-height: 40px; border-top: solid 1px #ccc; display: block; box-sizing: border-box; padding: 5px 0; overflow: hidden;">
+                    <div class="det-lft" style="width: 250px; color: #747474; box-sizing: border-box; float: left;">Wire
+                        Transfer Fee</div>
+                    <div class="det-rgt"
+                        style="float: left; box-sizing: border-box; width: calc(100% - 250px); padding-left: 15px;">
+                        <b>{{wire_tr_fee}} {{from_currency_code}}</b></div>
+                </div>
+                {% elif domestic_transfer %}
+                <div class="det-row"
+                    style="min-height: 40px; border-top: solid 1px #ccc; display: block; box-sizing: border-box; padding: 5px 0; overflow: hidden;">
+                    <div class="det-lft" style="width: 250px; color: #747474; box-sizing: border-box; float: left;">Domestic
+                        Transfer Fee</div>
+                    <div class="det-rgt"
+                        style="float: left; box-sizing: border-box; width: calc(100% - 250px); padding-left: 15px;">
+                        <b>{{domestic_tr_fee}} {{from_currency_code}}</b></div>
+                </div>
+                {% endif %}
+                <div class="det-row"
+                    style="min-height: 40px; border-top: solid 1px #ccc; display: block; box-sizing: border-box; padding: 5px 0; overflow: hidden;">
+                    <div class="det-lft" style="width: 250px; color: #747474; box-sizing: border-box; float: left;">
+                        Cable Charges</div>
+                    <div class="det-rgt"
+                        style="float: left; box-sizing: border-box; width: calc(100% - 250px); padding-left: 15px;">
+                        <b>{{cable_charge}} {{from_currency_code}}</b></div>
+                </div>
+
+                <div class="det-row"
+                    style="min-height: 40px; border-top: solid 1px #ccc; display: block; box-sizing: border-box; padding: 5px 0; overflow: hidden;">
+                    <div class="det-lft" style="width: 250px; color: #747474; box-sizing: border-box; float: left;">
+                        Debit Amount</div>
+                    <div class="det-rgt"
+                        style="float: left; box-sizing: border-box; width: calc(100% - 250px); padding-left: 15px;">
+                        <b>{{debit_amount}} {{from_currency_code}}</b></div>
+                </div>
+
+                <div class="det-row"
+                    style="background-color: #e8f8ed; min-height: 50px; border-top: solid 1px #ccc; display: block; box-sizing: border-box; padding: 10px 0; overflow: hidden;">
+                    <div class="det-lft"
+                        style="width: 250px; color: #747474; box-sizing: border-box; float: left; font-weight: 600;">
+                        Credit Amount</div>
+                    <div class="det-rgt"
+                        style="float: left; box-sizing: border-box; width: calc(100% - 250px); padding-left: 15px;">
+                        <b>{{credit_amount}} {{currency}}</b></div>
+                </div>
+                {% if wire_transfer %}
+                <div class="det-row"
+                    style="min-height: 40px; border-top: solid 1px #ccc; display: block; box-sizing: border-box; padding: 5px 0; overflow: hidden;">
+                    <div class="det-lft" style="width: 250px; color: #747474; box-sizing: border-box; float: left;">Note
+                    </div>
+                    {% if note %}
+                    <div class="det-rgt"
+                        style="float: left; box-sizing: border-box; width: calc(100% - 250px); padding-left: 15px;">
+                        <b>{{note}}</b></div>
+                    {% else %}
+                    <div class="det-rgt"
+                        style="float: left; box-sizing: border-box; width: calc(100% - 250px); padding-left: 15px;">
+                        <b>Not Specified</b></div>
+                    {% endif %}
+                </div>
+                {% elif domestic_transfer %}
+                <div class="det-row"
+                style="min-height: 40px; border-top: solid 1px #ccc; display: block; box-sizing: border-box; padding: 5px 0; overflow: hidden;">
+                <div class="det-lft" style="width: 250px; color: #747474; box-sizing: border-box; float: left;">Notes - Recipient Account Number
+                </div>
+                {% if note %}
+                <div class="det-rgt"
+                    style="float: left; box-sizing: border-box; width: calc(100% - 250px); padding-left: 15px;">
+                    <b>{{note}}</b></div>
+                {% else %}
+                <div class="det-rgt"
+                    style="float: left; box-sizing: border-box; width: calc(100% - 250px); padding-left: 15px;">
+                    <b>Not Specified</b></div>
+                {% endif %}
+            </div>
+                {% endif %}
+            </div>
+            <p style="margin-bottom: 15px;">If this transaction is not authorized by you, contact support at <a href="#"
+                    style="font-size: 15px; font-weight: 600; color: #2966d1;">​support@entrebiz.com</a></p>
+        </div>
+        <div style="border-top: solid 1px #000; font-size: 18px; font-family: \Source Sans Pro\, sans-serif;">
+            <p style="margin-bottom: 0; margin-top: 25px;">Thanks</p>
+            <p style="margin-top: 0;">Entrebiz Team</p>
+        </div>
+        <div class="copyrights"
+            style="margin-top: 80px; text-align: center; font-size: 12px; color: #717171; font-family: \Source Sans Pro\, sans-serif;">
+            <p style="color: #717171;">Please do not respond to this email. This mailbox is not monitored and you will
+                not receive a response.</p>
+            <p style="color: #717171;"> Entrebiz Pte. Ltd. is a company registered in Singapore with registered number 201802629R. Our registered office is at 60 PAYA LEBAR ROAD, #05-40B, PAYA LEBAR SQUARE, Singapore 409051.</p>
+            <p style="color: #717171;">Copyright © {{year}} Entrebiz. All rights reserved.</p>
+        </div>
+    </div>
+
+    {% elif acc_acc_transfer %}
+
+    <div class="container"
+        style="color: #000; font-family: Source Sans Pro, sans-serif; padding: 3% 5% 3%; border: solid 1px #f2f2f2; max-width: 800px; width: 100%; margin: 0 auto;">
+        <div class="header-logo"><img src="{{domain}}/static/dash/assets/img/logo-acc.png" alt=""
+                style="max-width: 100%;"></div>
+        <div class="content-body" style="font-size: 18px; font-family: Source Sans Pro, sans-serif;">
+            <p style="text-align: center; padding-top: 10px; margin-bottom: 10px;"><img
+                    src="{{domain}}/static/dash/assets/img/success-alert.png" alt=""> </p>
+            <p style="text-align: center; margin-bottom: 5px;">Transaction No: {{transactionno}}</p>
+            <p style="text-align: center; margin-top: 5px;">Date and Time: {{transaction_datetime_utc}}</p>
+            <div class="acc-det-tab" style="margin-top: 30px;">
+               
+                <div class="det-row"
+                    style="min-height: 40px; border-top: solid 1px #ccc; display: block; box-sizing: border-box; padding: 5px 0; overflow: hidden;">
+                    <div class="det-lft" style="width: 250px; color: #747474; box-sizing: border-box; float: left;">
+                        Debit Account</div>
+                    <div class="det-rgt"
+                        style="float: left; box-sizing: border-box; width: calc(100% - 250px); padding-left: 15px;">
+                        <b>{{fromaccount}}&nbsp;({{from_currency_code}})</b></div>
+                </div>
+                <div class="det-row"
+                    style="min-height: 40px; border-top: solid 1px #ccc; display: block; box-sizing: border-box; padding: 5px 0; overflow: hidden;">
+                    <div class="det-lft" style="width: 250px; color: #747474; box-sizing: border-box; float: left;">
+                        Credit Account</div>
+                    <div class="det-rgt"
+                        style="float: left; box-sizing: border-box; width: calc(100% - 250px); padding-left: 15px;">
+                        <b>{{beneficiary_accno}}&nbsp;({{credit_currency_code}})</b></div>
+                </div>
+                {% if beneficiary_name %}
+                <div class="det-row"
+                    style="min-height: 40px; border-top: solid 1px #ccc; display: block; box-sizing: border-box; padding: 5px 0; overflow: hidden;">
+                    <div class="det-lft" style="width: 250px; color: #747474; box-sizing: border-box; float: left;">
+                        Beneficiary Name</div>
+                    <div class="det-rgt"
+                        style="float: left; box-sizing: border-box; width: calc(100% - 250px); padding-left: 15px;">
+                        <b>{{beneficiary_name}}</b></div>
+                </div>
+                {% endif %}
+                  
+                <div class="det-row"
+                    style="min-height: 40px; border-top: solid 1px #ccc; display: block; box-sizing: border-box; padding: 5px 0; overflow: hidden;">
+                    <div class="det-lft" style="width: 250px; color: #747474; box-sizing: border-box; float: left;">Net
+                        Amount</div>
+                    <div class="det-rgt"
+                        style="float: left; box-sizing: border-box; width: calc(100% - 250px); padding-left: 15px;">
+                        <b>{{amount}}&nbsp;{{from_currency_code}}</b></div>
+                </div>
+                <div class="det-row"
+                    style="min-height: 40px; border-top: solid 1px #ccc; display: block; box-sizing: border-box; padding: 5px 0; overflow: hidden;">
+                    <div class="det-lft" style="width: 250px; color: #747474; box-sizing: border-box; float: left;">
+                        Conversion Fee</div>
+                    <div class="det-rgt"
+                        style="float: left; box-sizing: border-box; width: calc(100% - 250px); padding-left: 15px;">
+                        <b> {{conversion_fee}}&nbsp;{{from_currency_code}}</b></div>
+                </div>
+               
+               
+                <div class="det-row"
+                    style="min-height: 40px; border-top: solid 1px #ccc; display: block; box-sizing: border-box; padding: 5px 0; overflow: hidden;">
+                    <div class="det-lft" style="width: 250px; color: #747474; box-sizing: border-box; float: left;">
+                        Debit Amount</div>
+                    <div class="det-rgt"
+                        style="float: left; box-sizing: border-box; width: calc(100% - 250px); padding-left: 15px;">
+                        <b>{{debit_amount}}&nbsp;{{from_currency_code}}</b></div>
+                </div>
+
+                <div class="det-row"
+                    style="background-color: #e8f8ed; min-height: 50px; border-top: solid 1px #ccc; display: block; box-sizing: border-box; padding: 10px 0; overflow: hidden;">
+                    <div class="det-lft"
+                        style="width: 250px; color: #747474; box-sizing: border-box; float: left; font-weight: 600;">
+                        Credit Amount</div>
+                    <div class="det-rgt"
+                        style="float: left; box-sizing: border-box; width: calc(100% - 250px); padding-left: 15px;">
+                        <b>{{credit_amount}}&nbsp;{{credit_currency_code}}</b></div>
+                </div>
+                
+                <div class="det-row"
+                    style="min-height: 40px; border-top: solid 1px #ccc; display: block; box-sizing: border-box; padding: 5px 0; overflow: hidden;">
+                    <div class="det-lft" style="width: 250px; color: #747474; box-sizing: border-box; float: left;">Note
+                    </div>
+                    {% if note %}
+                    <div class="det-rgt"
+                        style="float: left; box-sizing: border-box; width: calc(100% - 250px); padding-left: 15px;">
+                        <b>{{note}}</b></div>
+                    {% else %}
+                    <div class="det-rgt"
+                        style="float: left; box-sizing: border-box; width: calc(100% - 250px); padding-left: 15px;">
+                        <b>Not Specified</b></div>
+                    {% endif %}
+                </div>
+            </div>
+            <p style="margin-bottom: 15px;">If this transaction is not authorized by you, contact support at <a href="#"
+                    style="font-size: 15px; font-weight: 600; color: #2966d1;">​support@entrebiz.com</a></p>
+        </div>
+        <div style="border-top: solid 1px #000; font-size: 18px; font-family: \Source Sans Pro\, sans-serif;">
+            <p style="margin-bottom: 0; margin-top: 25px;">Thanks</p>
+            <p style="margin-top: 0;">Entrebiz Team</p>
+        </div>
+        <div class="copyrights"
+            style="margin-top: 80px; text-align: center; font-size: 12px; color: #717171; font-family: \Source Sans Pro\, sans-serif;">
+            <p style="color: #717171;">Please do not respond to this email. This mailbox is not monitored and you will
+                not receive a response.</p>
+            <p style="color: #717171;"> Entrebiz Pte. Ltd. is a company registered in Singapore with registered number 201802629R. Our registered office is at 60 PAYA LEBAR ROAD, #05-40B, PAYA LEBAR SQUARE, Singapore 409051.</p>
+            <p style="color: #717171;">Copyright © {{year}} Entrebiz. All rights reserved.</p>
+        </div>
+    </div>
+
+
+     {% elif wallet_transfer %}
+    <div class="container"
+        style="color: #000; font-family: Source Sans Pro, sans-serif; padding: 3% 5% 3%; border: solid 1px #f2f2f2; max-width: 800px; width: 100%; margin: 0 auto;">
+        <div class="header-logo"><img src="{{domain}}/static/dash/assets/img/logo-acc.png" alt=""
+                style="max-width: 100%;"></div>
+        <div class="content-body" style="font-size: 18px; font-family: Source Sans Pro, sans-serif;">
+            <p style="text-align: center; padding-top: 10px; margin-bottom: 10px;"><img
+                    src="{{domain}}/static/dash/assets/img/success-alert.png" alt=""> </p>
+            <p style="text-align: center; margin-bottom: 5px;">Transaction No: {{transactionno}}</p>
+            <p style="text-align: center; margin-top: 5px;">Date and Time: {{transaction_datetime_utc}}</p>
+            <div class="acc-det-tab" style="margin-top: 30px;">
+                <div class="det-row"
+                    style="min-height: 40px; border-top: solid 1px #ccc; display: block; box-sizing: border-box; padding: 5px 0; overflow: hidden;">
+                    <div class="det-lft" style="width: 250px; color: #747474; box-sizing: border-box; float: left;">
+                        Sender Name</div>
+                    <div class="det-rgt"
+                        style="float: left; box-sizing: border-box; width: calc(100% - 250px); padding-left: 15px;">
+                        <b>{{sender_name}}</b></div>
+                </div>
+                <div class="det-row"
+                    style="min-height: 40px; border-top: solid 1px #ccc; display: block; box-sizing: border-box; padding: 5px 0; overflow: hidden;">
+                    <div class="det-lft" style="width: 250px; color: #747474; box-sizing: border-box; float: left;">
+                        Debit Account</div>
+                    <div class="det-rgt"
+                        style="float: left; box-sizing: border-box; width: calc(100% - 250px); padding-left: 15px;">
+                        <b>{{fromaccount}} ({{from_currency_code}})</b></div>
+                </div>
+                <div class="det-row"
+                    style="min-height: 40px; border-top: solid 1px #ccc; display: block; box-sizing: border-box; padding: 5px 0; overflow: hidden;">
+                    <div class="det-lft" style="width: 250px; color: #747474; box-sizing: border-box; float: left;">
+                        Wallet Name</div>
+                    <div class="det-rgt"
+                        style="float: left; box-sizing: border-box; width: calc(100% - 250px); padding-left: 15px;">
+                        <b>{{beneficiary_name}}</b></div>
+                </div>
+                <div class="det-row"
+                    style="min-height: 40px; border-top: solid 1px #ccc; display: block; box-sizing: border-box; padding: 5px 0; overflow: hidden;">
+                    <div class="det-lft" style="width: 250px; color: #747474; box-sizing: border-box; float: left;">Wallet
+                        Address</div>
+                    <div class="det-rgt"
+                        style="float: left; box-sizing: border-box; width: calc(100% - 250px); padding-left: 15px;"><b>{{Wallet_name}}</b></div>
+                </div>
+                <div class="det-row"
+                    style="min-height: 40px; border-top: solid 1px #ccc; display: block; box-sizing: border-box; padding: 5px 0; overflow: hidden;">
+                    <div class="det-lft" style="width: 250px; color: #747474; box-sizing: border-box; float: left;">
+                        Currency</div>
+                    <div class="det-rgt"
+                        style="float: left; box-sizing: border-box; width: calc(100% - 250px); padding-left: 15px;"><b>{{from_currency_code}}</b></div>
+                </div>
+                <div class="det-row"
+                    style="min-height: 40px; border-top: solid 1px #ccc; display: block; box-sizing: border-box; padding: 5px 0; overflow: hidden;">
+                    <div class="det-lft" style="width: 250px; color: #747474; box-sizing: border-box; float: left;">Net
+                        Amount</div>
+                    <div class="det-rgt"
+                        style="float: left; box-sizing: border-box; width: calc(100% - 250px); padding-left: 15px;">
+                        <b>{{amount}} {{from_currency_code}}</b></div>
+                </div>
+                <div class="det-row"
+                    style="min-height: 40px; border-top: solid 1px #ccc; display: block; box-sizing: border-box; padding: 5px 0; overflow: hidden;">
+                    <div class="det-lft" style="width: 250px; color: #747474; box-sizing: border-box; float: left;">
+                        Conversion Fee</div>
+                    <div class="det-rgt"
+                        style="float: left; box-sizing: border-box; width: calc(100% - 250px); padding-left: 15px;">
+                        <b>{{conversion_fee}} {{from_currency_code}}</b></div>
+                </div>
+                <div class="det-row"
+                    style="min-height: 40px; border-top: solid 1px #ccc; display: block; box-sizing: border-box; padding: 5px 0; overflow: hidden;">
+                    <div class="det-lft" style="width: 250px; color: #747474; box-sizing: border-box; float: left;">Wallet
+                        Transfer Fee</div>
+                    <div class="det-rgt"
+                        style="float: left; box-sizing: border-box; width: calc(100% - 250px); padding-left: 15px;">
+                        <b>{{wallet_tr_fee}} {{from_currency_code}}</b></div>
+                </div>
+                <div class="det-row"
+                    style="min-height: 40px; border-top: solid 1px #ccc; display: block; box-sizing: border-box; padding: 5px 0; overflow: hidden;">
+                    <div class="det-lft" style="width: 250px; color: #747474; box-sizing: border-box; float: left;">
+                        Cable Charges</div>
+                    <div class="det-rgt"
+                        style="float: left; box-sizing: border-box; width: calc(100% - 250px); padding-left: 15px;">
+                        <b>{{cable_charge}} {{from_currency_code}}</b></div>
+                </div>
+                <div class="det-row"
+                    style="min-height: 40px; border-top: solid 1px #ccc; display: block; box-sizing: border-box; padding: 5px 0; overflow: hidden;">
+                    <div class="det-lft" style="width: 250px; color: #747474; box-sizing: border-box; float: left;">
+                        Debit Amount</div>
+                    <div class="det-rgt"
+                        style="float: left; box-sizing: border-box; width: calc(100% - 250px); padding-left: 15px;">
+                        <b>{{debit_amount}} {{from_currency_code}}</b></div>
+                </div>
+                <div class="det-row"
+                    style="background-color: #e8f8ed; min-height: 50px; border-top: solid 1px #ccc; display: block; box-sizing: border-box; padding: 10px 0; overflow: hidden;">
+                    <div class="det-lft"
+                        style="width: 250px; color: #747474; box-sizing: border-box; float: left; font-weight: 600;">
+                        Credit Amount</div>
+                    <div class="det-rgt"
+                        style="float: left; box-sizing: border-box; width: calc(100% - 250px); padding-left: 15px;">
+                        <b>{{credit_amount}} {{from_currency_code}}</b></div>
+                </div>
+                <div class="det-row"
+                    style="min-height: 40px; border-top: solid 1px #ccc; display: block; box-sizing: border-box; padding: 5px 0; overflow: hidden;">
+                    <div class="det-lft" style="width: 250px; color: #747474; box-sizing: border-box; float: left;">Note
+                    </div>
+                    {% if note %}
+                    <div class="det-rgt"
+                        style="float: left; box-sizing: border-box; width: calc(100% - 250px); padding-left: 15px;">
+                        <b>{{note}}</b></div>
+                    {% else %}
+                    <div class="det-rgt"
+                        style="float: left; box-sizing: border-box; width: calc(100% - 250px); padding-left: 15px;">
+                        <b>Not Specified</b></div>
+                    {% endif %}
+                </div>
+            </div>
+            <p style="margin-bottom: 15px;">If this transaction is not authorized by you, contact support at <a href="#"
+                    style="font-size: 15px; font-weight: 600; color: #2966d1;">​support@entrebiz.com</a></p>
+        </div>
+        <div style="border-top: solid 1px #000; font-size: 18px; font-family: \Source Sans Pro\, sans-serif;">
+            <p style="margin-bottom: 0; margin-top: 25px;">Thanks</p>
+            <p style="margin-top: 0;">Entrebiz Team</p>
+        </div>
+        <div class="copyrights"
+            style="margin-top: 80px; text-align: center; font-size: 12px; color: #717171; font-family: \Source Sans Pro\, sans-serif;">
+            <p style="color: #717171;">Please do not respond to this email. This mailbox is not monitored and you will
+                not receive a response.</p>
+            <p style="color: #717171;"> Entrebiz Pte. Ltd. is a company registered in Singapore with registered number 201802629R. Our registered office is at 60 PAYA LEBAR ROAD, #05-40B, PAYA LEBAR SQUARE, Singapore 409051.</p>
+            <p style="color: #717171;">Copyright © {{year}} Entrebiz. All rights reserved.</p>
+        </div>
+    </div>
+
+    {% elif error %}
+    <div class="container" style="color: #000; font-family: 'Source Sans Pro', sans-serif; padding: 5% 5% 3%; border: solid 1px #f2f2f2; max-width: 800px; width: 100%; margin: 0 auto;">
+		<div class="header-logo"><img src="{{domain}}/static/dash/assets/img/logo-acc.png" alt="" style="max-width: 100%;"></div>
+		<div class="content-body" style="font-size: 18px; font-family: 'Source Sans Pro', sans-serif;">
+			<p style="font-family: 'Source Sans Pro', sans-serif; margin-bottom: 30px;">Dear {{user}}</p>
+			<p style="margin-bottom: 30px;">{{message}}</p>
+			<p style="margin-bottom: 15px;">If this happens by mistake, contact support at <a href="#" style="font-size: 15px; font-weight: 600; color: #2966d1;">​support@entrebiz.com</a></p>
+		</div>
+		<div style="border-top: solid 1px #000; font-size: 18px; font-family: 'Source Sans Pro', sans-serif;">
+			<p style="margin-bottom: 0; margin-top: 25px;">Thanks</p>
+			<p style="margin-top: 0;">Entrebiz Team</p>
+		</div>
+		<div class="copyrights" style="margin-top: 80px; text-align: center; font-size: 12px; color: #717171; font-family: 'Source Sans Pro', sans-serif;">
+			<p style="color: #717171;">Please do not respond to this email. This mailbox is not monitored and you will not receive a response.</p>
+			<p style="color: #717171;">Entrebiz Pte. Ltd. is a company registered in Singapore with registered number 201802629R. Our registered office is at 60 PAYA LEBAR ROAD, #05-40B, PAYA LEBAR SQUARE, Singapore 409051.</p>
+			<p style="color: #717171;">Copyright © {{year}} Entrebiz. All rights reserved.</p>
+		</div>
+	</div>
+    {% elif mail_attach %}
+    <div class="container" style="color: #000; font-family: 'Source Sans Pro', sans-serif; padding: 5% 5% 3%; border: solid 1px #f2f2f2; max-width: 800px; width: 100%; margin: 0 auto;">
+		<div class="header-logo"><img src="{{domain}}/static/dash/assets/img/logo-acc.png" alt="" style="max-width: 100%;"></div>
+		<div class="content-body" style="font-size: 18px; font-family: 'Source Sans Pro', sans-serif;">
+			<p style="font-family: 'Source Sans Pro', sans-serif; margin-bottom: 30px;">Hi {{user}}</p>
+			<p style="margin-bottom: 30px;">Your Transaction for <b>{{from_currency_code}}:{{amount}}</b> is Successfull.</p>
+			<p style="margin-bottom: 15px;">If this happens by mistake, contact support at <a href="#" style="font-size: 15px; font-weight: 600; color: #2966d1;">​support@entrebiz.com</a></p>
+		</div>
+		<div style="border-top: solid 1px #000; font-size: 18px; font-family: 'Source Sans Pro', sans-serif;">
+			<p style="margin-bottom: 0; margin-top: 25px;">Thanks</p>
+			<p style="margin-top: 0;">Entrebiz Team</p>
+		</div>
+		<div class="copyrights" style="margin-top: 80px; text-align: center; font-size: 12px; color: #717171; font-family: 'Source Sans Pro', sans-serif;">
+			<p style="color: #717171;">Please do not respond to this email. This mailbox is not monitored and you will not receive a response.</p>
+			<p style="color: #717171;">Entrebiz Pte. Ltd. is a company registered in Singapore with registered number 201802629R. Our registered office is at 60 PAYA LEBAR ROAD, #05-40B, PAYA LEBAR SQUARE, Singapore 409051.</p>
+			<p style="color: #717171;">Copyright © {{year}} Entrebiz. All rights reserved.</p>
+		</div>
+	</div>
+    {% endif %}
+</body>
+
+</html>

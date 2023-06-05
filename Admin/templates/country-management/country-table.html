@@ -1,0 +1,61 @@
+<div class="tr-requests-content">
+    <table class="table table-striped" style="font-size:13px">
+        <tbody>
+            <tr>
+                <th>Sl No.</th>
+                <th>Name</th>
+                <th>Shortform</th>
+                <th>Phonecode</th>
+                <th>Action</th>
+            </tr>
+            {% for country in countries%}
+            <tr>
+                <td>{{forloop.counter}}</td>
+                <td>{{country.name}}</td>
+                <td>{{country.shortform}}</td>
+                <td>{{country.phonecode}}</td>
+                <td>
+                    <a href="/edit-country?id={{country.id}}" class="btn-edit-ben" style="margin-right: 10px;">
+                    <i class="far fa-pencil-alt"></i></a>
+                    {% if country.isdeleted %}
+                    <a href=""  onclick="return enableORDisableCountry(1,'{{country.name}}','{{country.id}}')" class="btn-edit-ben" style="margin-right: 10px;">
+                    <i class="far fa-toggle-off"></i></a>
+                    {% else %}
+                    <a href="" onclick="return enableORDisableCountry(0,'{{country.name}}','{{country.id}}')" class="btn-edit-ben" style="margin-right: 10px;">
+                    <i class="far fa-toggle-on"></i></a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" style="text-align:center;font-size:20px;font-weight: 300;">No records found!</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="row" style="margin-top:15px;margin-bottom:20px;">
+        <div class="col-sm-12" style="text-align:center">
+            <div class="pagination" style="">
+                {% if countries.has_other_pages %}
+                {% if countries.has_previous %}
+                <a class="btn-page" data-page-num="{{ countries.previous_page_number }}">&laquo;</a>
+                {% else %}
+                <a class="disabled"><span>&laquo;</span></a>
+                {% endif %}
+                {% for i in countries.paginator.page_range %}
+                {% if countries.number == i %}
+                <a data-page-num="{{ i }}" class="active">{{ i }}</a>
+                {% else %}
+                <a class="btn-page" data-page-num="{{ i }}">{{ i }}</a>
+                {% endif %}
+                {% endfor %}
+                {% if countries.has_next %}
+                <a class="btn-page" data-page-num="{{ countries.next_page_number }}">&raquo;</a>
+                {% else %}
+                <a class="disabled"><span>&raquo;</span></a>
+                {% endif %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>

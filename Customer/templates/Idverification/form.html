@@ -1,0 +1,7 @@
+<div>
+    {% if document_feilds %}
+    {% for i in document_feilds%}
+    {{i.fieldname}}{{i.fieldtype}}<br>
+    {% endfor %}
+    {% endif %}
+</div>

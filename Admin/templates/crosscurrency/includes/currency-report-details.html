@@ -1,0 +1,471 @@
+{% extends 'common/admin-base.html' %}
+{% load static %}
+{% load util_tags %}
+{% block css %}
+<style>
+    .statment-filter-tab {
+        display: block;
+        border-bottom: solid 1px #efefef;
+        width: 100%;
+        overflow: hidden;
+    }
+
+    .statment-filter-tab a {
+        display: inline-block;
+        padding: 10px;
+        border-right: solid 1px #efefef;
+        color: #84878a;
+        border-bottom: solid 2px transparent;
+        float: left;
+    }
+
+    .statment-filter-tab a.active {
+        border-bottom-color: #22bc51;
+    }
+
+    .tab-title-block {
+        margin-bottom: 0;
+        height: 70px;
+        flex-wrap: wrap;
+        display: flex;
+        min-height: 45px;
+        padding: 10px 15px;
+    }
+
+    .customer-mng-details-sec .tab-title-block {
+        background-color: #fbfbfb !important;
+    }
+
+    .customer-mng-details-sec .cust-mail-title {
+        position: relative;
+        padding-right: 50px !important;
+    }
+
+    .customer-mng-details-sec .curr-conversion-card {
+        background-color: #fff;
+        padding-top: 15px;
+    }
+
+    .customer-mng-details-sec .cust-mail-title .mail-btn {
+        position: absolute;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        border: none;
+        background: none;
+        margin: auto;
+        margin-right: 10px;
+    }
+
+    .m-0 {
+        margin: 0;
+    }
+
+    .details-content-holder {
+        display: flex;
+        align-items: flex-start;
+    }
+
+    .det-label {
+        color: #586168;
+        padding: 10px 10px;
+        min-width: 180px;
+        font-size: 15px;
+    }
+
+    .det-show {
+        padding: 8px 10px;
+        font-weight: 800;
+        color: #586168;
+    }
+
+    .modal-hide {
+        display: none;
+    }
+
+    .modal-outer {
+        left: 0;
+        right: 0;
+        bottom: 0;
+        top: 0;
+        background: rgba(0, 0, 0, 0.23);
+        position: fixed;
+        z-index: 100;
+        overflow-y: auto;
+        text-align: center;
+        /* display: block; */
+    }
+
+    table {
+        border-collapse: collapse;
+        margin: 0.7em 0;
+        table-layout: fixed;
+        width: 100%;
+    }
+
+    .admin-table-def th {
+        font-weight: normal;
+        padding: 5px 10px;
+        text-align: left;
+        border-bottom: 1px solid #efefef;
+        color: #586168;
+        border-right: 1px solid #efefef;
+        font-size: 14px;
+    }
+
+    .admin-table-def td {
+        font-size: 14px;
+        padding: 10px 10px;
+        color: #586168;
+        /* border-bottom: 1px solid #efefef; */
+        border-color: #efefef;
+        word-break: break-all;
+    }
+
+    td {
+        border-bottom: 1px solid #efefef !important;
+    }
+    .td-slno {
+    width: 70px;
+    }
+    .customer-mng-details-sec .document-empty.tab-title-block {
+        background-color: #fff !important;
+    }
+
+    .document-empty h6 {
+        text-align: center;
+        margin: 0 auto;
+        color: #fb8989 !important;
+    }
+
+    .management-docs-sec {
+        padding-top: 20px;
+    }
+
+    .decs-bottom-btn-sec {
+        padding-top: 15px;
+        margin-top: 15px;
+        border-top: solid 1px #efefef;
+    }
+
+    .decs-bottom-btn-sec .prev-comment-sec {
+        max-height: 150px;
+        border: solid 1px #efefef;
+        border-radius: 5px;
+        padding: 20px 15px;
+        overflow-y: auto;
+        overflow-wrap: break-word;
+    }
+
+    .comment-btn-sec {
+        padding: 15px;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .btn-white {
+        background-color: #fff !important;
+        color: #fa661d !important;
+        border: solid 1px #fa661d !important;
+        border-radius: 5px !important;
+        height: 40px !important;
+        padding: 5px 20px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+
+    .btn-rgt {
+        float: right !important;
+    }
+
+    .doc-details-block {
+        padding-right: 5%;
+    }
+
+    .doc-sub-title {
+        font-size: 16px;
+    }
+
+    .docs-thumb-cover {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .management-docs-sec .doc-details-cover .docs-thumb-cover .custom-input-file {
+        border: solid 1px #ddd;
+        height: 80px;
+        width: 31%;
+        margin: 1%;
+        position: relative;
+    }
+
+    .custom-input-file.img-show {
+        cursor: initial;
+    }
+
+    .custom-input-file {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 117px;
+        background-color: #f8f9fa;
+        flex-direction: column;
+    }
+
+    .custom-input-file a {
+        background-color: rgba(229, 232, 234, 0.82);
+        display: inline-block;
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        text-align: center;
+        font-size: 13px;
+        padding: 3px 5px;
+        color: #84878a;
+        z-index: 10;
+    }
+
+    .isactive {
+        border-bottom-color: #22bc51 !important;
+    }
+
+    .chat-admin-date {
+        font-size: 12px;
+    }
+
+    .prev-comment-sec p {
+        color: #586168;
+        font-size: 15px;
+        max-width: 650px;
+        border-bottom: 1px solid #e1e1e1;
+    }
+
+    .mail-modal-cover {
+        padding-top: 30px;
+    }
+
+    .mail-modal-cover .mail-inp-row {
+        display: flex;
+        margin-bottom: 25px;
+        align-items: center;
+    }
+
+    .mail-modal-cover .mail-inp-row .mail-inp-label {
+        text-align: left;
+        flex: 0 0 100px;
+    }
+
+    .mail-modal-cover .mail-inp-row .mail-inp-cover {
+        flex-grow: 1;
+    }
+
+    .mail-modal-cover .mail-inp-row .mail-inp-box {
+        width: 100%;
+        border: none;
+        border-bottom: solid 1px #efefef;
+        font-size: 15px;
+        padding: 5px 15px;
+    }
+
+    .mail-modal-cover .mail-inp-row.last-mail-inp {
+        margin-bottom: 5px;
+    }
+
+    .mail-modal-cover .mail-body {
+        margin-top: 15px;
+        border-radius: 5px;
+        border: solid 1px #efefef;
+        width: 100%;
+        padding: 5px 15px;
+        font-size: 15px;
+    }
+
+    .mail-modal-cover .otp-modal-content {
+        padding: 10px !important;
+    }
+    .btn-primary:hover{
+        padding: 10px 58px !important;
+    }
+    .btn-cnf:hover {
+        padding: 0px 0px !important;
+        background: #fff !important;
+        border-radius: 3px !important;
+        color: #ff671e !important;
+    }
+</style>
+{% endblock %}
+{% block content %}
+
+<div class=" balance-cover  mx-4 ">
+        <div id="detailsDiv" class="customer-management-sec">
+            <div class="customer-mng-details-sec">
+                <div id="alert-box-outer" class="alert-box-outer" style="display:none">
+                    <div class="section-alert" style="display: block;" id="alertDiv">
+                        <button class="section-alert-close" onclick="closeAlertModal()">
+                            <i class="fas fa-times"></i>
+                        </button>
+                        <p style="text-align: center" id="errorField" class="refund-err-msg"></p>
+                    </div>
+                </div>
+                {% get_transaction_amounts cross_currencyreport as transaction_amounts %}
+                <div class="row">
+                    <div class="form-group col-lg-4">
+                        <h6 style="font-weight: 500;">{{cross_currencyreport.transactiontype}}/View</h6>
+                    </div>
+                </div>
+                <div class="transaction-details-container">
+                    <div class="row">
+                        <div class="form-group col-lg-6">
+                        </div>
+                        <div class="form-group col-lg-6">
+                            <a href="/crosscurrency-report" style="float:right;padding: 0.75rem 1.5rem;"><i
+                                    class="fa fa-solid fa-angle-left"></i>&nbsp;Back</a>
+                        </div>
+                    </div>
+              
+                    <div class="row">
+                        <div class="col-md-6 details-content-holder">
+                            <div class="det-label">
+                                Transaction Id
+                            </div>
+                            <div class="det-show">
+                                : {{cross_currencyreport.transactionno}}
+                            </div>
+                        </div>
+                        <div class="col-md-6 details-content-holder">
+                            <div class="det-label">
+                                Date and time
+                            </div>
+                            <div class="det-show">
+                                : {{cross_currencyreport.createdon|date:'d M Y'}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 details-content-holder">
+                            <div class="det-label">
+                                Sender AccNo
+                            </div>
+                            <div class="det-show">
+                                : {{cross_currencyreport.fromaccount.accountno}}
+                            </div>
+                        </div>
+                        <div class="col-md-6 details-content-holder">
+                            <div class="det-label">
+                                Beneficiary AccNo
+                            </div>
+                            <div class="det-show">
+                                : {{cross_currencyreport.toaccount.accountno}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 details-content-holder">
+                            <div class="det-label">
+                                Sender Name
+                            </div>
+                            <div class="det-show">
+                                : {{cross_currencyreport.fromaccount.user_account.firstname}}
+                            </div>
+                        </div>
+                        <div class="col-md-6 details-content-holder">
+                            <div class="det-label">
+                                Beneficiary Name
+                            </div>
+                            <div class="det-show">
+                                :  {{cross_currencyreport.toaccount.user_account.firstname}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 details-content-holder">
+                            <div class="det-label">
+                                Debit Amount
+                            </div>
+                            <div class="det-show">
+                                : {{cross_currencyreport.fromamount|floatformat:2}}
+                            </div>
+                        </div>
+                        <div class="col-md-6 details-content-holder">
+                            <div class="det-label">
+                               Credit Amount
+                            </div>
+                            <div class="det-show">
+                                : {{cross_currencyreport.toamount|floatformat:2}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 details-content-holder">
+                            <div class="det-label">
+                                Conversion Fees
+                            </div>
+                            <div class="det-show">
+                                :
+                                {% if transaction_amounts.conversion_fee %}
+                                {{transaction_amounts.conversion_fee|floatformat:2}}
+                                {% else%}
+                                N/A
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-6 details-content-holder">
+                            <div class="det-label">
+                               Total Amount
+                            </div>
+                            <div class="det-show">
+                                : 
+                                {% if transaction_amounts.net_amount %}
+                                {{transaction_amounts.net_amount|floatformat:2}}
+                                {% else%}
+                                N/A
+                                {% endif %}
+                            </div>
+                        </div>
+                </div>
+</div>
+
+
+{% endblock %}
+{% block extra_script %}
+<script>
+    
+
+    
+    function showConfirmModal() {
+        var firstName = "{{user_details.firstname}}"
+        var MiddleName = "{{user_details.middlename|default_if_none:''}}"
+        var lastName = "{{user_details.lastname}}"
+        var fullName = firstName + ' ' + MiddleName + ' ' + lastName
+        var status = $('#VerificationStatus option:selected').val()
+        $("#modal-submit").find("#userName").text(fullName)
+        $("#modal-submit").find("#statusType").text(status)
+        $("#modal-submit").modal("show")
+        return false
+    }
+    function checkStatus() {
+
+        if (validateForm('documentFields', 'class')) {
+            showConfirmModal();
+            return false;
+        } else {
+            return false;
+        }
+    }
+    function submit_status() {
+        const elem = document.getElementById('idAdminStatus');
+        elem.submit();
+    }
+    var options = $('#VerificationStatus option');
+    var values = $.map(options, e => $(e).val())
+    $.each(values, function (index, value) {
+        if (value == '{{user_details.activestatus}}') {
+            $('#VerificationStatus option[value="{{user_details.activestatus}}"]').attr('selected', 'selected')
+        }
+    });
+</script>
+{% endblock %}

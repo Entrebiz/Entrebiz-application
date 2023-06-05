@@ -1,0 +1,544 @@
+{% extends 'common/admin-base.html' %}
+{% load static %}
+{% load util_tags %}
+{% block css %}
+<style>
+    .err-label {
+        color: red;
+        font-size: 14px;
+    }
+
+    .custom-input-file {
+        border: solid 1px #ddd;
+        height: 80px;
+        width: 31%;
+        margin: 1%;
+        position: relative;
+    }
+
+    .custom-input-file.img-show {
+        cursor: initial;
+    }
+
+    .custom-input-file {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 117px;
+        background-color: #f8f9fa;
+        flex-direction: column;
+    }
+
+    .custom-input-file a {
+        background-color: rgba(229, 232, 234, 0.82);
+        display: inline-block;
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        text-align: center;
+        font-size: 13px;
+        padding: 3px 5px;
+        color: #84878a;
+        z-index: 10;
+    }
+
+    .documents-container {
+        padding: 20px 20px;
+    }
+
+    .documents-container h2 {
+        font-size: 16px;
+        font-weight: 500;
+
+    }
+</style>
+{% endblock %}
+{% block content %}
+<div class=" balance-cover  mx-4 " style="margin-bottom:50px">
+    <div class="row" style="100%">
+        <div class=" balance-main">
+            <div id="alert-box-outer" class="alert-box-outer" style="display:none">
+                <div class="section-alert" style="display: block;" id="alertDiv">
+                    <button class="section-alert-close" onclick="closeAlertModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <p style="text-align: center" id="errorField" class="refund-err-msg"></p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-lg-4">
+                    <h6 style="font-weight: 500;">Wallet withdrawal transfer / View</h6>
+                </div>
+
+                <div class="form-group col-lg-5" style="text-align:center;">
+                    <label class="label-status" style="color:
+                    {% if wallet_transaction.verificationstatus == 'Executed' %}
+                    green;
+                    {% elif wallet_transaction.verificationstatus == 'Refund Requested' or wallet_transaction.verificationstatus == 'Pending' or wallet_transaction.verificationstatus == 'Refund Rejected' %}
+                    orange;
+                    {% elif wallet_transaction.verificationstatus == 'Refunded' %}
+                    red;
+                    {% elif wallet_transaction.verificationstatus == 'Hold' %}
+                    blue;
+                    {% elif int_transaction.verificationstatus == 'Approved' %}
+                    #77b53f;
+                    {% endif %}
+                    ">{{wallet_transaction.verificationstatus}}
+                        {% if wallet_transaction.verificationstatus == 'Refund Requested' or wallet_transaction.verificationstatus == 'Refunded' %}
+                        {% if wallet_transaction.wallet_tr_refund_transaction.all|get_active %}
+
+                        <span style="font-size:13px;color:#5e5e5e">{% with wallet_transaction.wallet_tr_refund_transaction.all|get_active|first as wallet_tr_refund_transaction %}({{ wallet_tr_refund_transaction.amount|floatformat:2 }}
+                            {{wallet_transaction.transaction.fromaccount.currency.code}}){% endwith %}</span>
+                        {% endif %}
+                        {% endif %}
+                    </label>
+                </div>
+                {% if wallet_transaction.verificationstatus != 'Refunded' and wallet_transaction.verificationstatus != 'Refund Requested' and request.user.adminacc_created_by.approval_level != "Approver"%}
+                        {% if request.user.adminacc_created_by.admin_level != 'Sub Admin' %}
+                        <div class="form-group col-lg-3">
+                            <button class="btn btn-refund">Refund</button>
+                        </div>
+                        {% endif %}
+                {% endif %}
+                {% if wallet_transaction.verificationstatus == 'Refund Requested' and request.user.adminacc_created_by.approval_level != "Inputter" %}
+                    {% if request.user.adminacc_created_by.admin_level != 'Sub Admin' %}
+                    <div class="form-group col-lg-3">
+                        <button class="btn btn-primary" onclick='showConfirmModal("approve")'>Approve</button>
+                        <button class="btn btn-bordered btn-reject"
+                            onclick='$("#modal-form-refund-reject").modal("show")'>Reject</button>
+                    </div>
+                    {% endif %}
+                {% endif %}
+            </div>
+           
+            <div class="transaction-details-container">
+                <!--  -->
+                {% get_recipient_accountnumber wallet_transaction.transaction as wallet_name %}
+                {% get_beneficiary wallet_transaction.transaction as beneficiary %}
+                {% get_transaction_amounts wallet_transaction.transaction as transaction_amounts %}
+                {% get_debit_amount wallet_transaction.transaction "True" as debit_amount %}
+                <input type="hidden" class="total_amount" value="{{debit_amount|floatformat:2}}">
+                <input type="hidden" class="currencycode" value="{{wallet_transaction.transaction.fromaccount.currency.code}}">
+                <div class="row">
+                    <div class="col-md-6 details-content-holder">
+                        <div class="det-label">
+                            Transaction Id
+                        </div>
+                        <div class="det-show">
+                            : {{wallet_transaction.transaction.transactionno}}
+                        </div>
+                    </div>
+                    <div class="col-md-6 details-content-holder">
+                        <div class="det-label">
+                            Date and time
+                        </div>
+                        <div class="det-show">
+                            : {{wallet_transaction.createdon|date:'d M Y'}}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 details-content-holder">
+                        <div class="det-label">
+                            Wallet Address
+                        </div>
+                        <div class="det-show">
+                            : {{wallet_name}}
+                        </div>
+                    </div>
+                    <div class="col-md-6 details-content-holder">
+                        <div class="det-label">
+                            Wallet Name
+                        </div>
+                        <div class="det-show">
+                            : {{beneficiary.name}}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 details-content-holder">
+                        <div class="det-label">
+                            Sending Amount
+                        </div>
+                        <div class="det-show">
+                            : {% if transaction_amounts.net_amount %}
+                            {{transaction_amounts.net_amount|floatformat:2}}
+                            {{wallet_transaction.transaction.fromaccount.currency.code}}
+                            {% else %}
+                            NA
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-6 details-content-holder">
+                        <div class="det-label">
+                            Receiving Amount
+                        </div>
+                        <div class="det-show">
+                            : {% if wallet_transaction.transaction.toamount %}
+                            {{wallet_transaction.transaction.toamount|floatformat:2}}
+                            {{wallet_transaction.currency.code}}
+                            {% else %}
+                            NA
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 details-content-holder">
+                        <div class="det-label">
+                            Conversion Fees
+                        </div>
+                        <div class="det-show">
+                            :
+                            {% if transaction_amounts.conversion_fee %}
+                            {{transaction_amounts.conversion_fee|floatformat:2}}
+                            {{wallet_transaction.transaction.fromaccount.currency.code}}
+                            {% else %}
+                            NA
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-6 details-content-holder">
+                        <div class="det-label">
+                            Transaction Fees
+                        </div>
+                        <div class="det-show">
+                            :
+                            {% if transaction_amounts.wallet_fee %}
+                            {{transaction_amounts.wallet_fee|floatformat:2}}
+                            {{wallet_transaction.transaction.fromaccount.currency.code}}
+                            {% else %}
+                            NA
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 details-content-holder">
+                        <div class="det-label">
+                            Cable Charges
+                        </div>
+                        <div class="det-show">
+                            : {% if transaction_amounts.cable_charge %}
+                            {{transaction_amounts.cable_charge|floatformat:2}}
+                            {{wallet_transaction.transaction.fromaccount.currency.code}}
+                            {% else %}
+                            NA
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 details-content-holder">
+
+                        <div class="det-label">
+                            Total Amount
+                        </div>
+                        <div class="det-show">
+                            : {% if debit_amount %}
+                            {{debit_amount|floatformat:2}} {{wallet_transaction.transaction.fromaccount.currency.code}}
+                            {% else %}
+                            NA
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 details-content-holder">
+                        <div class="det-label">
+                            Currency
+                        </div>
+                        <div class="det-show">
+                            : {{wallet_transaction.currency.code}}
+                        </div>
+                    </div>
+                    
+                        <div class="col-md-6 details-content-holder">
+                            <div class="det-label">
+                                Risk Category
+                            </div>
+                            
+                            {% with risk_management=wallet_transaction.createdby.customer_details.all.0.useracc_customer.all.0.risk_management %}
+                            <div class="det-show">
+                                :{% if risk_management %}
+                                {% if risk_management == "Low" %}
+                                    <span style="color: green">{{ risk_management }}</span>
+                                {% elif risk_management == "Medium Low" %}
+                                    <span style="color: blue;">{{ risk_management }}</span>
+                                {% elif risk_management == "Medium High" %}
+                                    <span style="color: orange;">{{ risk_management }}</span>
+                                {% elif risk_management == "High" %}
+                                    <span style="color: red;">{{ risk_management }}</span>
+                                {% endif %}
+                                {% else %}
+                                <span>NA</span>
+                                {% endif %}
+                            </div>
+                            {% endwith %}
+
+                            
+                        </div>
+                </div>
+                <div class="row">
+                    {% if wallet_transaction.transaction.note %}
+                    <div class="col-md-6 details-content-holder">
+                        <div class="det-label">
+                            Note
+                        </div>
+                        <div class="det-show">
+                            : {{wallet_transaction.transaction.note}}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                </div>
+            {% show_transaction wallet_transaction request as approver %}
+            {% if request.user.adminacc_created_by.admin_level != 'Sub Admin'  and  approver %}
+                <form method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="action_type" value="add-comment">
+                    <input type="hidden" class="wallet_transaction_id" name="wallet_transaction_id"
+                        value="{{wallet_transaction.id}}">
+                    <div class="update-status-content">
+                        {% if wallet_transaction.verificationstatus == 'Hold' or wallet_transaction.verificationstatus == 'Pending' or wallet_transaction.verificationstatus == 'Approved' or wallet_transaction.verificationstatus == 'Refund Rejected'%}
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <label>Status</label>
+                                <select class="select-list" name="tr-status">
+                                    {% if wallet_transaction.verificationstatus == 'Refund Rejected' %} <option
+                                        value="Refund Rejected" {% if wallet_transaction.verificationstatus == 'Refund Rejected' %}selected{% endif %}>Refund Rejected</option>{% endif %}
+                                    <option value="Pending" {% if wallet_transaction.verificationstatus == 'Pending' %}selected{% endif %}>Pending</option>
+                                    <option value="Hold" {% if wallet_transaction.verificationstatus == 'Hold' %}selected{% endif %}>Hold</option>
+                                    <option value="Executed" {% if wallet_transaction.verificationstatus == 'Executed' %}selected{% endif %}>Executed</option>
+                                    {% if request.user.adminacc_created_by.approval_level != 'Inputter' %} <option value="Approved" {% if wallet_transaction.verificationstatus == 'Approved' %}selected{% endif %}>Approved</option>{% endif %}
+
+                                </select>
+
+                            </div>
+                        </div>
+                         {% else %}
+                        <input type="hidden" name="tr-status" value="{{wallet_transaction.verificationstatus}}">
+                        {% endif %}
+                        <br>
+                        {% show_comment wallet_transaction request as showcomment %}
+                        {% if showcomment %}
+                        <div class="row">
+                            <div class="col-sm-8">
+                                <label>Comments</label>
+                                <textarea class="inp-box" cols="20" rows="5" maxlength="500" name="comment"
+                                    required></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="btn-content">
+                        <button type="submit" class="btn btn-w30">Submit</button>
+                    </div>
+                    {% endif %}
+                </form>
+                {% else %}
+                <input type="hidden" class="wallet_transaction_id" name="wallet_transaction_id" value="{{wallet_transaction.id}}">
+                {% endif %}
+                <!--  -->
+                {% if wallet_transaction.admincomments.all %}
+                <div class="row">
+                    <div class="col-sm-12 cmnt-container" style="overflow-wrap: break-word ;">
+                        {% for comment in wallet_transaction.admincomments.all %}
+                        <div class="cmnt-inner-container">
+                            <span style="font-size:11px;">
+                                {{comment.createdon|date:'d M Y, h:i a'}} UTC
+                            </span>
+                            <p style="max-width: 650px;border-bottom: 1px solid #e1e1e1;">
+                                <span style="font-weight:600">{{comment.createdby.firstname}}</span>
+                                : {{comment.content}}
+                            </p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+<div id="modal-form-transaction" class="modal fade modal-form-transaction">
+    <div class="modal-dialog modal-confirm-container">
+        <div class="modal-content">
+            <button class="modal-close-btn btn-modal-close">
+                <img src="{% static 'dash/assets/img/curr-close.png' %}" alt="">
+            </button>
+            <div class="modal-header">
+                <label class="modal-title" id="exampleModalLabel">Refund</label>
+
+            </div>
+            <div class="modal-body">
+                <div class="input-form-group">
+                    <label>Original Amount</label>
+                    <input type="text" class="form-control org-amount" disabled>
+                </div>
+                <form method="post" class="form-refund-transaction">
+                    {% csrf_token %}
+                    <input type="hidden" name="wallet_transaction_id" class="wallet_transaction_id">
+                    <div class="input-form-group">
+                        <label>Refund Amount</label>
+                        <input type="text" class="form-control ref-amount inp-validate" name="refund-amount"
+                            onkeypress="return restrictAmount(event)" onchange='return formatAmount(event)'>
+                        <p class="rfnd-err-msg"></p>
+                        <!--                    <p class="err-label" style="display:none">Amount is required.</p>-->
+                    </div>
+                    <div class="input-form-group">
+                        <label>Comments</label>
+                        <textarea class="inp-box inp-validate" cols="20" rows="5" maxlength="500" name="comment"
+                            required></textarea>
+                        <p class="err-label" style="display:none">Comment is required.</p>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-bordered btn-modal-close" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary w100" onclick="open_form_refund()">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modal-form-refund-reject" class="modal fade modal-form-transaction">
+    <div class="modal-dialog modal-confirm-container">
+        <div class="modal-content">
+            <button class="modal-close-btn btn-modal-close">
+                <img src="{% static 'dash/assets/img/curr-close.png' %}" alt="">
+            </button>
+            <div class="modal-header" style="padding-top:0">
+                <label class="modal-title" id="exampleModalLabel">Reject Refund Request</label>
+
+            </div>
+            <div class="modal-body">
+
+
+                <div class="input-form-group">
+                    <label>Reject Reason</label>
+                    <textarea class="inp-box inp-reject-reason " cols="20" rows="5" maxlength="500" name="comment"
+                        required></textarea>
+                </div>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-bordered btn-modal-close" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary w100" onclick='showConfirmModal("reject")'>Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modal-confirm-refund" class="modal fade">
+    <div class="modal-dialog modal-confirm-container" style="box-shadow: 1px 1px 9px 3px #a5a5a559;">
+        <div class="modal-content">
+
+            <div class="modal-body">
+
+
+                <p class="confirm-rej-label" style="display:none">Do you really want to reject this refund ? </p>
+                <p class="confirm-ap-label">Do you really want to refund this transaction ? </p>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <input type="hidden" name="refund-status" class="refund-status" value="approve">
+                <button type="button" class="btn btn-bordered btn-modal-close" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary submit-btn"
+                    onclick="{% if wallet_transaction.verificationstatus == 'Refund Requested' and request.user.adminacc_created_by.approval_level != 'Inputter' %}{% else %}submit_form_refund(){% endif %}">Submit</button>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
+{% block extra_script %}
+<script>
+    function closeAlertModal() {
+        const elem = document.getElementById('alert-box-outer');
+        if (elem) {
+            elem.style.display = 'none';
+        }
+    }
+    $(document).on(" click", ".btn-refund", function () {
+        var total_amount = $(".total_amount").val() 
+        var  currencycode = $(".currencycode").val()
+        $("#modal-form-transaction").find(".org-amount").val(total_amount + ' ' + currencycode)
+        $("#modal-form-transaction").modal("show")
+    })
+    $(document).on("click", ".btn-modal-close", function () {
+
+        $(this).closest(".modal").modal("hide")
+
+    })
+    function validateAmount() {
+        var status = true;
+        var message = ""
+        if (!$(".ref-amount").val() || parseFloat($(".ref-amount").val() <= 0)) {
+            status = false;
+            message = "Refund amount should be greater than zero."
+        }
+        else if (parseFloat($(".total_amount").val()) < parseFloat($(".ref-amount").val())) {
+            status = false;
+            message = "Refund amount greater than original amount."
+        }
+        if (status == ' true') { 
+            $(".rfnd-err-msg").html("") 
+            $(".rfnd-err-msg").hide() } 
+        else {
+            $(".rfnd-err-msg").html(message) 
+            $(".rfnd-err-msg").show()
+        } 
+        return status
+    } 
+    function validate() {
+        flag = 0 
+        $(".inp-validate").each(function () {
+            if ($(this).val().length == 0) {
+                $(this).addClass('inp-err')
+                $(this).closest('.input-form-group').find(".err-label").show() 
+                flag = 1
+            } else {
+                $(this).removeClass('inp-err') 
+                $(this).closest('.input-form-group').find(".err-label").hide()
+            }
+        })
+        if (validateAmount() == false) { flag = 1 } if (flag == 1) { return false } return true
+    } 
+    function open_form_refund() {
+            status = validate() 
+            if (status == 'true') {
+                $("#modal-confirm-refund").modal("show")
+            }
+    } 
+    function submit_form_refund() {
+        $(".submit-btn").attr("disabled", true);
+        var formData = $('.form-refund-transaction').serializeArray();
+        formData.push({ name: "action_type", value: "refund-transaction" }); 
+        formData.push({ name: "wallet_transaction_id", value: $(".wallet_transaction_id").val() }); 
+        $.ajax({
+            type: 'POST',
+            data: formData, success: function (result) {
+                if (result.status) {
+                 location.reload()
+                  }
+                else {
+                    $("#modal-confirm-refund").modal("hide") 
+                    $(".rfnd-err-msg").html(result.message)
+                    $(".rfnd-err-msg").show()
+                }
+            }
+        })
+    } 
+    
+    function showConfirmModal(status) {
+        if (status == 'approve') {
+            $("#modal-confirm-refund").find(".confirm-ap-label").show()
+            $("#modal-confirm-refund").find(".confirm-rej-label").hide()
+            $("#modal-confirm-refund").find(".refund-status").val("approve")
+        } else {
+            $("#modal-confirm-refund").find(".confirm-ap-label").hide()
+            $("#modal-confirm-refund").find(".confirm-rej-label").show()
+            $("#modal-confirm-refund").find(".refund-status").val("reject")
+        }
+        $("#modal-confirm-refund").modal("show")
+    } 
+</script>
+{% endblock %}

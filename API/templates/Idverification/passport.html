@@ -1,0 +1,92 @@
+
+
+<div class="persn-det-card rec-mny-card consum-num">
+    <div class="form-grp-edit input-form-group ">
+        <label for="6">Passport Number</label>
+        <input type="hidden" id="check" name="check" value="Passport">
+        {% if prev %}
+        <input type="text" maxlength="25" onkeypress="return restrictAlphabets(event)" id="docId" name="docId" class="validationClass_input input-box" 
+        onfocus="clearErrorMessage(this)" placeholder="Enter Passport Number" value="{% if prev_id == 2 %}{{prev.docId}}{% else %}{% endif %}" onblur="formVerification(this)" required> 
+        {% else %}
+        <input type="text" maxlength="25" onkeypress="return restrictAlphabets(event)" id="docId" name="docId" class="validationClass_input input-box" 
+        onfocus="clearErrorMessage(this)" placeholder="Enter Passport Number" value="{% if customer_document_type == 2 %}{{idproofnumber}}{% else %}{% endif %}" onblur="formVerification(this)" required> 
+        {% endif %}
+    </div>
+</div>
+<div class="persn-det-card rec-mny-card consum-num" id="validity">
+   
+    <div class="form-grp-edit input-form-group ">
+        <label> Validity</label>  
+        <div class="date-field-row validity err-shw-abslt"> 
+            {% if prev %}
+            <select class="validationClass input-box col-5 custom-select month" name="validityMonth" id="month" onclick="removeErrormonth(this)" onchange="loadDateAndYear()" required>
+                <option value="0" disabled="" selected="">Month</option>
+                {% for month in months_choices %}
+                <option value="{{month}}" {% if prev.validityMonth == month and prev_id == 2 %}selected{% endif %}>{{month}}</option>
+                {% endfor %}
+                
+            </select>
+            {% else %}
+            <select class="validationClass input-box col-5 custom-select month" name="validityMonth" id="month" onclick="removeErrormonth(this)" onchange="loadDateAndYear()" required>
+                <option value="0" disabled="" selected="">Month</option>
+                {% for month in months_choices %}
+                <option value="{{month}}" {% if validity_month == month and customer_document_type == 2 %}selected{% endif %}>{{month}}</option>
+                {% endfor %}
+                
+            </select>
+            {% endif %}
+            {% if prev %}
+            <select class="validationClass input-box col-5 custom-select year " id="year" name="validityYear" onclick="removeErroryear(this)" onchange="loadDateAndYear()" required>
+                <option value="0"  disabled="" selected="">Year</option>
+                
+                {% for year in year_choices %} 
+                
+                <option value="{{year}}" {% if prev.validityYear == year and prev_id == 2 %}selected{% endif %}>{{year}}</option>
+                {% endfor %}
+            </select>
+            {% else %}
+                <select class="validationClass input-box col-5 custom-select year " id="year" name="validityYear" onclick="removeErroryear(this)" onchange="loadDateAndYear()" required>
+                    <option value="0"  disabled="" selected="">Year</option>
+                    
+                    {% for year in year_choices %} 
+                    
+                    <option value="{{year}}" {% if validity_year == year and customer_document_type == 2 %}selected{% endif %}>{{year}}</option>
+                    {% endfor %}
+                </select>
+            {% endif %}
+        </div>
+        <label id="err-month-year" style="color: red; font-size: small;"></label>
+        <input type="hidden" name="validity" id="validity" class="hiddenDate input-box"> 
+        
+    </div>
+</div>
+<script>
+    function restrictAlphabets(e) {
+	const charReg = /^\s*[a-zA-Z0-9\-\s]+\s*$/;
+	const regexp = /^\S+$/;
+	const inputVal = e.key;
+	// const inputText = e.target.value;
+    if (inputVal === 'Tab' || inputVal === 'Backspace') {
+		return true;
+	}
+    return regexp.test(inputVal);
+    return charReg.test(inputVal);
+}
+
+
+function clearErrorMessage(elem) {
+	(document.getElementById(`err-${elem.id}`)) && document.getElementById(`err-${elem.id}`).remove();
+	if (elem.style.borderColor && elem.style.borderColor === 'red') {
+		elem.style.borderColor = null;
+	}
+}
+
+function loadDateAndYear() {
+	let dateYear;
+	document.getElementsByClassName('hiddenDate')[0].value = '';
+	dateYear = `${document.getElementsByName('validityMonth').value} - ${document.getElementsByName('year').value}`;
+	document.getElementsByClassName('hiddenDate')[0].value = dateYear;
+}
+
+
+</script>

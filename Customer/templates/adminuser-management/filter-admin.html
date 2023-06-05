@@ -1,0 +1,33 @@
+{% load static %}
+<table class="table table-striped" style="font-size:13px">
+    <tbody>
+        <tr>
+            <th>Sl No</th>
+            <th>Name</th>
+            <th>User name</th>
+            <th>Admin Type </th>
+            <th>Action</th>
+            <th>Status</th>
+        </tr>
+
+        {% for admin in admins %}
+        <tr>
+            <td>{{forloop.counter}}</td>
+            <td>{{admin.firstname}}</td>
+            <td>{{admin.createdby.email}}</td>
+            <td>{{admin.approval_level}}</td>
+            <td>
+                <a href="/editAdminUser/?slug={{admin.slug}}" class="btn-edit-ben" style="margin-right: 10px;"><i
+                        class="far fa-pencil-alt"></i></a>
+                <a onclick="return showModal('{{admin.slug}}','{{admin.firstname}}')" href=""
+                    class="btn-open-del-ben"><i class="far fa-trash-alt"></i></a>
+            </td>
+            <td {% if admin.status %} style="color:green;" {% else %} style="color:red;" {% endif %}>{% if admin.status %}Actve{% else %}Inactve{% endif %}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="8" style="text-align:center;font-size:20px;font-weight: 300;">No records found!</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

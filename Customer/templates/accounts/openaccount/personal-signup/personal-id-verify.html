@@ -1,0 +1,208 @@
+{% extends 'accounts/openaccount/personal-signup/reg-base.html' %}
+{% load static %}
+{% load util_tags %}
+{% block style %}
+<style>
+    .doc-upload-label {
+        color: green;
+        color: green !important;
+        font-size: 15px !important;
+        margin-top: 0px !important;
+        font-style: oblique !important;
+        font-weight: 700 !important;
+    }
+</style>
+{% endblock %}
+{% block content %}
+
+<div class="container acc-det-container pers-acc-container acc-det-lg">
+    <!--<div class="container acc-det-container pers-acc-container acc-det-lg">-->
+    <div class="acc-det">
+        <div class="title-content-skip">
+            <div class="row title-skip-row title-brdr m-0">
+                <div class="col-sm-7 col-12 title-block">
+                    <h2 class="header">ID Verification</h2>
+                    <p>Please select your docs</p>
+                </div>
+                <div class="col-sm-5 col-12 title-block">
+                    <a href="/pageStatus/?page=3" class="skip-btn btn-btm">Skip</a>
+                </div>
+            </div>
+        </div>
+        {% if message %}
+        <div class="alert-box-outer">
+            <div class="{% if status %}success-alert{% else %}section-alert{% endif %}" style="display: block;"
+                id="alertDiv">
+                <button class="{% if status %}success-alert-close{% else %}section-alert-close{% endif %}"
+                    onclick="closeAlertModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+                <p style="text-align: center" id="errorField">{{message}}</p>
+            </div>
+        </div>
+        {% endif %}
+        <div class="acc-det-body-content acc-det-body-signup">
+            <form role="form" action="/documentVerification/idEdit" id="uploadVerification" method="post" enctype="multipart/form-data"
+                onsubmit="return validateForm('uploadVerification', 'form')">
+                {% csrf_token %}
+                <input type="hidden"  name="page" value="2">
+                <input type="hidden" id="check" name="check" value="{{check}}">
+                <div class="row form-row-signup">
+                    <div class="col-md-5 col-12 input-form-group" id="documentUploadDiv" style="display: block">
+                        <input type="hidden" name="VerificationType" id="VerificationType" value="1">
+                        <div id="fileUpload">
+                            <div class="custom-input-file err-shw-inpfile">
+                                <img src="{% static 'dash/assets/img/upload1.png' %}"
+                                    style="max-width: 150px !important;width: auto;" id="frontPage" class="imagLoad"
+                                    alt="">
+                                <label for="idImageFile0" style="display: block;">Front side of the doc</label>
+                                <input type="file" class="validationClass"
+                                    accept=".jpg,.png,.jpeg,.pdf,.JPG,.tiff,.tif,.TIFF,.PNG,.PDF,.JPEG" name="frontPage"
+                                    id="idImageFile0" onfocus="clearErrorMessage(this)" onchange="readImageURL(this)">
+                            </div>
+                            <label id="frontPage-label" class="doc-upload-label"></label>
+                            <div class="custom-input-file err-shw-inpfile">
+                                <img src="{% static 'dash/assets/img/upload1.png' %}"
+                                    style="max-width: 150px !important;width: auto;" id="backPage" class="imagLoad"
+                                    alt="">
+                                <label for="idImageFile1" style="display: block;">Back side of the doc</label>
+                                <input type="file" class="validationClass"
+                                    accept=".jpg,.png,.jpeg,.pdf,.JPG,.tiff,.tif,.TIFF,.PNG,.PDF,.JPEG" name="backPage"
+                                    id="idImageFile1" onfocus="clearErrorMessage(this)" onchange="readImageURL(this)">
+                            </div>
+                            <label id="backPage-label" class="doc-upload-label"></label>
+                            <div class="custom-input-file err-shw-inpfile">
+                                <img src="{% static 'dash/assets/img/upload1.png' %}"
+                                    style="max-width: 150px !important;width: auto;" id="selfiePage" class="imagLoad"
+                                    alt="">
+                                <label for="idImageFile2" style="display: block;">Selfie with doc</label>
+                                <input type="file" class="validationClass"
+                                    accept=".jpg,.png,.jpeg,.pdf,.JPG,.tiff,.tif,.TIFF,.PNG,.PDF,.JPEG"
+                                    name="selfiePage" id="idImageFile2" onfocus="clearErrorMessage(this)"
+                                    onchange="readImageURL(this)">
+                            </div>
+                            <label id="selfiePage-label" class="doc-upload-label"></label>
+                                <!--my doc-->
+                             <div class="custom-input-file err-shw-inpfile">
+                                <img src="{% static 'dash/assets/img/upload1.png' %}"
+                                    style="max-width: 150px !important;width: auto;" id="additionalPage" class="imagLoad"
+                                    alt="">
+                                <label for="idImageFile3" style="display: block;">Additional doc</label>
+                                <input type="file" class="validationClass"
+                                    accept=".jpg,.png,.jpeg,.pdf,.JPG,.tiff,.tif,.TIFF,.PNG,.PDF,.JPEG" name="additionalPage"
+                                    id="idImageFile3" onfocus="clearErrorMessage(this)" onchange="readImageURL(this)">
+                            </div>
+                             <label id="additionalPage-label" class="doc-upload-label"></label>
+                            <!---->
+                        </div>
+                    </div>
+                    <div class="col-md-7 col-12 input-file-rgt-content">
+                        <div class="form-group">
+                            <label for="idProof">Select ID Type</label>
+                            <input type="hidden" value="1" id="selectDocType">
+                            <select name="idProof" id="idProof" class="select-list validationClass"
+                                onchange="showDocumentFields()">
+                                <option selected="" disabled="" value="">-select doc type -</option>
+                                {% for doc in id_docs %}
+                                <option value="{{doc.id}}" {% if doc.id == idProof|to_int %}selected{% endif %}>{{doc.name}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <!--  -->
+                        <div id="viewDetails">
+                            <div id="7">
+                                <div id="field-name" class="persn-det-card rec-mny-card consum-num">
+                                {% if docId %}
+                                    <div class="form-group ">
+                                        <label for="docId">{{label_name}}</label>
+                                        <input type="text" maxlength="25" onkeypress="return restrictAlphabets(event)"
+                                            id="docId" name="docId" class="validationClass form-control"
+                                            onfocus="clearErrorMessage(this)" placeholder="Enter Driving License Number"
+                                            value="{{docId}}">
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                <div id="field-name1" class="persn-det-card rec-mny-card consum-num">
+                                    {% if validityMonth and validityYear %}
+                                    <div class="form-group ">
+                                        <label> Validity</label>
+                                        <div class="date-field-row validity err-shw-abslt">
+                                            <select class="validationClass select-list"
+                                                name="validityMonth" id="month" onfocus="clearErrorMessage(this)"
+                                                onchange="loadDateAndYear()" style="margin-left: 10px;margin-right: 10px;width: 30%;display: inline-block;">
+                                                <option value="" disabled="" selected="">Month</option>
+                                                {% for months in months_choices %}
+                                                <option value="{{months}}" {% if months == validityMonth %}selected{% endif %}>{{months}}</option>
+                                                {% endfor %}
+                                            </select>
+                                            <select class="validationClass select-list"
+                                                id="year" name="validityYear" onfocus="clearErrorMessage(this)"
+                                                onchange="loadDateAndYear()" style="width: 40%;display: inline-block;">
+                                                <option value="" selected="">Year</option>
+                                                {% for years in year_choices %}
+                                                <option value="{{years}}" {% if years == validityYear|to_int %}selected{% endif %}>{{years}}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--  -->
+                        <div class="row m-0 form-row-signup form-row-signup-btn">
+                            <button type="submit"
+                                class="btn btn-primary button-w btn-sm m-rt ripple-efct pers-save-btn">Next
+                                <img class="img-rgt" style="margin-left: 37px;margin-top: -36px;"
+                                    src="{% static 'dash/assets/img/arrow-rgt-wht.png' %}" alt="">
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-12" id="formatType" style="display: block">
+                        <label>Note:&nbsp;<br>
+                            <small>- Allowed Files :
+                                jpeg, JPG, pdf, tiff, png
+                            </small>
+                            <br>
+                            <small>- Maximum file size :
+                                10 MB
+                            </small>
+                        </label>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!--</div>-->
+</div>
+{% endblock %}
+{% block script %}
+<script>
+    function showDocumentFields() {
+        let id_proof = $('#idProof option:selected').val()
+        let id_proof_name = $('#idProof option:selected').text()
+        $('#check').val(id_proof_name)
+        $.get('/show-document-fields/',
+            {
+                'id_proof': id_proof,
+                'for_field': true
+            },
+            function (data, status) {
+                var fieldtype_arr = [];
+                $("#field-name").replaceWith('<div id="field-name" class="persn-det-card rec-mny-card consum-num"></div>')
+                $("#field-name1").replaceWith('<div id="field-name1" class="persn-det-card rec-mny-card consum-num"></div>')
+
+                $.each(data.doc_fileds, function (key, value) {
+                    if (value.fieldtype == 2) {
+                        $("#field-name").replaceWith('<div id="field-name" class="persn-det-card rec-mny-card consum-num"><div class="form-group "><label for="docId">' + value.fieldname + '</label><input type="hidden"  name="label_name" value="' + value.fieldname + '"><input type="text" maxlength="25" onkeypress="return restrictAlphabets(event)" id="docId" name="docId" class="validationClass form-control" onfocus="clearErrorMessage(this)" placeholder="Enter ' + value.fieldname + '" value=""> </div> </div>');
+                    }
+                    else if (value.fieldtype == 5) {
+                        // $( "#field-name1" ).replaceWith( '<div id="field-name1" class="persn-det-card rec-mny-card consum-num"><div class="form-group "><label> Validity</label><div class="date-field-row validity err-shw-abslt"><select class="validationClass input-box col-5 custom-select month" name="validityMonth" id="month" onfocus="clearErrorMessage(this)" onchange="loadDateAndYear()"><option value="0" disabled="" selected="">Month</option><option value="January">January</option><option value="February">February</option><option value="March">March</option><option value="April">April</option><option value="May">May</option><option value="June">June</option><option value="July">July</option><option value="August">August</option><option value="September">September</option><option value="October">October</option><option value="November">November</option><option value="December">December</option></select><select class="validationClass input-box col-5 custom-select year " id="year" name="validityYear" onfocus="clearErrorMessage(this)" onchange="loadDateAndYear()"><option value="0" selected="">Year</option><option value="2022">2022</option><option value="2023">2023</option><option value="2024">2024</option><option value="2025">2025</option><option value="2026">2026</option><option value="2027">2027</option><option value="2028">2028</option><option value="2029">2029</option><option value="2030">2030</option><option value="2031">2031</option><option value="2032">2032</option><option value="2033">2033</option><option value="2034">2034</option><option value="2035">2035</option><option value="2036">2036</option><option value="2037">2037</option><option value="2038">2038</option><option value="2039">2039</option><option value="2040">2040</option><option value="2041">2041</option><option value="2042">2042</option><option value="2043">2043</option></select></div><input type="hidden" name="19" id="19" class="hiddenDate input-box"></div></div>' )
+                        $("#field-name1").replaceWith('<div id="field-name1" class="persn-det-card rec-mny-card consum-num"><div class="form-group "><label> Validity</label><div class="date-field-row validity err-shw-abslt"><select class="validationClass select-list" name="validityMonth" id="month" onfocus="clearErrorMessage(this)" onchange="loadDateAndYear()" style="margin-left: 10px;margin-right: 10px;width: 30%;display: inline-block;"><option value="" disabled="" selected="">Month</option>{% for months in months_choices %}<option value="{{months}}" {% if months == month %}selected{% endif %}>{{months}}</option>{% endfor %}</select><select class="validationClass select-list" id="year" name="validityYear" onfocus="clearErrorMessage(this)" onchange="loadDateAndYear()" style="width: 40%;display: inline-block;"><option value="" selected="">Year</option>{% for years in year_choices %}<option value="{{years}}" {% if years == year|to_int %}selected{% endif %}>{{years}}</option>{% endfor %}</select></div></div></div>')
+                    }
+                });
+            });
+    }
+</script>
+{% endblock %}

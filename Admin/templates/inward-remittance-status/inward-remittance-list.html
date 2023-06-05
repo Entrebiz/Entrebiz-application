@@ -1,0 +1,69 @@
+{% extends 'common/admin-base.html' %}
+{% load static %}
+{% load util_tags %}
+{% block css %}
+<style>
+    table {
+        border-collapse: collapse;
+        margin: 0.7em 0;
+        table-layout: fixed;
+        width: 100%;
+    }
+
+    .admin-table-def th {
+        font-weight: normal;
+        padding: 5px 10px;
+        text-align: left;
+        border-bottom: 1px solid #efefef;
+        color: #586168;
+        border-right: 1px solid #efefef;
+        font-size: 14px;
+    }
+
+    .td-slno {
+        width: 70px;
+    }
+
+    .admin-table-def td {
+        font-size: 14px;
+        padding: 10px 10px;
+        color: #586168;
+        border-color: #efefef;
+        word-break: break-all;
+    }
+</style>
+{% endblock %}
+{% block content %}
+<div class=" balance-cover  mx-4 " style="min-height: 450px;">
+    <div class="row">
+        <div class=" balance-main">
+            <!--  -->
+            <div class="curr-conversion-sec">
+                {% include 'inward-remittance-status/inward-remittance-list-table.html' %}
+
+            </div>
+            <!--  -->
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block extra_script %}
+<script>
+
+$(document).on("click",".btn-page",function(){
+    next_page = $(this).attr("data-page-num")
+    $.ajax({
+        type:'POST',
+        data:{
+            "page" : next_page,
+            "action_type" : "filterinwardremitance",
+            "csrfmiddlewaretoken" : '{{csrf_token}}'
+
+        },
+        success: function(result) {
+            $(".admin-user-table-sec").replaceWith(result.inwardrem_data)
+        }
+    })
+    })
+</script>
+{% endblock %}

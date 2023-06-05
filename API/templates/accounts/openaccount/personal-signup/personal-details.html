@@ -1,0 +1,281 @@
+{% extends 'accounts/openaccount/personal-signup/reg-base.html' %}
+{% load static %}
+{% load util_tags %}
+{% block style %}
+<style>
+    .p-details-header {
+        font-weight: 600;
+    }
+
+    .cust-row {}
+
+    .cust-col {
+        padding-top: 10px;
+        padding-bottom: 20px;
+        /* border: 1px solid #efefef; */
+    }
+
+    .input-edit {
+        display: block;
+        /* border: none; */
+        box-shadow: none;
+        width: 100%;
+        color: #84878a;
+    }
+
+    .input-edit:focus {
+        outline: 0;
+    }
+
+    .date-field-row {
+        display: flex;
+    }
+
+    .custom-select.day {
+
+        width: 30%;
+    }
+
+    .custom-select.month {
+        margin-left: 10px;
+        margin-right: 10px;
+        width: 30%;
+    }
+
+    .custom-select.year {
+        width: 40%;
+    }
+
+    .phnumber {
+        margin-right: 10px;
+        width: 30%;
+    }
+</style>
+{% endblock %}
+{% block content %}
+<div class="container acc-det-container pers-acc-container acc-det-lg">
+    <div class="acc-det">
+        <div class="title-content-skip">
+            <div class="row title-skip-row title-brdr m-0">
+                <div class="col-sm-7 col-12 title-block">
+                    <h2 class="header">Personal Details</h2>
+                    <p></p>
+                </div>
+                <div class="col-sm-5 col-12 title-block">
+                    <a href="/pageStatus/?page=2" class="skip-btn btn-btm">Skip</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="acc-det-body-content acc-det-body-signup">
+            {% if message %}
+            <div class="alert-box-outer">
+                <div class="{% if status %}success-alert{% else %}section-alert{% endif %}" style="display: block;"
+                    id="alertDiv">
+                    <button class="{% if status %}success-alert-close{% else %}section-alert-close{% endif %}"
+                        onclick="closeAlertModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <p style="text-align: center" id="errorField">{{message}}</p>
+                </div>
+            </div>
+            {% endif %}
+            <form method="post" class="ed-details-form">
+                {% csrf_token %}
+                <input type="hidden" name="id" value="{{id}}">
+                <div class="row cust-row">
+                    <div class="col-sm-6 cust-col">
+                        <div class="form-grp-edit">
+                            <label>First Name</label>
+                            <input type="text" name="firstname" value="{{firstname|default_if_none:''}}"
+                                class="input-edit form-control" required="" readonly="" style="cursor: default;">
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6 cust-col">
+                        <div class="form-grp-edit">
+                            <label>Middle Name</label>
+                            <input type="text" name="middlename" value="{{middlename|default_if_none:''}}"
+                                class="input-edit form-control" required="" readonly="" style="cursor: default;"
+                                placeholder="Enter Your Middle Name">
+                        </div>
+                    </div>
+
+                </div>
+                <!--row1-->
+                <div class="row cust-row">
+                    <div class="col-sm-6 cust-col">
+                        <div class="form-grp-edit">
+                            <label>Last Name</label>
+                            <input type="text" name="lastname" value="{{lastname|default_if_none:''}}"
+                                class="input-edit form-control" required="" readonly="" style="cursor: default;">
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6 cust-col">
+                        <div class="form-grp-edit">
+                            <label>Email</label>
+                            <input type="text" name="email" value="{{email|default_if_none:''}}"
+                                class="input-edit form-control" required="" readonly="" style="cursor: default;">
+                        </div>
+                    </div>
+
+
+                </div>
+                <!--row2-->
+                <div class="row cust-row">
+                    <div class="col-sm-6 cust-col">
+                        <div class="form-grp-edit">
+                            <label>Date of Birth</label>
+                            <input type="hidden" name="dateofbirth" value="{{dateofbirth|date:'d-m-Y'}}">
+                            <!-- <input type="text" name="" value="{{dateofbirth|date:'d M Y'}}"
+                                class="input-edit form-control" required="" > -->
+                            <!--  -->
+                            <div class="date-field-row">
+                                <select class="select-list" style="width: 30%;" name="day" id="day" required="">
+                                    <option value="" disabled="" selected="">Day</option>
+                                    {% for days in day_choices %}
+                                    <option value="{{days}}" {% if days == day|to_int %}selected{% endif %}>{{days}}</option>
+                                    {% endfor %}
+                                </select>
+                                <select class="select-list" style="margin-left: 10px;margin-right: 10px;width:30%;"
+                                    name="month" id="month" required="">
+                                    <option value="" disabled="" selected="">Month</option>
+                                    {% for months in months_choices %}
+                                    <option value="{{months}}" {% if months == month %}selected{% endif %}>{{months}}</option>
+                                    {% endfor %}
+                                </select>
+                                <select class="select-list" style="width: 40%;" name="year" id="year" required="">
+                                    <option value="" disabled="" selected="">Year</option>
+                                    {% for years in year_choices %}
+                                    <option value="{{years}}" {% if years == year|to_int %}selected{% endif %}>{{years}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <!--  -->
+                        </div>
+                    </div>
+                    <div class="col-sm-6 cust-col">
+                        <div class="form-grp-edit">
+                            <label for="street_address">Street Address</label>
+                            <input id="street_address" type="text" maxlength="40" pattern="[^':]*$" autocomplete="off"
+                                title="Quotes are not allowed" name="street_address"
+                                value="{{street_address|default_if_none:''}}" class="input-edit form-control"
+                                required="" style="cursor: default;" placeholder="Enter Street Address" onblur="checkNonAsciiCharacters(this)">
+                        </div>
+                    </div>
+
+
+                </div>
+                <!--row3-->
+                <div class="row cust-row">
+                    <div class="col-sm-6 cust-col">
+                        <div class="form-grp-edit">
+                            <label for="city">City</label>
+                            <input maxlength="40" pattern="[^':]*$" autocomplete="off" title="Quotes are not allowed"
+                                type="text" id="city" name="city" value="{{city|default_if_none:''}}"
+                                class="input-edit form-control" required="" style="cursor: default;"
+                                placeholder="Enter City" onblur="checkNonAsciiCharacters(this)">
+                        </div>
+                    </div>
+                    <div class="col-sm-6 cust-col">
+                        <div class="form-grp-edit">
+                            <label for="region">State / Region</label>
+                            <input id="region" maxlength="40" pattern="[^':]*$" autocomplete="off" title="Quotes are not allowed"
+                                type="text" name="region" value="{{region|default_if_none:''}}"
+                                class="input-edit form-control" required="" style="cursor: default;"
+                                placeholder="Enter State / Region" onblur="checkNonAsciiCharacters(this)">
+                        </div>
+                    </div>
+
+                </div>
+                <!--row4-->
+                <div class="row cust-row">
+                    <div class="col-sm-6 cust-col">
+                        <div class="form-grp-edit">
+                            <label>Zip Code</label>
+                            <input maxlength="10" pattern="[a-zA-Z0-9\s]+"
+                                title="Special characters or spaces are not allowed" autocomplete="off" type="text"
+                                name="zipcode" value="{{zipcode|default_if_none:''}}" class="input-edit form-control"
+                                required="" style="cursor: default;" placeholder="Enter Zip Code">
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6 cust-col">
+                        <div class="form-grp-edit">
+                            <label>Phone Number</label>
+                            <div class="date-field-row">
+                                <select class="select-list phnumber" name="countrycode" id="" required="" style="">
+                                    <option value="" disabled="" selected="">---</option>
+                                    {% for country in countries|filter_by:'phonecode-dist' %}
+                                    {% if country.phonecode %}
+                                    <option value="{{country.phonecode}}" {% if countrycode == country.phonecode%}selected{% endif %}>{{country.phonecode}}
+                                    </option>
+                                    {% endif %}
+                                    {% endfor %}
+                                </select>
+                                <input type="text" onkeypress="return restrictAmount(event)" name="phonenumber" value="{{phonenumber|default_if_none:''}}"
+                                    class="input-edit form-control inp-phn-number" required=""
+                                    style="cursor: default;width:70%" placeholder="Enter Phone Number" maxlength="20">
+                            </div>
+                            {% if form.phonenumber.errors %}
+                            {% for error in form.phonenumber.errors %}
+                            <span style="list-style:none;color: orangered;padding-left: 10px;">{{ error|escape }}</span>
+                            {% endfor %}
+                            {% endif %}
+                        </div>
+                    </div>
+
+                </div>
+                <!--row5-->
+                <div class="row cust-row">
+                    <div class="col-sm-6 cust-col">
+                        <div class="form-grp-edit">
+                            <label>Country Of Residence</label>
+                            <!--                        <input type="text" name="country" value="{{user_account.country.name|default_if_none:''}}" class="input-edit form-control" required=""-->
+                            <!--                               style="cursor: default;">-->
+                            <select class="select-list" name="country" style="" required="">
+                                <option value="" disabled="" selected="">select your country</option>
+                                {% for cntry in countries %}
+                                <option value="{{cntry.id}}" {% if country|to_int == cntry.id %}selected{% endif %}>
+                                    {{cntry.name}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 cust-col">
+                        <div class="form-grp-edit">
+                            <label>Nationality</label>
+                            <!--                        <input type="text" name="nationality" value="{{user_account.nationality.name|default_if_none:''}}" class="input-edit form-control" required=""-->
+                            <!--                               style="cursor: default;">-->
+                            <select class="select-list" name="nationality" required="">
+                                <option value="" disabled="" selected="">select your nationality</option>
+                                {% for cntry in countries %}
+                                <option value="{{cntry.id}}" {% if nationality|to_int == cntry.id %}selected{% endif %}>
+                                    {{cntry.name}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <!--row6-->
+                <!-- <div class="row">
+                    <div class="col-sm-12" style="text-align:center">
+                        <button type="submit" class="btn btn-primary button-w" style="">&nbspconfirm details</button>
+                    </div>
+                </div>  -->
+                <!--row7-->
+                <!--  -->
+                <div class="row m-0 form-row-signup form-row-signup-btn">
+                    <button class="btn btn-primary button-w" style="width:140px;margin-right: 0;margin-left: auto;"
+                        type="submit">Next
+                        <img style="margin-left: 37px;margin-top: -36px;" class="img-rgt"
+                            src="{% static 'dash/assets/img/arrow-rgt-wht.png' %}" alt=""></button>
+                </div>
+                <!--  -->
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

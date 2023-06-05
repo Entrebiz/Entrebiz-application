@@ -1,0 +1,91 @@
+{% load static %}
+<div class="row" id="bank-det">
+    <div class="col-lg-6 col-md-6 col-12">
+        <div class="res-mny-adrs">
+            <div class="adrs-icon">
+                <img src="{% static 'dash/assets/img/user-sm.png' %}" alt="">
+            </div>
+            <div class="adrs-det">
+                <label for="bank-beneficiaryname">Beneficiary Name</label>
+                <p id="bank-beneficiaryname">{{bank_details.beneficiaryname}}</p>
+            </div>
+        </div>
+        <div class="res-mny-adrs">
+            <div class="adrs-icon">
+                <img src="{% static 'dash/assets/img/card.png' %}" alt="">
+            </div>
+            <div class="adrs-det">
+                <label for="bank-acnumber">Account Number</label>
+                <p id="bank-acnumber">{{bank_details.acnumber}}</p>
+            </div>
+        </div>
+        <div class="res-mny-adrs">
+            <div class="adrs-icon">
+                <img src="{% static 'dash/assets/img/bic.png' %}" alt="">
+            </div>
+            <div class="adrs-det">
+                <label for="bank-swiftcode">BIC/SWIFT Code</label>
+                <p id="bank-swiftcode">{{bank_details.swiftcode}}</p>
+            </div>
+        </div>
+        <div class="res-mny-adrs">
+            <div class="adrs-icon">
+                <img src="{% static 'dash/assets/img/location-pin.png' %}" alt="">
+            </div>
+            <div class="adrs-det">
+                <label for="bank-city">City</label>
+                <p id="bank-city">{{bank_details.city}}</p>
+            </div>
+        </div>
+        {% if bank_details.reference %}
+        <div class="res-mny-adrs">
+            <div class="adrs-icon">
+                <img style="height:30px;width:30px;" src="{% static 'dash/assets/img/reference.png' %}" alt="">
+            </div>
+            <div class="adrs-det">
+                <label for="bank-reference">Payment Reference</label>
+                <p id="bank-reference">{{bank_details.reference}}</p>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="col-lg-6 col-md-6 col-12">
+        <div class="res-mny-adrs">
+            <div class="adrs-icon">
+                <img src="{% static 'dash/assets/img/building.png' %}" alt="">
+            </div>
+            <div class="adrs-det">
+                <label for="bank-bankname">Bank Name</label>
+                <p id="bank-bankname">{{bank_details.bankname}}</p>
+            </div>
+        </div>
+        <div class="res-mny-adrs">
+            <div class="adrs-icon">
+                <img src="{% static 'dash/assets/img/currency.png' %}" alt="">
+            </div>
+            <div class="adrs-det">
+                <label for="bank-currency">Currency</label>
+                <p id="bank-currency">{{bank_details.currency.code}}</p>
+            </div>
+        </div>
+        <div class="res-mny-adrs">
+            <div class="adrs-icon">
+                <img src="{% static 'dash/assets/img/location-pin.png' %}" alt="">
+            </div>
+            <div class="adrs-det">
+                <label for="bank-address">Address of Bank</label>
+                <p id="bank-address">{{bank_details.address}}</p>
+            </div>
+        </div>
+        <div class="res-mny-adrs">
+            <div class="adrs-icon">
+                <img src="{% static 'dash/assets/img/location-pin.png' %}" alt="">
+            </div>
+            <div class="adrs-det">
+                <label for="bank-country">Country</label>
+                <p id="bank-country">{{bank_details.country.name}}</p>
+            </div>
+        </div>
+    </div>
+</div>

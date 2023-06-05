@@ -1,0 +1,58 @@
+{% load util_tags %}
+<div class="tr-requests-content">
+<table class="table table-striped" style="font-size:13px">
+                <tbody>
+                    <tr>
+                        <th>Sl No</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Account No.</th>
+                        <th>Action</th>
+                    </tr>
+
+                    {% for account in accounts %}
+                    <tr>
+                        <td>{{forloop.counter}}</td>
+                        <td>{{account.customer_name|default_if_none:''}}</td>
+                        <td>{{account.email|default_if_none:''}}</td>
+                        <td>{{account.accountno|default_if_none:''}} ({{account.currency_code|default_if_none:''}})</td>
+                        <td>
+                            <button class="btn btn-bordered btn-small" onclick="showModal('{{account.accountno}}', '{{account.currency_code}}','{{account.accountid}}','1')">Add Money</button>
+                            <button class="btn btn-bordered btn-small" onclick="showModal('{{account.accountno}}', '{{account.currency_code}}','{{account.accountid}}','2')">Add Charge</button>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="8" style="text-align:center;font-size:20px;font-weight: 300;">No Users</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+<div class="row" style="margin-top:15px;margin-bottom:20px;">
+                <div class="col-sm-12" style="text-align:center">
+                    <div class="pagination" style="">
+                  {% if paginate_data.has_other_pages %}
+                        {% if paginate_data.has_previous %}
+                          <a class="btn-page" data-page-num="{{ paginate_data.previous_page_number }}">&laquo;</a>
+                        {% else %}
+                          <a class="disabled"><span>&laquo;</span></a>
+                        {% endif %}
+                        {% for i in paginate_data.paginator.page_range %}
+                          {% if data.number == i %}
+                            <a data-page-num="{{ i }}" class="active">{{ i }}</a>
+                          {% else %}
+                            <a class="btn-page" data-page-num="{{ i }}">{{ i }}</a>
+                          {% endif %}
+                        {% endfor %}
+                        {% if data.has_next %}
+                          <a class="btn-page" data-page-num="{{ paginate_data.next_page_number }}">&raquo;</a>
+                        {% else %}
+                          <a class="disabled"><span>&raquo;</span></a>
+                        {% endif %}
+                    {% endif %}
+                </div>
+                </div>
+
+            </div>
+</div>

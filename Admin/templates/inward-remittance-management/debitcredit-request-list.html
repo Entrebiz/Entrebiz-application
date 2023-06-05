@@ -1,0 +1,270 @@
+{% extends 'common/admin-base.html' %}
+{% load static %}
+{% load util_tags %}
+{% block css %}
+<style>
+    .btn-white {
+        background-color: #fff !important;
+        color: #fa661d !important;
+        border: solid 1px #fa661d !important;
+        border-radius: 5px !important;
+        height: 40px !important;
+        padding: 5px 20px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+
+    .btn-rgt {
+        float: right !important;
+    }
+    .filtr-content{
+        padding-left:15px;
+    }
+    .filtr-content .col-lg-2, .filtr-content .col-lg-3{
+        padding-left:0;
+    }
+    .tab-actn-btn{
+            border: solid 1px #e1e1e1;
+    border-radius: 5px;
+    padding: 3px 5px;
+    text-align: center;
+    margin: 0 1px;
+    min-width: 25px;
+    display: inline-block;
+    color: #586168;
+    font-size: 12px;
+    min-height: 25px;
+    }
+    .tab-actn-btn:hover{
+        color: #787e83;
+    }
+    .btn-small{
+        padding: 2px 5px !important;
+        height: 25px !important;
+    }
+    .inp-err{
+        border-color:red !important;
+    }
+    .err-label{
+        color: red;
+        font-size: 13px;
+    }
+</style>
+{% endblock %}
+{% block content %}
+<div class=" balance-cover  mx-4 " style="min-height: 450px;">
+    <div class="row">
+        <div class=" balance-main">
+            {% if message %}
+                <div class="alert-box-outer" id="alert">
+                    <div class="{% if status %}success-alert{% else %}section-alert{% endif %}" style="display: block;"
+                        id="alertDiv">
+                        <button class="{% if status %}success-alert-close{% else %}section-alert-close{% endif %}" onclick="closeAlertModal()">
+                            <i class="fas fa-times"></i>
+                        </button>
+                        <p style="text-align: center" id="errorField">{{message}}</p>
+                    </div>
+                </div>
+            {% else %}
+                <div id="alert-box-outer" class="alert-box-outer" style="display:none">
+                    <div class="section-alert" style="display: block;" id="alertDiv">
+                        <button class="section-alert-close" onclick="closeAlertModal()">
+                            <i class="fas fa-times"></i>
+                        </button>
+                        <p style="text-align: center" id="errorField" class="err-msg"></p>
+                    </div>
+                </div>
+            {% endif %}
+            <form method="post" class="debitcredit-requests-form">
+                {% csrf_token %}
+                <div class="row filtr-content" style="">
+                    <div class="form-group col-lg-2">
+                        <input type="text" class="form-control" id="name" name="name" placeholder="Name" value="{{name}}">
+                    </div>
+                    <div class="form-group col-lg-2">
+                        <input type="text" class="form-control" id="email" name="email" placeholder="Email" value="{{email}}">
+                    </div>
+                    <div class="form-group col-lg-2">
+                        <input type="text" class="form-control" id="accountno" name="accountno" placeholder="Account Number" value="{{accountno}}">
+                    </div>
+                    <input type="hidden" name="action_type" value="search_debitcredit_requests">
+                    <div class="form-group col-lg-2">
+                        <button type="submit" class="btn-white" style="padding: 0.75rem 1.5rem;">Search</button>
+                    </div>
+                </div>
+            </form>
+            {% include 'inward-remittance-management/includes/debitcredit-request-list-table.html' %}
+        </div>
+    </div>
+</div>
+<div id="modal-confirm-request" class="modal fade" style="z-index:2000">
+	<div class="modal-dialog modal-confirm-container" style="box-shadow: 1px 1px 9px 3px #a5a5a559;">
+		<div class="modal-content">
+			<div class="modal-body">
+                <div class="confirm-label-container" style="font-size:16px;color:#404040">
+                    <div>Do you really want to</div>
+                <div class="request-type">add</div>
+                    <span class="amount" style="font-weight:600;color:#333">11.00</span>
+                    <span>to</span>
+                    <span class="accnt-no">10000231 USD</span>?
+                    </div>
+                <input type="hidden" class="request_id">
+                <input type="hidden" class="request_type">
+			</div>
+			<div class="modal-footer justify-content-center">
+				<button type="button" class="btn btn-bordered btn-modal-close" data-dismiss="modal">Cancel</button>
+				<button type="button" class="btn btn-primary" onclick="submit_request()">Submit</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="modal-form-transaction" class="modal fade modal-form-transaction">
+	<div class="modal-dialog modal-confirm-container">
+		<div class="modal-content">
+            <button class="modal-close-btn btn-modal-close">
+            <img src="{% static 'dash/assets/img/curr-close.png' %}" alt="">
+        </button>
+			<div class="modal-header">
+        <label class="modal-title" id="exampleModalLabel">Add Money</label>
+
+      </div>
+			<div class="modal-body">
+                <div class="input-form-group">
+                    <label>Account Number</label>
+                    <label class="label-accnt-number" style="color:#333;font-weight:600"></label>
+                </div>
+                <form method="post" class="form-creditdebit">
+                    {% csrf_token %}
+                    <input type="hidden" name="account_id" class="account_id">
+                    <input type="hidden" name="creditdebit_type" class="creditdebit_type">
+                    <input type="hidden" name="action_type" class="action_type" value="creditdebit">
+                <div class="input-form-group">
+                    <label>Amount</label>
+                    <input type="text" class="form-control inp-amount inp-validate" name="amount" placeholder="Enter Amount" onkeypress="return restrictAmount(event)"  onchange='return formatAmount(event)'>
+                    <p class="err-label" style="display:none">Amount is required.</p>
+                </div>
+                <div class="input-form-group">
+                    <label>Comments</label>
+                    <textarea class="inp-box inp-validate" cols="20" rows="5" maxlength="500" name="comment"></textarea>
+                    <p class="err-label" style="display:none">Comment is required.</p>
+                </div>
+                </form>
+			</div>
+			<div class="modal-footer justify-content-center">
+				<button type="button" class="btn btn-bordered btn-modal-close" data-dismiss="modal">Cancel</button>
+				<button type="button" class="btn btn-primary w100 btn-submit" onclick="open_confirm_modal()">Submit</button>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
+{% block extra_script %}
+<script>
+
+
+
+
+
+function closeAlertModal() {
+         $('.alert-box-outer').hide();
+    }
+    $(document).on("click",".btn-page",function(){
+        next_page = $(this).attr("data-page-num")
+        var formData = $('.wire-rqsts-form').serializeArray();
+        formData.push({ name: "page", value: next_page });
+        formData.push({ name: "is_paginate", value: "true" });
+        $.ajax({
+            type:'POST',
+            data:formData,
+            success: function(result) {
+                $(".stmnt-table").replaceWith(result.statementtable_html)
+            }
+        })
+    })
+
+function showModal(accountno,curr_code,account_id,type){
+    $("#modal-form-transaction").find(".inp-validate").each(function(){
+        $(this).val("")
+    })
+
+    $("#modal-form-transaction").find(".account_id").val(account_id)
+    $("#modal-form-transaction").find(".creditdebit_type").val(type)
+    if (type == '1'){
+        $("#modal-form-transaction").find(".modal-title").html("Add Money")
+        $("#modal-form-transaction").find(".btn-submit").attr("data-type","add")
+    }else if(type == '2'){
+        $("#modal-form-transaction").find(".modal-title").html("Add Charge")
+        $("#modal-form-transaction").find(".btn-submit").attr("data-type","charge")
+    }
+    $("#modal-form-transaction").find(".label-accnt-number").html(accountno+' '+curr_code)
+    $("#modal-form-transaction").find(".btn-submit").attr("data-accountno",accountno)
+    $("#modal-form-transaction").find(".btn-submit").attr("data-curr_code",curr_code)
+    $("#modal-form-transaction").find(".btn-submit").attr("data-account_id",account_id)
+
+
+    if (type == '1' | type == '2'){
+        $("#modal-form-transaction").modal("show")
+    }
+
+}
+
+$(document).on("click",".btn-modal-close",function(){
+
+    $(this).closest(".modal").modal("hide")
+
+})
+function validate(){
+    flag = 0
+    $(".inp-validate").each(function(){
+
+    if ($(this).val().length == 0){
+        $(this).addClass('inp-err')
+        $(this).closest('.input-form-group').find(".err-label").show()
+        flag = 1
+    }else{
+        $(this).removeClass('inp-err')
+        $(this).closest('.input-form-group').find(".err-label").hide()
+    }
+
+})
+if (flag == 1){
+        return false
+    }
+    return true
+}
+function open_confirm_modal(type,amount,accountno,curr_code){
+    if (validate()){
+        type = $(".btn-submit").attr("data-type")
+        amount = $(".inp-amount").val()
+        accountno = $(".btn-submit").attr("data-accountno")
+        curr_code = $(".btn-submit").attr("data-curr_code")
+
+        $(".confirm-label-container").find('.request-type').html(type)
+        $(".confirm-label-container").find('.amount').html(amount)
+        $(".confirm-label-container").find('.accnt-no').html(accountno+' '+curr_code)
+        $("#modal-confirm-request").modal("show")
+    }
+}
+
+function submit_request(){
+    document.querySelector('button[onclick="submit_request()"]').disabled = true;
+    var formData = $('.form-creditdebit').serializeArray();
+    $.ajax({
+        type:'POST',
+        data:formData,
+        success: function(result) {
+             if (result.status){
+                location.href = '/inwardRemittance'
+            }else{
+                $("#modal-confirm-request").modal("hide")
+                $("#modal-form-transaction").modal("hide")
+                $(".err-msg").html(result.message)
+                $(".alert-box-outer").show()
+            }
+        }
+    })
+}
+</script>
+{% endblock %}

@@ -1,0 +1,135 @@
+{% extends 'accounts/openaccount/personal-signup/reg-base.html' %}
+{% load static %}
+{% block style %}
+<style>
+    .doc-upload-label {
+        color: green;
+        color: green !important;
+        font-size: 15px !important;
+        margin-top: 0px !important;
+        font-style: oblique !important;
+        font-weight: 700 !important;
+    }
+</style>
+{% endblock %}
+{% block content %}
+
+<div class="container acc-det-container pers-acc-container acc-det-lg">
+    <!--<div class="container acc-det-container pers-acc-container acc-det-lg">-->
+    <div class="acc-det">
+        <div class="title-content-skip">
+            <div class="row title-skip-row title-brdr m-0">
+                <div class="col-sm-7 col-12 title-block">
+                    <h2 class="header">Address Verification</h2>
+                    <p>Please select your docs</p>
+                </div>
+                <div class="col-sm-5 col-12 title-block">
+                    <a href="/pageStatus/?page=4" class="skip-btn btn-btm">Skip</a>
+                </div>
+            </div>
+        </div>
+        {% if message %}
+        <div class="alert-box-outer">
+            <div class="{% if status %}success-alert{% else %}section-alert{% endif %}" style="display: block;"
+                id="alertDiv">
+                <button class="{% if status %}success-alert-close{% else %}section-alert-close{% endif %}"
+                    onclick="closeAlertModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+                <p style="text-align: center" id="errorField">{{message}}</p>
+            </div>
+        </div>
+        {% endif %}
+        <div class="acc-det-body-content acc-det-body-signup">
+            <form role="form" id="uploadVerification" method="post" enctype="multipart/form-data" action="/documentVerification/addressEdit"
+                onsubmit="return validateForm('uploadVerification', 'form')">
+                {% csrf_token %}
+                <input type="hidden" name="page" value="3">
+                <div class="row form-row-signup">
+                    <div class="col-md-5 col-12 input-form-group" id="documentUploadDiv" style="display: block">
+                        <input type="hidden" name="VerificationType" id="VerificationType" value="2">
+                        <div id="fileUpload">
+                            <div class="custom-input-file err-shw-inpfile">
+                                <img src="{% static 'dash/assets/img/upload1.png' %}" id="frontPage" class="imagLoad"
+                                    alt="" style="max-width: 150px !important;width: auto;">
+                                <label for="idImageFile0" style="display: block;">upload your doc </label>
+                                <input type="file" class="validationClass"
+                                    accept=".jpg,.png,.jpeg,.pdf,.JPG,.tiff,.tif,.TIFF,.PNG,.PDF,.JPEG" name="frontPage"
+                                    id="idImageFile0" onfocus="clearErrorMessage(this)" onchange="readImageURL(this)">
+                            </div>
+                            <label id="frontPage-label" class="doc-upload-label"></label>
+                        </div>
+                    </div>
+                    <div class="col-md-7 col-12 input-file-rgt-content">
+                        <div class="form-group">
+                            <label for="idProof">Select ID Type</label>
+                            <input type="hidden" value="2" id="selectDocType">
+                            <select name="idProof" id="idProof" class="select-list validationClass"
+                                onchange="showDocumentFields()" required="">
+                                <option selected="" disabled="" value="">-select doc type -</option>
+                                {% for doc in address_docs %}
+                                <option value="{{doc.name}}" {% if doc.name == idProof %}selected{% endif %}>{{doc.name}}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <!-- <div id="viewDetails">
+                            <div id="0"></div>
+                        </div> -->
+                        <div id="viewDetails">
+                            <div id="field-name">
+                                {% if field_value %}
+                                <div class="persn-det-card rec-mny-card consum-num">
+                                    <div class="form-group "><label for="docId">{{label_name}}</label>
+                                        <input type="hidden" id="docFieldId" name="doc_field_id"
+                                            value="{{doc_field_id}}">
+                                        <input type="text" maxlength="25" onkeypress="return restrictAlphabets(event)"
+                                            id="docId" name="field_value" class="validationClass input-box"
+                                            onfocus="clearErrorMessage(this)" placeholder="" value="{{field_value}}">
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="row m-0 form-row-signup form-row-signup-btn">
+                            <button type="submit"
+                                class="btn btn-primary button-w btn-sm m-rt ripple-efct pers-save-btn">Next
+                                <img style="margin-left: 37px;margin-top: -36px;" class="img-rgt"
+                                    src="{% static 'dash/assets/img/arrow-rgt-wht.png' %}" alt="">
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-12" id="formatType" style="display: block">
+                        <label>Note:&nbsp;<br>
+                            <small>- Allowed Files :
+                                jpeg, JPG, pdf, tiff, png
+                            </small>
+                            <br>
+                            <small>- Maximum file size :
+                                10 MB
+                            </small>
+                        </label>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!--</div>-->
+</div>
+{% endblock %}
+{% block script %}
+<script>
+    function showDocumentFields() {
+        let id_proof = $('#idProof option:selected').val()
+        $.get('/documentVerification/addressEdit',
+            {
+                'id_proof': id_proof,
+                'for_field': true
+            },
+            function (data, status) {
+                $("#field-name").replaceWith('<div id="field-name"><div class="persn-det-card rec-mny-card consum-num"><div class="form-group "><label for="docId">' + data.doc_fileds.fieldname + '</label><input type="hidden" id="docFieldId" name="doc_field_id" value="' + data.doc_fileds.id + '"><input type="hidden"  name="label_name" value="' + data.doc_fileds.fieldname + '"><input type="text" maxlength="25" onkeypress="return restrictAlphabets(event)" id="docId" name="field_value" class="validationClass input-box" onfocus="clearErrorMessage(this)" placeholder="Enter ' + data.doc_fileds.fieldname + '" value=""></div></div></div>');
+            });
+    }
+</script>
+{% endblock %}

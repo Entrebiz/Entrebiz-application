@@ -1,0 +1,265 @@
+{% extends 'common/base.html' %}
+{% load static %}
+{% load util_tags %}
+{% block css %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'transaction/currency_conversion/css/style.css' %}">
+
+{% endblock %}
+{% block content %}
+<style>
+
+    .balance-cover {
+        height: 35rem;
+    }
+
+    .btn-open-dlt-cnfrm-modal:hover {
+        padding: 0.75rem 1.5rem;
+    }
+
+    .list-account-content {
+        padding: 100px 0px 0px 200px;
+    }
+    #err-oldpassword{
+        margin-bottom: 0rem;
+    }
+    #err-password{
+        margin-bottom: 0rem;
+    }
+    #err-confirmPassword{
+        margin-bottom: 0rem;
+    }
+    .currency-d-content .row{
+        justify-content:center;
+    }
+    .label-balance{
+        display:none;
+        font-weight:500;
+    }
+    .span-balance{
+        font-weight: 800;
+    color: #22bc51;
+    font-size: 13px;
+    }
+
+</style>
+
+<div class=" balance-cover  mx-4 ">
+    <div class="row">
+        <div class=" balance-main">
+
+            <h6>Currency Conversion</h6>
+            <hr>
+            {% if message %}
+            <div class="alert-box-outer">
+                <div class="{% if status %}success-alert{% else %}section-alert{% endif %}" style="display: block;"
+                     id="alertDiv">
+                    <button class="{% if status %}success-alert-close{% else %}section-alert-close{% endif %}"
+                            onclick="closeAlertModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <p style="text-align: center" id="errorField">{{message}}</p>
+                </div>
+            </div>
+            {% endif %}
+            <div class="currency-d-content">
+
+                <div class="row curr-conversion-row m-0">
+                    <div class="col-lg-6 col-md-10 col-12 curr-conversion-card">
+                        <div class="confirm-title">
+                            <h3>{% if isconfirm %}Details{% else %}Confirm your details{% endif %}</h3>
+                        </div>
+                        <div class="confirm-tab-holder">
+                            <div class="cur-conv-curnt-value">
+                                <p class="conversionRateText">
+                                    <b>
+                                    <span style="color: #22bc51;">
+                                        1 {{debit_acc_curr_code}}
+                                    </span>
+                                    </b>
+                                    <img src="{% static '/transaction/currency_conversion/img/conversion.png' %}"
+                                         class="conversionEqual">
+                                    <b>
+                                   <span style="color: #22bc51;">
+                                        {{conversionrate}} {{credit_acc_curr_code}}
+                                    </span>
+                                    </b>
+
+                                </p>
+                            </div>
+                            <table class="confirm-table confirm-conversion">
+                                <tbody>
+                                <tr>
+                                    <td>Debit Account</td>
+                                    <td>:&nbsp;<span id="firstAccount">{{debit_acc_no}} ({{debit_acc_curr_code}})</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Credit Account</td>
+                                    <td>:&nbsp;<span
+                                            id="secondAccount">{{credit_acc_no}} ({{credit_acc_curr_code}})</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Net Amount</td>
+                                    <td>:&nbsp;<span id="totalAmount">{{net_amount}} {{debit_acc_curr_code}}</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Fee</td>
+                                    <td>:&nbsp;<span id="chargeAmount">{{conversion_fee}} {{debit_acc_curr_code}}</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Debit Amount</td>
+                                    <td>:&nbsp;<span id="firstAmount">{{debit_amount}} {{debit_acc_curr_code}}</span>
+                                    </td>
+                                </tr>
+
+                                <tr class="total-tr">
+                                    <td>Credit Amount</td>
+                                    <td>:&nbsp;<span id="secondAmount">{{credit_amount}} {{credit_acc_curr_code}}</span>
+                                    </td>
+                                </tr>
+                                {% if note %}
+                                <tr>
+                                    <td>Note</td>
+                                    <td>:&nbsp;<span id="note">{{note}}</span>
+                                    </td>
+                                </tr>
+                                {% endif %}
+                                </tbody>
+                            </table>
+                            {% if not isconfirm %}
+                            <div class="row confirm-btn-holder">
+                                <div class="col-sm-12">
+                                    <form method="post">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="action_type" value="confirm-details">
+                                    <button class="btn btn-primary w-100 mt-2 btn-confirm" type="submit">
+                                        CONFIRM
+                                    </button>
+                                    </form>
+                                </div>
+                                <div class="col-sm-6">
+                                    <form method="post">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="action_type" value="edit_page">
+                                        <a href="#">
+                                            <button class="btn btn-light w-100 btn-bg-white" type="submit">
+                                                EDIT
+                                            </button>
+                                        </a>
+                                    </form>
+                                </div>
+                                <div class="col-sm-6">
+                                    <a href="/cancelConversion">
+                                        <button class="btn btn-light w-100 btn-bg-white" type="button">
+                                            CANCEL
+                                        </button>
+                                    </a>
+                                </div>
+                            </div>
+                            {% else %}
+                            <form id="otpForm" method="post">
+                                {% csrf_token %}
+                                <div class="signed-succs-otp-sec otp-sec-sm otp-curr-convers tab-sec-gray">
+                                    <div class="succs-otp-sec-inner">
+
+                                        <p>{% generate_otp_type_string request  as otp_receivers%}
+                                    We have sent an OTP to {{otp_receivers|safe}}</p>
+
+
+                                        <div class="row input-form-group" style="height:40px">
+                                            <div class="col-md-6 col-12 succs-otp-block">
+                                                <label for="otp" style="display: none">OTP</label>
+                                                <input type="password" name="otp" id="otp" minlength="6" maxlength="6"
+                                                       value="" class="input-box conversionInputs"
+                                                       onkeypress="return restrictAmount(event)"
+                                                       placeholder="Enter Your OTP Here">
+                                            </div>
+                                            <div class="col-md-3 col-sm-6 col-12 succs-otp-block">
+                                                <button class="btn btn-primary btn-confirm w-100" type="submit">
+                                                    Submit
+                                                </button>
+                                            </div>
+                                            <div class="col-md-3 col-sm-6 col-12 succs-otp-block">
+                                                <a href="/cancelConversion" class="btn btn-secondary">CANCEL</a>
+                                            </div>
+                                        </div>
+                                        <div class="row input-form-group">
+                                            <div class="col-12 succs-otp-block">
+                                                <a id="requestOtp"  href="#" onclick="resendOtp()"
+                                                   >Resend
+                                                    OTP</a>
+                                            </div>
+                                        </div>
+                                        <p id="otpMsg" style="color: green;font-weight: bold;">{{otp_sent_message|default_if_none:''}}</p>
+                                    </div>
+                                </div>
+
+                            </form>
+                            <form method="post" id="form-resend-otp">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="action" value="resend">
+                                </form>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+{% block extra_script %}
+<script src="{%static '/accounts/js/wSelect.min.js' %}"></script>
+<script>
+   function closeAlertModal() {
+        $(".alert-box-outer").hide()
+    }
+
+setTimeout(() => {
+            document.getElementById('otpMsg').innerHTML = '';
+        }, 5000);
+$(document).ready(function(){
+    $('.custom-select').each(function(){
+        $(this).wSelect();
+    })
+})
+$(document).on("change",".select-account",function(){
+
+    $('.span-balance').html($('.select-account option:selected').attr('data-bal')+' '+$('.select-account option:selected').attr('data-c-code'))
+    $('.label-balance').show()
+})
+
+function resendOtp(){
+    var token = '{{ request.session.currency_conversion.token}}'
+    $.post("/conversionConfirm?accessToken="+token,
+    {
+        'csrfmiddlewaretoken': '{{ csrf_token }}',
+        'action' : 'otpresend'
+    },function(data) {
+            // $('#otpMsg').text(data['message']);
+            document.getElementById('otpMsg').innerHTML = data['message'];
+            if (data.status){
+                color = 'green';
+            }else{
+                color='red';
+            }
+            document.getElementById('otpMsg').style.color = color;
+
+            }
+
+    );
+    return false
+}
+setTimeout(() => {
+            document.getElementById('otpMsg').innerHTML = '';
+        }, 5000);
+
+</script>
+
+{% endblock %}

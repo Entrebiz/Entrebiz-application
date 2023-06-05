@@ -1,0 +1,101 @@
+{
+  "name": "Retrieve single Account",
+  "endpoint": "GET/accounts/{account_number}",
+  "parameters": [],
+  "languages": [
+    {
+      "name": "PHP",
+      "code": [
+        " <?php",
+
+        "$request = new HttpRequest();",
+        "$request->setUrl('https://api.entrebiz-pte.com/api/v1/accounts/<account_number>');",
+        "$request->setMethod(HTTP_METH_GET);",
+
+        " $request->setHeaders(array(",
+        " 'Postman-Token' => 'a96ce79d-fbe3-45d7-8783-8c9db5e32ade',",
+        "'Cache-Control' => 'no-cache',",
+        "'Authorization' => 'Token eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjI3NTUsImVtYWlsIjoia3V0dHVAbWFpbGluYXRvci5jb20iLCJpYXQiOjE1NzExMjA1NDUsImV4cCI6MTU3MTIwNj0NX0.JxLIcp1ysw50Iwd94gmRWvbxaHUTQ5WXvoQ7phpkL99PRQUj4cl02pEjObEfJHit2MLrzkvUdE__jZ4_odZOKQ',",
+        "'Content-Type' => 'application/x-www-form-urlencoded'",
+        " ));",
+
+        " $request->setContentType('application/x-www-form-urlencoded');"
+      ],
+      "Response": [
+              "{",
+                  "'status': true,",
+                  "'data': {",
+                      "'account_details': {",
+                          "\t'account_number': '10000##',",
+                          "\t'balance': '566677880.00',",
+                          "\t'currency': 'AUD'",
+                      "\t}",
+                  "}",
+              "}"
+      ]
+    },
+    {
+      "name": "NodeJs",
+      "code": [
+        "var request = require('request');",
+
+        "var options = { method: 'GET',",
+        "url: 'https://api.entrebiz-pte.com/api/v1/accounts/<account_number>',",
+        "headers: ",
+        "{ 'Postman-Token': '099e3667-67cd-49c0-977e-347acc18d67d',",
+        "'Cache-Control': 'no-cache',",
+        "'Authorization': 'Token eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjI3NTUsImVtYWlsIjoia3V0dHVAbWFpbGluYXRvci5jb20iLCJpYXQiOjE1NzExMjA1NDUsImV4cCI6MTU3MTIwNjk0NX0.JxLIcp1ysw50Iwd94gmRWvbxaHUTQ5WXvoQ7phpkL99PRQUj4cl02pEjObEfJHit2MLrzkvUdE__jZ4_odZOKQ',",
+        "'Content-Type': 'application/x-www-form-urlencoded' },",
+
+        "request(options, function (error, response, body) {",
+        "if (error) throw new Error(error);",
+        "console.log(body);",
+        " });"
+      ],
+      "Response": [
+            "{",
+                "'status': true,",
+                "'data': {",
+                    "'account_details': {",
+                        "\t'account_number': '10000##',",
+                        "\t'balance': '566677880.00',",
+                        "\t'currency': 'AUD'",
+                    "\t}",
+                "}",
+            "}"
+
+      ]
+    },
+    {
+      "name": "Python",
+      "code": [
+        "import requests",
+
+        "url = 'https://api.entrebiz-pte.com/api/v1/accounts/<account_number>'",
+
+        "headers = {",
+        "'Content-Type': 'application/x-www-form-urlencoded',",
+        "'Authorization': 'Token eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjI3NTUsImVtYWlsIjoia3V0dHVAbWFpbGluYXRvci5jb20iLCJpYXQiOjE1NzExMjA1NDUsImV4cCI6MTU3MTIwNjk0NX0.JxLIcp1ysw50Iwd94gmRWvbxaHUTQ5WXvoQ7phpkL99PRQUj4cl02pEjObEfJHit2MLrzkvUdE__jZ4_odZOKQ',",
+        "'Cache-Control': 'no-cache',",
+        "'Postman-Token': 'c1d85412-cf62-461d-9055-eadd2cac7a6b'",
+        " }",
+
+        "response = requests.request('GET', url, headers=headers)",
+
+        "print(response.text)"
+      ],
+      "Response": [
+          "{",
+              "'status': true,",
+              "'data': {",
+                  "'account_details': {",
+                      "\t'account_number': '10000##',",
+                      "\t'balance': '566677880.00',",
+                      "\t'currency': 'AUD'",
+                  "\t}",
+              "}",
+          "}"
+                ]
+    }
+  ]
+}

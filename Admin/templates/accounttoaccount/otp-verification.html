@@ -1,0 +1,176 @@
+{% extends 'common/base.html' %}
+{% load static %}
+{% load util_tags %}
+
+{% block content %}
+<main class="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg ">
+   
+ 
+   <div class="balance-cover  mx-4">
+      {% if messagee %}
+      <div class="alert-box-outer">
+          <div class="{% if status %}success-alert{% else %}section-alert{% endif %}" style="display: block;"
+              id="alertDiv">
+              <button class="{% if status %}success-alert-close{% else %}section-alert-close{% endif %}" onclick="closeAlertModal()">
+                  <i class="fas fa-times"></i>
+              </button>
+              <p style="text-align: center" id="errorField">{{messagee}}</p>
+          </div>
+      </div>
+      {% endif %}
+      <div class="container-fluid py-5 ">
+          <div class="row" style="align-items: center;justify-content: center;">
+              <div class="col-lg-11 col-md-10 col-12">
+                  <div class="conversion-confirm-sec">
+                      <div class="">
+                          <div class="curr-conversion-sec">
+                              <div class="row curr-conversion-row m-0" style="justify-content: center;">
+                                  <div class="col-lg-8 col-md-10 col-12 curr-conversion-card">
+                              
+                               <div class="confirm-title">
+                                  <h4>Confirm your details</h4>
+                              </div>
+                              <div class="confirm-tab-holder">
+                               <table class="confirm-table confirm-transactions" style="width: 100%;">
+                                   <tbody>
+                                       <tr>
+                                           <td>Debit Account</td>
+                                           <td><span>:</span>&nbsp;<strong>{{ request.session.accounttoaccounttransfer.debit_account }}</strong>
+                                           </td>
+                                       </tr>
+                                       <tr>
+                                           <td>Credit Account</td>
+                                           <td><span>:</span>&nbsp;<strong>{{ request.session.accounttoaccounttransfer.beneficiary_accountnumber }}</strong>
+                                           </td>
+                                       </tr>
+                                       {% if request.session.accounttoaccounttransfer.beneficiary_name %}
+                                       <tr>
+                                           <td>Beneficiary Name</td>
+                                           <td><span>:</span>&nbsp;<strong>{{ request.session.accounttoaccounttransfer.beneficiary_name|value_change }}</strong>
+                                           </td>
+                                       </tr>
+                                       {% endif %}
+                                      
+                                      
+                                       <tr class="">
+                                           <td>Net Amount</td>
+                                           <td><span>:</span>&nbsp;<strong>{{ request.session.accounttoaccounttransfer.amount }} {{ request.session.accounttoaccounttransfer.currency_code_debit }}</strong>
+                                           </td>
+                                       </tr>
+                                       <tr>
+                                        <td>Fee</td>
+                                        <td><span>:</span>&nbsp;<strong>{{ request.session.accounttoaccounttransfer.conversion_fee }} {{ request.session.accounttoaccounttransfer.currency_code_debit }}</strong>
+                                        </td>
+                                    </tr>
+                                      
+                                       <tr>
+                                           <td>Debit Amount</td>
+                                           <td><span>:</span>&nbsp;<strong>{{ request.session.accounttoaccounttransfer.debit_amount }} {{ request.session.accounttoaccounttransfer.currency_code_debit }}</strong>
+                                           </td>
+                                       </tr>
+                                       <tr style="background-color: #e8f8ed;">
+                                           <td><strong>Credit Amount</strong></td>
+                                           <td><span>:</span>&nbsp;<strong>{{ request.session.accounttoaccounttransfer.credit_amount }} {{ request.session.accounttoaccounttransfer.currency_code_beneficiary }}</strong>
+                                           </td>
+                                       </tr>
+                                       {% if request.session.accounttoaccounttransfer.note %}
+                                       <tr>
+                                           <td>Note</td>
+                                           <td><span>:</span>&nbsp;<span
+                                                   class="confirm-note pl-0"><strong>{{request.session.accounttoaccounttransfer.note}}</strong></span>
+                                           </td>
+                                       </tr>
+                                       {% endif %}
+                                   </tbody>
+                               </table>
+ 
+                               <form id="otpForm" method="post" action="{% url 'accOtp' request.session.token %}" >
+                                 {% csrf_token %}
+                                 <div
+                                       class="signed-succs-otp-sec otp-sec-sm otp-curr-convers tab-sec-gray" 
+                                       style="background-color: #f6f8f9;
+                                       display: flex;align-items: center;
+                                       justify-content: center;">
+                                       <div class="succs-otp-sec-inner">
+                                          <p id="otpsend" class="mt-3" style="text-align: center;color: #586168;font-size: 13px;margin-bottom: 15px;text-align: center;">{% generate_otp_type_string request  as otp_receivers%}
+                                    We have sent an OTP to {{otp_receivers|safe}}
+                                          </p>
+                                          <div class="row input-form-group">
+                                             <div class="col-md-6 col-12 succs-otp-block">
+                                                   <input type="password" name="otp" id="otp" minlength="6"
+                                                      maxlength="6" value="" class="input-box validationClass"
+                                                      placeholder="Enter Your OTP Here" autofocus style="height: 41px;" required>
+                                             </div>
+                                             <div class="col-md-3 col-sm-6 col-12 succs-otp-block">
+                                                   <button class="btn btn-primary sub w-100"
+                                                      type="submit">
+                                                      Submit
+                                                   </button>
+                                             </div>
+                                            
+                                             <div class="col-md-3 col-sm-6 col-12 succs-otp-block">
+                                                   <a href="/transactionCancel"
+                                                      class="btn btn-light w-100" style="border: solid 1px #e1e1e1;border-radius: 5px;background-color: #fff;color: #646464">CANCEL</a>
+                                             </div>
+                                             <!-- <p id="errorField"></p> -->
+                                          </div>
+                                          <div class="row input-form-group">
+                                             <div class="col-12 succs-otp-block">
+                                                         <a id="RequestOtp" onclick="return resendOtp()" style="color: #4078c0;cursor: pointer;">Resend
+                                                               OTP</a>
+                                             </div>
+                                          </div>
+                                          
+                                          {% for message in messages %}
+                                          <p id="otpMsg" {% if message.tags == "success" %} style="color: green;font-weight: bold;text-align: center;font-size: 12px;"
+                                          {% elif message.tags == 'error' %}style="color: red;font-weight: bold;text-align: center;font-size: 12px;" {% endif %}>{{message}}</p>
+                                          
+                                          {% endfor %}
+                                          
+                                       </div>
+                                 </div>
+
+                              </form>
+ 
+ 
+ 
+ 
+ 
+                               
+                           </div>
+                       </div>
+                   </div>
+               </div>
+           </div>
+       </div>
+   </div>
+ </div>
+ </div>
+ </div>
+   
+</main>
+{% endblock %}
+{% block extra_script %}
+<script> 
+function resendOtp(){
+    var token = '{{ request.session.token}}'
+    $.post("/transaction/acc/Confirmation/%3Ftoken="+token,
+    {
+        'csrfmiddlewaretoken': '{{ csrf_token }}',
+        'type' : 'otpresend'
+    },function(data) {
+            // $('#otpMsg').text(data['message']);
+            document.getElementById('otpMsg').innerHTML = data['message'];
+            document.getElementById('otpMsg').style.color = 'green';
+                
+            }
+
+    );
+    return false
+}
+setTimeout(() => {
+            document.getElementById('otpMsg').innerHTML = '';
+        }, 5000);
+
+</script>
+{% endblock %}

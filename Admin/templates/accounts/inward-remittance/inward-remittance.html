@@ -1,0 +1,407 @@
+{% extends 'common/base.html' %}
+{% load static %}
+{% load util_tags %}
+{% block css %}
+<link rel="stylesheet" type="text/css" href="{% static 'accounts/css/wSelect.css' %}">
+<style>
+    .res-mny-adrs {
+        width: 100%;
+        display: -webkit-box;
+        display: -moz-box;
+        display: -ms-flexbox;
+        display: -webkit-flex;
+        display: flex;
+        margin-bottom: 15px;
+    }
+
+    .adrs-icon {
+        width: 50px;
+        flex-shrink: 0;
+    }
+
+    .res-mny-adrs {
+        width: 100%;
+    }
+
+    .adrs-det p {
+        font-size: 14px;
+    }
+
+    .adrs-det p {
+        margin-bottom: 0;
+        color: #ff6600;
+        font-weight: 600;
+        word-break: break-word;
+    }
+
+    .adrs-det label {
+        margin-bottom: 0;
+        margin-left: 0;
+    }
+
+    .tab-sec-gray {
+        background-color: #f6f8f9;
+    }
+
+    .spd-up-sec.add-currency-btm {
+        padding: 50px 100px;
+    }
+    #err-senderAmount{
+        margin-bottom: 0;
+    }
+    .input-data-cover input[type="file"] {
+    opacity: 0;
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    right: 0;
+    cursor: pointer;
+}
+.input-data-cover {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #acb7bd;
+    border: none;
+}
+.note p {
+    font-size: 10px;
+    margin-bottom: 0;
+}
+</style>
+{% endblock %}
+{% block content %}
+<main class="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg ">
+    <div class=" balance-cover  mx-4 " style="padding-left: 9%;padding-right: 9%;">
+        <form id="receiveMoneyForm" method="post" action="" onsubmit="return validateForm('validatFields', 'class')" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="row">
+                <div class=" balance-main">
+                    {% if message %}
+                    <div class="alert-box-outer">
+                        <div class="{% if status %}success-alert{% else %}section-alert{% endif %}"
+                            style="display: block;" id="alertDiv">
+                            <button class="{% if status %}success-alert-close{% else %}section-alert-close{% endif %}"
+                                onclick="closeAlertModal()">
+                                <i class="fas fa-times"></i>
+                            </button>
+                            <p style="text-align: center" id="errorField">{{message}}</p>
+                        </div>
+                    </div>
+                    {% endif %}
+                    <div class="row">
+                        <div class="form-group col-lg-6" style="margin-bottom: 0;">
+                            <label for="Currency">Currency</label>
+                            <div>
+                                <select id="Currency" name="Currency" class="custom-select select-list validatFields"
+                                    required style="display:none" onchange="showBanks();">
+                                    <option value="" selected disabled="">Select Currency</option>
+                                    {% get_accounts request as accounts %}
+                                    {% for account in accounts|acc_list:user_details %}
+                                    <option
+                                        data-icon="{% if account.currency.flag %}{{account.currency.flag.url}}{% else %}/other/no-image.jpg{% endif %}"
+                                        value="{{account.id}}" {% if Currency|to_int == account.id %}selected{% endif %}>{{account.accountno}}
+                                        {{account.currency.code}}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-lg-6" style="margin-bottom: 0;">
+                            <label for="bank">Select Bank</label>
+                            <div>
+                                <select id="bank" name="bank" class="custom-select select-list validatFields"
+                                    onchange="fillBankInfo();" required>
+                                    <option value="" disabled="" selected>Select your Bank</option>
+                                </select>
+                            </div>
+                        </div>
+                        <p style="text-align: center;">
+                            <small id="alertMessage" style="color: #22bc51;">
+
+                            </small>
+                        </p>
+                        <div class="row" id="bank-det">
+                            <div class="col-lg-6 col-md-6 col-12">
+                                <div class="res-mny-adrs">
+                                    <div class="adrs-icon">
+                                        <img src="{% static 'dash/assets/img/user-sm.png' %}" alt="">
+                                    </div>
+                                    <div class="adrs-det">
+                                        <label for="bank-beneficiaryname">Beneficiary Name</label>
+                                        <p id="bank-beneficiaryname">-</p>
+                                    </div>
+                                </div>
+                                <div class="res-mny-adrs">
+                                    <div class="adrs-icon">
+                                        <img src="{% static 'dash/assets/img/card.png' %}" alt="">
+                                    </div>
+                                    <div class="adrs-det">
+                                        <label for="bank-acnumber">Account Number</label>
+                                        <p id="bank-acnumber">-</p>
+                                    </div>
+                                </div>
+                                <div class="res-mny-adrs">
+                                    <div class="adrs-icon">
+                                        <img src="{% static 'dash/assets/img/bic.png' %}" alt="">
+                                    </div>
+                                    <div class="adrs-det">
+                                        <label for="bank-swiftcode">BIC/SWIFT Code</label>
+                                        <p id="bank-swiftcode">-</p>
+                                    </div>
+                                </div>
+                                <div class="res-mny-adrs">
+                                    <div class="adrs-icon">
+                                        <img src="{% static 'dash/assets/img/location-pin.png' %}" alt="">
+                                    </div>
+                                    <div class="adrs-det">
+                                        <label for="bank-city">City</label>
+                                        <p id="bank-city">-</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6 col-md-6 col-12">
+                                <div class="res-mny-adrs">
+                                    <div class="adrs-icon">
+                                        <img src="{% static 'dash/assets/img/building.png' %}" alt="">
+                                    </div>
+                                    <div class="adrs-det">
+                                        <label for="bank-bankname">Bank Name</label>
+                                        <p id="bank-bankname">-</p>
+                                    </div>
+                                </div>
+                                <div class="res-mny-adrs">
+                                    <div class="adrs-icon">
+                                        <img src="{% static 'dash/assets/img/currency.png' %}" alt="">
+                                    </div>
+                                    <div class="adrs-det">
+                                        <label for="bank-currency">Currency</label>
+                                        <p id="bank-currency">-</p>
+                                    </div>
+                                </div>
+                                <div class="res-mny-adrs">
+                                    <div class="adrs-icon">
+                                        <img src="{% static 'dash/assets/img/location-pin.png' %}" alt="">
+                                    </div>
+                                    <div class="adrs-det">
+                                        <label for="bank-address">Address of Bank</label>
+                                        <p id="bank-address">-</p>
+                                    </div>
+                                </div>
+                                <div class="res-mny-adrs">
+                                    <div class="adrs-icon">
+                                        <img src="{% static 'dash/assets/img/location-pin.png' %}" alt="">
+                                    </div>
+                                    <div class="adrs-det">
+                                        <label for="bank-country">Country</label>
+                                        <p id="bank-country">-</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--  -->
+                        <div class="row">
+                            <div class="spd-up-sec add-currency-btm tab-sec-gray">
+                                <p>If you/someone is sending a payment to your account, kindly notify us.
+                                </p>
+                                <p id="notifyBtn" style="display: block;text-align: center;">
+                                    <a href="#" onclick="showOptionals()" class="btn btn-primary button-w">Click here to
+                                        notify</a>
+                                </p>
+
+                                <div id="receiveMoneyOptionalInfo" style="display: none;">
+                                    <div class="row">
+                                        <div class="form-group col-lg-6">
+                                            <label for="senderAccName">Sender Account Name&nbsp;<span
+                                                    class="input-optional">(optional)</span></label>
+                                            <input type="text" id="senderAccName" name="SenderName"
+                                                value="{{SenderName}}" class="form-control" maxlength="50"
+                                                placeholder="Enter Sender Account Name">
+                                        </div>
+                                        <div class="form-group col-lg-6">
+                                            <label for="senderAccNo">Sender Account Number&nbsp;<span
+                                                    class="input-optional">(optional)</span></label>
+                                            <input type="text" id="senderAccNo" name="SenderAccountNo"
+                                                value="{{SenderAccountNo}}" class="form-control" maxlength="50"
+                                                onkeypress="return restrictAlphabets(event)"
+                                                onblur="return formatAccount(event ,this.id)"
+                                                placeholder="Enter Sender Account Number">
+                                        </div>
+                                        <div class="form-group col-lg-6">
+                                            <label for="senderBankName">Sender Bank Name&nbsp;<span
+                                                    class="input-optional">(optional)</span></label>
+                                            <input type="text" id="senderBankName" name="SenderBankName"
+                                                value="{{SenderBankName}}" class="form-control" maxlength="50"
+                                                placeholder="Enter Sender Bank Name">
+                                        </div>
+                                        <div class="form-group col-lg-6">
+                                            <label for="senderCountry">Sender Country&nbsp;<span
+                                                    class="input-optional">(optional)</span></label>
+                                            <input type="text" id="senderCountry" name="SenderCountry"
+                                                value="{{SenderCountry}}" class="form-control" maxlength="50"
+                                                placeholder="Enter Sender Country">
+                                        </div>
+                                        <div class="form-group col-lg-6">
+                                            <label for="senderSwiftCode">SWIFT Code of Sender's
+                                                Bank&nbsp;<span class="input-optional">(optional)</span></label>
+                                            <input type="text" id="senderSwiftCode" name="SwiftCode"
+                                                value="{{SwiftCode}}" class="form-control" maxlength="15"
+                                                placeholder="Enter SWIFT Code">
+                                        </div>
+                                        <div class="form-group col-lg-6">
+                                            <label for="senderAmount">Amount&nbsp;<span
+                                                    class="input-optional amountFiled"></span></label>
+                                            <input type="text" id="senderAmount" name="Amount" value="{{Amount}}"
+                                                onkeypress="return restrictAmount(event)"
+                                                onblur="return formatAmount(event)" class="form-control" maxlength="12"
+                                                autocomplete="off" placeholder="Enter Amount">
+                                        </div>
+                                        <div class="form-group col-lg-6" id="invoice-doc">
+                                            <label for="text3">Attach Proof of payment&nbsp;<span
+                                                class="input-optional">(optional)</span></label>
+                                            <br>
+                                            <label class="btn btn-primary button-w w-100" for="my-file-selector">
+                                               <input id="my-file-selector" name="invoice-doc" type="file" style="display:none"
+                                                  onchange="$('#upload-file-info').text(this.files[0].name);$('#upload-file-info').css('color', 'green');">
+                                               Choose File
+                                            </label>
+                                            <span style="color: green;" class='label label-info' id="upload-file-info"></span>
+                                            <div class="note">
+                                                <p style="float: none !important;">- Allowed Files :
+                                                    jpeg, JPG, pdf, tiff, png
+                                                </p>
+                                                <p style="float: none !important;">- Maximum file size :
+                                                    10 MB
+                                                </p>
+                                            </div>
+                                         </div>
+                                        <div class="form-group col-lg-6">
+                                            <label for="senderReference">Reference&nbsp;<span
+                                                    class="input-optional">(optional)</span></label>
+                                            <input type="text" id="senderReference" name="Reference"
+                                                value="{{Reference}}" class="form-control" maxlength="50"
+                                                placeholder="Enter Reference">
+                                        </div>
+
+                                    </div>
+                                    <br>
+                                    <div style="text-align: center;">
+                                        <a href="#" onclick="requestSubmit()" class="btn btn-primary button-w">Submit
+                                            Request
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--  -->
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</main>
+{% endblock %}
+{% block extra_script %}
+<script src="{%static '/accounts/js/wSelect.min.js' %}"></script>
+<script>
+    $('#Currency').wSelect();
+    function fillBankInfo() {
+        let bank_id = $('#bank option:selected').val()
+        if (bank_id) {
+            $.get('/fetch-bank-details',
+                {
+                    'for bank details': true,
+                    'bank_id': bank_id
+                },
+                function (data, status) {
+                    $("#bank-det").replaceWith(data.bank_details);
+                    $('#bank').css('border-color', '');
+                });
+
+        }
+        return true;
+    }
+    function showOptionals() {
+        if (validate('validatFields')) {
+            document.getElementById('senderAmount').classList.add('validatFields');
+            const rcOptional = document.getElementById('receiveMoneyOptionalInfo');
+            if (rcOptional) {
+                rcOptional.style.display = (rcOptional.style.display === 'none') ? 'block' : 'none';
+            }
+            document.getElementById('notifyBtn').style.display = 'none';
+            return true;
+        }
+    }
+    function validate(id) {
+        let validationType = false;
+        allInputs = document.getElementsByClassName(id);
+        for (let j = 0; j < allInputs.length; j += 1) {
+            if (['', null, undefined].includes(allInputs[j].value)) {
+                $('#' + allInputs[j].id).css('border-color', 'red');
+                if (allInputs[j].id == 'Currency') {
+                    $('.wSelect-theme-classic').css('border-color', 'red');
+                }
+                validationType = true
+            }
+        }
+        if (validationType) return false;
+        return true;
+    }
+    function requestSubmit() {
+        if (validateForm('validatFields', 'class')) {
+            document.forms['receiveMoneyForm'].submit();
+        }
+        return true;
+    }
+    $(window).on('load', function () {
+        showBanks()
+    });
+    function showBanks() {
+        let acc_id = $('#Currency option:selected').val()
+        if (acc_id) {
+            document.getElementById('senderAmount').classList.remove('validatFields');
+            $.get('/fetch-bank-details',
+                {
+                    'for bank name': true,
+                    'acc_id': acc_id
+                },
+                function (data, status) {
+                    $('#bank').replaceWith(data.bank_details);
+                    $('#bank-det').replaceWith(data.bank_details_fields);
+                    $('.wSelect-theme-classic').css('border-color', '');
+                    if ($('#bank option').length >= 2) {
+                        $('#alertMessage').text('');
+                        $('#receiveMoneyOptionalInfo').hide();
+                        $('#notifyBtn').show();
+                    }
+                    else if ($('#bank option').length < 2) {
+                        $('#alertMessage').text('No banks for the selected currency.');
+                        $('#receiveMoneyOptionalInfo').hide();
+                        $('#notifyBtn').show();
+                    }
+
+                    let bank_id = $('#bank option:selected').val()
+                    if (bank_id) {
+                        $("#bank").trigger("change");
+                        showOptionals()
+                    }
+                    else{
+                        $("#senderAccName").val(null);
+                        $("#senderAccNo").val(null);
+                        $("#senderBankName").val(null);
+                        $("#senderCountry").val(null);
+                        $("#senderSwiftCode").val(null);
+                        $("#senderAmount").val(null);
+                        $("#senderReference").val(null);
+                        $("#my-file-selector").val(null);
+                    }
+                });
+        }
+    }
+</script>
+{% endblock %}

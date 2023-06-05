@@ -1,0 +1,292 @@
+{% extends 'common/base.html' %}
+{% load static %}
+{% load util_tags %}
+
+{% block content %}
+<style>
+    .p-details-header{
+        font-weight:600;
+    }
+    .cust-row {
+
+    }
+    .cust-col{
+            padding-top: 10px;
+    padding-bottom: 20px;
+    //border: 1px solid #efefef;
+    }
+    .input-edit{
+    display: block;
+    //border: none;
+    box-shadow: none;
+    width: 100%;
+    color: #84878a;
+    }
+    .input-edit:focus{
+            outline: 0;
+    }
+    .date-field-row{
+        display:flex;
+    }
+    .custom-select.day{
+
+        width:30%;
+    }
+    .custom-select.month{
+        margin-left: 10px;
+    margin-right: 10px;
+        width:30%;
+    }
+    .custom-select.year{
+        width:40%;
+    }
+    .phnumber{
+        margin-right: 10px;
+        width:30%;
+    }
+
+</style>
+
+<div class=" balance-cover  mx-4 ">
+    <div class="row">
+        <div class=" balance-main">
+            {% if message %}
+            <div class="alert-box-outer">
+                <div class="{% if status %}success-alert{% else %}section-alert{% endif %}" style="display: block;"
+                     id="alertDiv">
+                    <button class="{% if status %}success-alert-close{% else %}section-alert-close{% endif %}"
+                            onclick="closeAlertModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <p style="text-align: center" id="errorField">{{message}}</p>
+                </div>
+            </div>
+            {% endif %}
+            <form method="POST" class="ed-details-form">
+                {% csrf_token %}
+                <input type="hidden" name="id" value="{{id}}">
+                <div class="row cust-row">
+                    <div class="col-sm-6 cust-col">
+                        <div class="form-grp-edit">
+                            <label>First Name</label>
+                            <input type="text" name="firstname" value="{{firstname|default_if_none:''}}"
+                                   class="input-edit form-control" required="" readonly=""
+                                   style="cursor: default;">
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6 cust-col">
+                        <div class="form-grp-edit">
+                            <label>Middle Name</label>
+                            <input type="text" name="middlename" value="{{middlename|default_if_none:''}}"
+                                   class="input-edit form-control" required="" readonly=""
+                                   style="cursor: default;">
+                        </div>
+                    </div>
+
+                </div> <!--row1-->
+                <div class="row cust-row">
+                    <div class="col-sm-6 cust-col">
+                        <div class="form-grp-edit">
+                            <label>Last Name</label>
+                            <input type="text" name="lastname" value="{{lastname|default_if_none:''}}"
+                                   class="input-edit form-control" required="" readonly=""
+                                   style="cursor: default;">
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6 cust-col">
+                        <div class="form-grp-edit">
+                            <label>Email</label>
+                            <input type="text" name="email"
+                                   value="{{email|default_if_none:''}}"
+                                   class="input-edit form-control" required="" readonly=""
+                                   style="cursor: default;">
+                        </div>
+                    </div>
+
+
+                </div> <!--row2-->
+                <div class="row cust-row">
+                    <div class="col-sm-6 cust-col">
+                        <div class="form-grp-edit">
+                            <label>Date of Birth</label>
+                            {% if dateofbirth and is_not_edit %}
+                                            <input type="hidden" name="dateofbirth" value="{{dateofbirth|date:'Y-m-d'}}">
+                                                    <input type="text" name="" value="{{dateofbirth|date:'d M Y'}}" class="input-edit form-control" required=""  readonly=""
+                                                           style="cursor: default;">
+                            {% else %}
+                            <div class="date-field-row">
+                            <select class="select-list" style="width: 30%;" name="day" id="day" required="">
+                                <option value="" disabled="" selected="">Day</option>
+                                {% for days in day_choices %}
+                                <option value="{{days}}" {% if days == day|to_int %}selected{% endif %}>{{days}}</option>
+                                {% endfor %}
+                            </select>
+                            <select class="select-list" style="margin-left: 10px;margin-right: 10px;width:30%;"
+                                name="month" id="month" required="">
+                                <option value="" disabled="" selected="">Month</option>
+                                {% for months in months_choices %}
+                                <option value="{{months}}" {% if months == month %}selected{% endif %}>{{months}}</option>
+                                {% endfor %}
+                            </select>
+                            <select class="select-list" style="width: 40%;" name="year" id="year" required="">
+                                <option value="" disabled="" selected="">Year</option>
+                                {% for years in year_choices %}
+                                <option value="{{years}}" {% if years == year|to_int %}selected{% endif %}>{{years}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-sm-6 cust-col">
+                        <div class="form-grp-edit">
+                            <label>Street Address</label>
+                            <input type="text" name="street_address"
+                                   value="{{street_address|default_if_none:''}}"
+                                   class="input-edit form-control" required=""
+                                   style="cursor: default;">
+                            {% if form.street_address.errors %}
+                            {% for error in form.street_address.errors %}
+                                <span style="list-style:none;color:orangered">{{ error|escape }}</span>
+                            {% endfor %}
+                            {% endif %}
+                        </div>
+                    </div>
+
+
+                </div> <!--row3-->
+                <div class="row cust-row">
+                    <div class="col-sm-6 cust-col">
+                        <div class="form-grp-edit">
+                            <label>City</label>
+                            <input type="text" name="city" value="{{city|default_if_none:''}}"
+                                   class="input-edit form-control" required=""
+                                   style="cursor: default;">
+                            {% if form.city.errors %}
+                            {% for error in form.city.errors %}
+                                <span style="list-style:none;color:orangered">{{ error|escape }}</span>
+                            {% endfor %}
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-sm-6 cust-col">
+                        <div class="form-grp-edit">
+                            <label>State / Region</label>
+                            <input type="text" name="region" value="{{region|default_if_none:''}}"
+                                   class="input-edit form-control" required=""
+                                   style="cursor: default;">
+                            {% if form.region.errors %}
+                            {% for error in form.region.errors %}
+                                <span style="list-style:none;color:orangered">{{ error|escape }}</span>
+                            {% endfor %}
+                            {% endif %}
+                        </div>
+                    </div>
+
+                </div> <!--row4-->
+                <div class="row cust-row">
+                    <div class="col-sm-6 cust-col">
+                        <div class="form-grp-edit">
+                            <label>Zip Code</label>
+                            <input type="text" name="zipcode" value="{{zipcode|default_if_none:''}}"
+                                   class="input-edit form-control" required=""
+                                   style="cursor: default;">
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6 cust-col">
+                        <div class="form-grp-edit">
+                            <label>Phone Number</label>
+                            <div class="date-field-row">
+                                <select class="input-box custom-select select-list phnumber" name="countrycode" id="" style="">
+                                    <option value="" disabled="" selected="">---</option>
+                                    {% for country in countries|filter_by:'phonecode-dist' %}
+                                    {% if country.phonecode %}
+                                    <option value="{{country.phonecode}}" {% if countrycode == country.phonecode%}selected{% endif %}>{{country.phonecode}}</option>
+                                    {% endif %}
+                                    {% endfor %}
+                                </select>
+                                <input type="text" name="phonenumber"
+                                       value="{{phonenumber|default_if_none:''}}"
+                                       class="input-edit form-control inp-phn-number" required=""
+                                       style="cursor: default;width:70%">
+                            </div>
+                            {% if form.phonenumber.errors %}
+                                {% for error in form.phonenumber.errors %}
+                                    <span style="list-style:none;color: orangered;padding-left: 10px;">{{ error|escape }}</span>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                    </div>
+
+                </div> <!--row5-->
+                <div class="row cust-row">
+                    <div class="col-sm-6 cust-col">
+                        <div class="form-grp-edit">
+                            <label>Country Of Residence</label>
+                            <!--                        <input type="text" name="country" value="{{user_account.country.name|default_if_none:''}}" class="input-edit form-control" required=""-->
+                            <!--                               style="cursor: default;">-->
+                            <select class="custom-select select-list" name="country" style="" required>
+                                <option value="" disabled="" selected="">select your country</option>
+                                {% for cntry in countries %}
+                                <option value="{{cntry.id}}"  {% if country|to_int == cntry.id %}selected{% endif %}>{{cntry.name}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 cust-col">
+                        <div class="form-grp-edit">
+                            <label>Nationality</label>
+                            <!--                        <input type="text" name="nationality" value="{{user_account.nationality.name|default_if_none:''}}" class="input-edit form-control" required=""-->
+                            <!--                               style="cursor: default;">-->
+                            {% if nationality and is_not_edit %}
+                                <select class="custom-select select-list" name="nationality" disabled=""
+                                style="cursor: not-allowed; background-color: rgb(233 236 239);">
+                            {% else %}
+                                <select class="custom-select select-list" name="nationality" required>
+                            {% endif %}
+
+                                <option value="" disabled="" selected="">select your nationality</option>
+                                {% for cntry in countries %}
+                                <option value="{{cntry.id}}" {% if nationality == cntry.id %}selected{% endif %}>{{cntry.name}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div> <!--row6-->
+                <div class="row">
+                    <div class="col-sm-12" style="text-align:center">
+                        <button type="submit" class="btn btn-primary button-w" style="">&nbspconfirm details</button>
+                    </div>
+                </div> <!--row7-->
+            </form>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+{% block extra_script %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script>
+    $(document).ready(function () {
+  //called when key is pressed in textbox
+  $(".inp-phn-number").keypress(function (e) {
+     //if the letter is not digit then display error and don't type anything
+     var phnnumber = $(".inp-phn-number").val();
+      var len = phnnumber.length;
+      if (len>=15){
+        return false;
+      }
+     if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+        //display error message
+
+               return false;
+    }
+   });
+
+});
+</script>
+{% endblock %}

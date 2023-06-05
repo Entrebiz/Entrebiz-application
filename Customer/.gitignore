@@ -1,0 +1,9 @@
+**/migrations/*
+**/__pycache__/
+.idea/*
+media/*
+staticfiles/*
+debug.log
+celerybeat-schedule
+.env
+logs/*

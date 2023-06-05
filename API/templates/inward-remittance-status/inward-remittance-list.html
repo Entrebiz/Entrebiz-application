@@ -1,0 +1,119 @@
+{% extends 'common/admin-base.html' %}
+{% load static %}
+{% load util_tags %}
+{% block css %}
+<style>
+    table {
+        border-collapse: collapse;
+        margin: 0.7em 0;
+        table-layout: fixed;
+        width: 100%;
+    }
+
+    .admin-table-def th {
+        font-weight: normal;
+        padding: 5px 10px;
+        text-align: left;
+        border-bottom: 1px solid #efefef;
+        color: #586168;
+        border-right: 1px solid #efefef;
+        font-size: 14px;
+    }
+
+    .td-slno {
+        width: 70px;
+    }
+
+    .admin-table-def td {
+        font-size: 14px;
+        padding: 10px 10px;
+        color: #586168;
+        border-color: #efefef;
+        word-break: break-all;
+    }
+</style>
+{% endblock %}
+{% block content %}
+<div class=" balance-cover  mx-4 ">
+    <div class="row">
+        <div class=" balance-main">
+            <!--  -->
+            <div class="curr-conversion-sec">
+                <div class="admin-user-table-sec">
+                    <table class="admin-table-def" id="inwardRemittancePendingList">
+                        <thead>
+                            <tr>
+
+                                <th class="td-slno">Sl No</th>
+                                <th>Account Name</th>
+                                <th>Account No</th>
+                                <th>Amount</th>
+                                <th style="width: 105px;">Transaction Type</th>
+                                <th style="width: 110px;">Created On</th>
+                                <th>Reject Reason</th>
+                                <th style="width: 90px;">Status</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            {% for inwardrem_tr in inwardrem_trs %}
+                            <tr id="rows-{{inwardrem_tr.id}}">
+                                <td>{{forloop.counter}}</td>
+                                {% if inwardrem_tr.account.user_account.customer.customertype == 1 %}
+                                <td>{{inwardrem_tr.account.user_account.firstname}}
+                                    {{inwardrem_tr.account.user_account.middlename|default_if_none:''}}
+                                    {{inwardrem_tr.account.user_account.lastname}}</td>
+                                {% else %}
+                                <td>{{inwardrem_tr.account.user_account.customer|company_name}}</td>
+                                {% endif %}
+                                <td>{{inwardrem_tr.account.accountno}}
+                                    <br>({{inwardrem_tr.currency.code}})
+                                </td>
+                                <td>{{inwardrem_tr.amount}}</td>
+                                {% if inwardrem_tr.transactiontype.name == 'Inward Remittance' %}
+                                <td>
+                                    Add Money
+                                </td>
+                                {% elif inwardrem_tr.transactiontype.name == 'Other Charges' %}
+                                <td>Add Charge</td>
+                                {% endif %}
+                                <td>{{inwardrem_tr.createdon|date:"d M Y"}}</td>
+                                {% if inwardrem_tr.approvallevel == 0 %}
+                                <td>-</td>
+                                <td>
+                                    <span style="color: orange;">Pending</span>
+                                </td>
+                                {% elif inwardrem_tr.approvallevel == 1 %}
+                                <td>-</td>
+                                <td>
+                                    <span style="color: green;">Approved</span>
+                                </td>
+                                {% elif inwardrem_tr.approvallevel == 2 %}
+                                <td>{{inwardrem_tr.reasonforreject}}</td>
+                                <td>
+                                    <span style="color: red;">Rejected</span>
+                                </td>
+                                {% endif %}
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="8" style="text-align:center;font-size:20;font-weight: 300;">No records
+                                    found!</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+            <!--  -->
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block extra_script %}
+<script>
+
+</script>
+{% endblock %}
